@@ -1,0 +1,175 @@
+{
+  "nav": {
+    "shop_all": "Boutique",
+    "performance": "Performance",
+    "interior": "Int\u00e9rieur",
+    "technology": "Technologie",
+    "brands": "Marques",
+    "customize": "Personnaliser",
+    "customize_long": "Personnaliser Votre V\u00e9hicule",
+    "shop_now": "Acheter",
+    "search": "Rechercher",
+    "account": "Compte",
+    "wishlist": "Favoris",
+    "cart": "Panier",
+    "menu": "Menu",
+    "close": "Fermer"
+  },
+  "loader": {
+    "tagline": "Performance. Technologie. Identit\u00e9."
+  },
+  "hero": {
+    "eyebrow": "TYMotors // Collection 2026",
+    "headline_1": "Transformez",
+    "headline_2": "Votre V\u00e9hicule",
+    "sub": "Pi\u00e8ces de tuning premium et technologie automobile pour BMW, Mercedes-Benz, Audi, Porsche, Volkswagen et Toyota.",
+    "cta_primary": "D\u00e9couvrir les Produits",
+    "cta_secondary": "Personnaliser Votre V\u00e9hicule",
+    "scroll": "D\u00e9filer",
+    "telemetry": {
+      "hp": "+18 CH AJOUT\u00c9S",
+      "weight": "-12% MASSE NON SUSPENDUE",
+      "downforce": "+22% APPUI ARRI\u00c8RE"
+    }
+  },
+  "brands": {
+    "eyebrow": "CONSTRUIT POUR",
+    "title": "Six plateformes l\u00e9gendaires.",
+    "sub": "Des ajustements con\u00e7us pour les propri\u00e9taires les plus exigeants.",
+    "explore": "D\u00e9couvrir"
+  },
+  "story": {
+    "eyebrow": "AU C\u0152UR DE LA MACHINE",
+    "title": "Chaque d\u00e9tail. Ing\u00e9ni\u00e9.",
+    "beats": [
+      { "title": "Phares Sculpt\u00e9s", "desc": "Matrices LED align\u00e9es au laser pour une signature nocturne unique." },
+      { "title": "Carbone Pos\u00e9 \u00e0 la Main", "desc": "Fibre de carbone pr\u00e9-impr\u00e9gn\u00e9e, vernis qualit\u00e9 UV." },
+      { "title": "Calandres Performance", "desc": "Prises d\u2019air optimis\u00e9es pour le refroidissement et le design." },
+      { "title": "Jantes Forg\u00e9es", "desc": "Construction monobloc l\u00e9g\u00e8re pour une r\u00e9ponse plus pr\u00e9cise." },
+      { "title": "\u00c9chappements Titane", "desc": "Son race, homologu\u00e9 ECE pour un usage quotidien." },
+      { "title": "Cockpits Num\u00e9riques", "desc": "Tableaux de bord AMOLED courbes avec t\u00e9l\u00e9m\u00e9trie custom." }
+    ]
+  },
+  "categories": {
+    "eyebrow": "TROIS DOMAINES",
+    "title": "Performance. Int\u00e9rieur. Technologie.",
+    "sub": "Catalogues s\u00e9lectionn\u00e9s pour votre fa\u00e7on de conduire.",
+    "explore": "D\u00e9couvrir"
+  },
+  "featured": {
+    "eyebrow": "COLLECTION SIGNATURE",
+    "title": "Pi\u00e8ces en Vedette.",
+    "sub": "S\u00e9lection \u00e9diteur des meilleures upgrades TYMotors.",
+    "view_all": "Voir tous les produits"
+  },
+  "before_after": {
+    "eyebrow": "TRANSFORMATIONS",
+    "title": "De stock \u00e0 spectaculaire.",
+    "sub": "Glissez pour r\u00e9v\u00e9ler une transformation TYMotors compl\u00e8te.",
+    "before": "Avant",
+    "after": "Apr\u00e8s"
+  },
+  "community": {
+    "eyebrow": "UNIVERS PROPRI\u00c9TAIRES",
+    "title": "Construit par des passionn\u00e9s. Aim\u00e9 partout.",
+    "sub": "Builds r\u00e9els de la communaut\u00e9 TYMotors."
+  },
+  "cta": {
+    "eyebrow": "PR\u00caT ?",
+    "title": "Construit Pour les Passionn\u00e9s.",
+    "sub": "Livraison UE offerte d\u00e8s 350\u20ac. Garantie 2 ans. Support propri\u00e9taire.",
+    "button": "D\u00e9couvrir TYMotors"
+  },
+  "footer": {
+    "brand_desc": "Tuning premium, modernisation et technologie automobile pour les passionn\u00e9s.",
+    "shop": "Boutique",
+    "brands": "Marques",
+    "support": "Support",
+    "company": "Soci\u00e9t\u00e9",
+    "newsletter_title": "Restez inform\u00e9",
+    "newsletter_sub": "Drops, lancements et builds pros directement par mail.",
+    "newsletter_placeholder": "votre@email.com",
+    "newsletter_button": "S\u2019inscrire",
+    "copyright": "\u00A9 2026 TYMotors. Tous droits r\u00e9serv\u00e9s.",
+    "links": {
+      "shop_all": "Boutique",
+      "new_arrivals": "Nouveaut\u00e9s",
+      "best_sellers": "Best Sellers",
+      "contact": "Contact",
+      "shipping": "Livraison",
+      "returns": "Retours",
+      "faq": "FAQ",
+      "compatibility": "Guide Compatibilit\u00e9",
+      "track": "Suivi de commande",
+      "privacy": "Confidentialit\u00e9",
+      "terms": "Conditions",
+      "cookies": "Cookies"
+    }
+  },
+  "shop": {
+    "title": "Toute la Boutique",
+    "sub": "Tous les produits TYMotors, en un seul endroit.",
+    "filters": "Filtres",
+    "sort": "Trier",
+    "price": "Prix",
+    "brand": "Marque",
+    "category": "Cat\u00e9gorie",
+    "all": "Tous",
+    "results": "r\u00e9sultats",
+    "empty": "Aucun produit ne correspond aux filtres.",
+    "reset": "R\u00e9initialiser"
+  },
+  "product": {
+    "add_to_cart": "Ajouter au Panier",
+    "buy_now": "Acheter Maintenant",
+    "wishlist": "Favoris",
+    "sku": "SKU",
+    "compatibility": "Compatibilit\u00e9",
+    "specs": "Sp\u00e9cifications",
+    "description": "Description",
+    "compatible_with": "Compatible avec",
+    "in_stock": "En Stock",
+    "price": "Prix",
+    "related": "Vous aimerez aussi",
+    "loading": "Chargement\u2026"
+  },
+  "customize": {
+    "title": "Personnalisez Votre V\u00e9hicule",
+    "sub": "S\u00e9lectionnez votre v\u00e9hicule, puis touchez une zone pour d\u00e9couvrir les upgrades compatibles.",
+    "select_brand": "Marque",
+    "select_model": "Mod\u00e8le",
+    "select_generation": "G\u00e9n\u00e9ration",
+    "hotspots": {
+      "front": "Avant",
+      "rear": "Arri\u00e8re",
+      "interior": "Int\u00e9rieur",
+      "lighting": "\u00c9clairage",
+      "technology": "Technologie"
+    },
+    "recommended": "Upgrades recommand\u00e9s",
+    "add_to_cart": "Ajouter au Panier",
+    "not_compatible": "Aucun produit pour cette combinaison."
+  },
+  "cart": {
+    "title": "Votre Panier",
+    "empty": "Votre panier est vide.",
+    "continue": "Continuer les achats",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "shipping_free": "Offerte d\u00e8s 350\u20ac",
+    "total": "Total",
+    "checkout": "Passer Commande",
+    "remove": "Retirer",
+    "quantity": "Quantit\u00e9"
+  },
+  "wishlist": {
+    "title": "Vos Favoris",
+    "empty": "Vos favoris sont vides.",
+    "continue": "Continuer les achats"
+  },
+  "common": {
+    "learn_more": "En savoir plus",
+    "explore": "D\u00e9couvrir",
+    "loading": "Chargement\u2026"
+  }
+}

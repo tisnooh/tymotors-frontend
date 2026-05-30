@@ -1,0 +1,175 @@
+{
+  "nav": {
+    "shop_all": "Shop All",
+    "performance": "Performance",
+    "interior": "Interior",
+    "technology": "Technology",
+    "brands": "Brands",
+    "customize": "Customize",
+    "customize_long": "Customize Your Vehicle",
+    "shop_now": "Shop Now",
+    "search": "Search",
+    "account": "Account",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "loader": {
+    "tagline": "Performance. Technology. Identity."
+  },
+  "hero": {
+    "eyebrow": "TYMotors // 2026 Collection",
+    "headline_1": "Transform",
+    "headline_2": "Your Vehicle",
+    "sub": "Premium tuning parts and automotive technology for BMW, Mercedes-Benz, Audi, Porsche, Volkswagen and Toyota.",
+    "cta_primary": "Explore Products",
+    "cta_secondary": "Customize Your Vehicle",
+    "scroll": "Scroll",
+    "telemetry": {
+      "hp": "+18 HP DELIVERED",
+      "weight": "-12% UNSPRUNG MASS",
+      "downforce": "+22% REAR DOWNFORCE"
+    }
+  },
+  "brands": {
+    "eyebrow": "BUILT FOR",
+    "title": "Six legendary platforms.",
+    "sub": "Engineered fitments for the most demanding owners.",
+    "explore": "Explore"
+  },
+  "story": {
+    "eyebrow": "INSIDE THE MACHINE",
+    "title": "Every detail. Engineered.",
+    "beats": [
+      { "title": "Sculpted Headlights", "desc": "Laser-aligned LED matrices for a signature presence at night." },
+      { "title": "Hand-laid Carbon", "desc": "Pre-preg carbon fiber finished with UV-grade lacquer." },
+      { "title": "Performance Grilles", "desc": "Aerodynamic intakes optimized for cooling and design." },
+      { "title": "Forged Wheels", "desc": "Lightweight monoblock construction for sharper response." },
+      { "title": "Titanium Exhausts", "desc": "Race-bred sound, ECE-approved for every-day driving." },
+      { "title": "Digital Cockpits", "desc": "Curved AMOLED dashboards with custom telemetry skins." }
+    ]
+  },
+  "categories": {
+    "eyebrow": "THREE DOMAINS",
+    "title": "Performance. Interior. Technology.",
+    "sub": "Curated catalogues built around how you actually drive.",
+    "explore": "Explore"
+  },
+  "featured": {
+    "eyebrow": "SIGNATURE COLLECTION",
+    "title": "Featured Parts.",
+    "sub": "Hand-picked upgrades from the TYMotors editor cut.",
+    "view_all": "View all products"
+  },
+  "before_after": {
+    "eyebrow": "TRANSFORMATIONS",
+    "title": "Stock to spectacular.",
+    "sub": "Drag to reveal what a complete TYMotors build delivers.",
+    "before": "Before",
+    "after": "After"
+  },
+  "community": {
+    "eyebrow": "OWNERS UNIVERSE",
+    "title": "Built by drivers. Loved worldwide.",
+    "sub": "Real builds from the global TYMotors community."
+  },
+  "cta": {
+    "eyebrow": "READY?",
+    "title": "Built For Automotive Enthusiasts.",
+    "sub": "Free EU shipping over \u20ac350. 2-year warranty. Owner-grade support.",
+    "button": "Explore TYMotors"
+  },
+  "footer": {
+    "brand_desc": "Premium tuning, modernization and automotive technology for performance enthusiasts.",
+    "shop": "Shop",
+    "brands": "Brands",
+    "support": "Support",
+    "company": "Company",
+    "newsletter_title": "Stay in the loop",
+    "newsletter_sub": "Drops, launches and pro builds in your inbox.",
+    "newsletter_placeholder": "your@email.com",
+    "newsletter_button": "Subscribe",
+    "copyright": "\u00A9 2026 TYMotors. All rights reserved.",
+    "links": {
+      "shop_all": "Shop All",
+      "new_arrivals": "New Arrivals",
+      "best_sellers": "Best Sellers",
+      "contact": "Contact",
+      "shipping": "Shipping",
+      "returns": "Returns",
+      "faq": "FAQ",
+      "compatibility": "Compatibility Guide",
+      "track": "Track Order",
+      "privacy": "Privacy Policy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    }
+  },
+  "shop": {
+    "title": "Shop All",
+    "sub": "Every TYMotors part, in one place.",
+    "filters": "Filters",
+    "sort": "Sort",
+    "price": "Price",
+    "brand": "Brand",
+    "category": "Category",
+    "all": "All",
+    "results": "results",
+    "empty": "No products match your filters.",
+    "reset": "Reset filters"
+  },
+  "product": {
+    "add_to_cart": "Add to Cart",
+    "buy_now": "Buy Now",
+    "wishlist": "Wishlist",
+    "sku": "SKU",
+    "compatibility": "Compatibility",
+    "specs": "Specifications",
+    "description": "Description",
+    "compatible_with": "Compatible with",
+    "in_stock": "In Stock",
+    "price": "Price",
+    "related": "You may also like",
+    "loading": "Loading\u2026"
+  },
+  "customize": {
+    "title": "Customize Your Vehicle",
+    "sub": "Select your vehicle, then tap an area to discover compatible upgrades.",
+    "select_brand": "Brand",
+    "select_model": "Model",
+    "select_generation": "Generation",
+    "hotspots": {
+      "front": "Front",
+      "rear": "Rear",
+      "interior": "Interior",
+      "lighting": "Lighting",
+      "technology": "Technology"
+    },
+    "recommended": "Recommended upgrades",
+    "add_to_cart": "Add to Cart",
+    "not_compatible": "No products yet for this combination."
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "continue": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shipping_free": "Free over \u20ac350",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity"
+  },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "empty": "Your wishlist is empty.",
+    "continue": "Continue Shopping"
+  },
+  "common": {
+    "learn_more": "Learn more",
+    "explore": "Explore",
+    "loading": "Loading\u2026"
+  }
+}
