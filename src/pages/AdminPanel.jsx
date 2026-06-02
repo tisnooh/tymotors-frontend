@@ -28,7 +28,7 @@ export default function AdminPanel() {
   const [search, setSearch] = useState('');
   const fileRef = useRef();
 
-  useEffect(() => { fetchProducts(); }, [fetchProducts]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function fetchProducts() {
     setLoading(true);
