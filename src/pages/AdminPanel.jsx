@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
+const ADMIN_PASSWORD = '03092004Aa';
 
 const CATEGORIES = ['performance', 'interior', 'technology'];
 const BRANDS = ['bmw', 'mercedes', 'audi', 'porsche', 'ferrari', 'lamborghini', 'aston-martin'];
@@ -15,7 +16,47 @@ function emptyProduct() {
   };
 }
 
+function PasswordGate({ onAuth }) {
+  const [pwd, setPwd] = useState('');
+  const [error, setError] = useState(false);
+
+  function submit() {
+    if (pwd === ADMIN_PASSWORD) {
+      sessionStorage.setItem('ty_admin', '1');
+      onAuth();
+    } else {
+      setError(true);
+      setPwd('');
+    }
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#080A0D', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Rajdhani', sans-serif" }}>
+      <div style={{ background: '#0D1017', border: '1px solid #1A2030', borderRadius: 8, padding: '48px 40px', width: 360, textAlign: 'center' }}>
+        <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: 4, color: '#F2F4F7', marginBottom: 4 }}>TY<span style={{ color: '#C9A84C' }}>MOTORS</span></div>
+        <div style={{ fontSize: 11, letterSpacing: 3, color: '#4A5568', marginBottom: 32 }}>ACCÈS ADMIN</div>
+        <input
+          type="password"
+          placeholder="Mot de passe"
+          value={pwd}
+          onChange={e => { setPwd(e.target.value); setError(false); }}
+          onKeyDown={e => e.key === 'Enter' && submit()}
+          style={{ width: '100%', background: '#0F1218', border: `1px solid ${error ? '#7f1d1d' : '#1A2030'}`, borderRadius: 4, padding: '12px 16px', color: '#E8E8E8', fontSize: 15, outline: 'none', fontFamily: "'Rajdhani', sans-serif", boxSizing: 'border-box', marginBottom: 8 }}
+        />
+        {error && <div style={{ color: '#ef4444', fontSize: 12, letterSpacing: 1, marginBottom: 12 }}>Mot de passe incorrect</div>}
+        <button
+          onClick={submit}
+          style={{ width: '100%', background: '#C9A84C', color: '#000', border: 'none', padding: '13px', fontWeight: 800, letterSpacing: 2, fontSize: 13, cursor: 'pointer', borderRadius: 4, fontFamily: "'Rajdhani', sans-serif", marginTop: 8 }}
+        >
+          ACCÉDER
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPanel() {
+  const [auth, setAuth] = useState(sessionStorage.getItem('ty_admin') === '1');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('list'); // 'list' | 'edit' | 'create'
@@ -28,7 +69,9 @@ export default function AdminPanel() {
   const [search, setSearch] = useState('');
   const fileRef = useRef();
 
-  useEffect(() => { fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (auth) fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!auth) return <PasswordGate onAuth={() => setAuth(true)} />;
 
   async function fetchProducts() {
     setLoading(true);
