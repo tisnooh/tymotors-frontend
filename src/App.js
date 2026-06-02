@@ -19,6 +19,7 @@ import BrandDetail from '@/pages/BrandDetail';
 import Customize from '@/pages/Customize';
 import Cart from '@/pages/Cart';
 import Wishlist from '@/pages/Wishlist';
+import AdminPanel from '@/pages/AdminPanel';
 
 // Stable references prevent unnecessary Toaster re-renders
 const TOASTER_STYLE = {
@@ -37,22 +38,32 @@ function Shell() {
   return (
     <div className="App relative">
       {!ready && <Loader onDone={handleDone} />}
-      <Navbar />
-      <MobileMenu />
-      <SearchOverlay />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/category/:slug" element={<CategoryPage />} />
-        <Route path="/product/:slug" element={<ProductDetail />} />
-        <Route path="/brands" element={<BrandsIndex />} />
-        <Route path="/brands/:slug" element={<BrandDetail />} />
-        <Route path="/customize" element={<Customize />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="*" element={<Home />} />
+        {/* Admin route — sans Navbar/Footer */}
+        <Route path="/admin" element={<AdminPanel />} />
+
+        {/* Routes publiques */}
+        <Route path="*" element={
+          <>
+            <Navbar />
+            <MobileMenu />
+            <SearchOverlay />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/category/:slug" element={<CategoryPage />} />
+              <Route path="/product/:slug" element={<ProductDetail />} />
+              <Route path="/brands" element={<BrandsIndex />} />
+              <Route path="/brands/:slug" element={<BrandDetail />} />
+              <Route path="/customize" element={<Customize />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="*" element={<Home />} />
+            </Routes>
+            <Footer />
+          </>
+        } />
       </Routes>
-      <Footer />
     </div>
   );
 }
