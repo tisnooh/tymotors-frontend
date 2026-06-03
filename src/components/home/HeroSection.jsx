@@ -22,12 +22,19 @@ export function HeroSection() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
+      // Set initial states immediately to prevent flash before animation
+      gsap.set(eyebrowRef.current, { autoAlpha: 0, y: 14 });
+      gsap.set(headlineRef.current?.querySelectorAll('.line'), { yPercent: 110, autoAlpha: 0 });
+      gsap.set(subRef.current, { autoAlpha: 0, y: 16 });
+      gsap.set(ctaRef.current?.children || [], { autoAlpha: 0, y: 14 });
+      gsap.set(telemetryRef.current?.children || [], { autoAlpha: 0, y: 10 });
+
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.fromTo(eyebrowRef.current, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.05)
-        .fromTo(headlineRef.current?.querySelectorAll('.line'), { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 1.0, stagger: 0.08 }, 0.15)
-        .fromTo(subRef.current, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.6)
-        .fromTo(ctaRef.current?.children || [], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, 0.8)
-        .fromTo(telemetryRef.current?.children || [], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, 1.1);
+      tl.to(eyebrowRef.current, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.05)
+        .to(headlineRef.current?.querySelectorAll('.line'), { yPercent: 0, autoAlpha: 1, duration: 1.0, stagger: 0.08 }, 0.15)
+        .to(subRef.current, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.6)
+        .to(ctaRef.current?.children || [], { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, 0.8)
+        .to(telemetryRef.current?.children || [], { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, 1.1);
 
       if (!reduced && imgRef.current) {
         gsap.fromTo(
