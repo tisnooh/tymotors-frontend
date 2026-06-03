@@ -147,9 +147,9 @@ export default function ProductDetail() {
             </div>
 
             <div className="mt-8 grid grid-cols-3 gap-3">
-              <Trust icon={<Truck className="h-4 w-4" />} title="Expédition Sécurisée" sub="Suivi de commande inclus" />
-              <Trust icon={<ShieldCheck className="h-4 w-4" />} title="Finition Premium" sub="Pièces sélectionnées" />
-              <Trust icon={<BadgeCheck className="h-4 w-4" />} title="Compatibilité Vérifiée" sub="Adaptation précise" />
+              <Trust icon={<Truck className="h-4 w-4" />} title="Expédition Sécurisée" sub="Suivi inclus" />
+              <Trust icon={<ShieldCheck className="h-4 w-4" />} title="Qualité Premium" sub="Sélection" />
+              <Trust icon={<BadgeCheck className="h-4 w-4" />} title="Compatibilité" sub="Adaptation précise" />
             </div>
 
             <div className="mt-10">
