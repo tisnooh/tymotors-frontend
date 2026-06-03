@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ChevronDown } from 'lucide-react';
@@ -19,7 +19,7 @@ export function HeroSection() {
   const telemetryRef = useRef(null);
   const wrapRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Hide wrapper immediately before first paint via GSAP (runs sync in useLayoutEffect timing)

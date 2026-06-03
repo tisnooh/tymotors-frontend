@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -37,7 +37,7 @@ export function StorytellingSection() {
   const addImage = (el) => el && !imagesRef.current.includes(el) && imagesRef.current.push(el);
   const addBeat = (el) => el && !beatsRef.current.includes(el) && beatsRef.current.push(el);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
 
