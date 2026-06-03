@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Sparkles } from 'lucide-react';
 import { HOTSPOTS } from './useCustomize';
 
-const VEHICLE_IMG = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2400&q=90';
+const VEHICLE_IMG = 'https://images.unsplash.com/photo-1634673970798-a15ae56f6c65?auto=format&fit=crop&w=2400&q=90';
 
 function Hotspot({ hotspot, onClick, disabled }) {
   return (
