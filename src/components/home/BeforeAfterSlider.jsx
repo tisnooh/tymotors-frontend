@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
 
 const BEFORE_IMG = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2000&q=85';
-const AFTER_IMG = 'https://images.unsplash.com/photo-1611821064430-0d40291922d2?auto=format&fit=crop&w=2000&q=85';
+const AFTER_IMG = 'https://images.unsplash.com/photo-1621776887753-fe3c3239555a?auto=format&fit=crop&w=2000&q=85';
 const TICK_KEYS = Array.from({ length: 12 }, (_, i) => `tick-${i}`);
 
 function TelemetryTicks() {
