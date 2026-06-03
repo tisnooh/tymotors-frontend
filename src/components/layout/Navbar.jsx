@@ -43,7 +43,7 @@ function NavLinkItem({ to, label, testId }) {
       to={to}
       data-testid={testId}
       className={({ isActive }) =>
-        `relative text-sm font-medium transition-colors ${isActive ? 'text-white' : 'text-ty-textMid hover:text-white'}`
+        `relative text-[13px] font-medium transition-colors ${isActive ? 'text-white' : 'text-ty-textMid hover:text-white'}`
       }
     >
       {({ isActive }) => (
@@ -72,7 +72,7 @@ function NavbarLeft() {
 
 function NavbarCenter({ items }) {
   return (
-    <nav className="hidden lg:flex items-center gap-10" data-testid="navbar-main-nav">
+    <nav className="hidden lg:flex items-center gap-6 xl:gap-10" data-testid="navbar-main-nav">
       {items.map((item) => (
         <NavLinkItem
           key={item.to}
