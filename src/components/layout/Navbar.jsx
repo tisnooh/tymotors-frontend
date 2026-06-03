@@ -87,7 +87,7 @@ function NavbarCenter({ items }) {
 
 function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }) {
   return (
-    <div className="flex items-center gap-3 lg:gap-4">
+    <div className="flex items-center gap-5 lg:gap-6">
       <div className="hidden md:flex">
         <LanguageSwitcher />
       </div>
