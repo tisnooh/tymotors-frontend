@@ -75,15 +75,15 @@ export function HeroSection() {
       <div className="absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
 
       <div className="relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
-        <p ref={eyebrowRef} className="font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
+        <p ref={eyebrowRef} style={{ opacity: 0, visibility: 'hidden' }} className="font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
           <span className="h-px w-10 bg-[#F2C94C]" data-testid="hero-eyebrow"/>
           {t('hero.eyebrow')}
         </p>
 
         <h1 ref={headlineRef} data-testid="hero-headline" className="ty-display text-white text-[12vw] sm:text-7xl md:text-8xl lg:text-[9.5rem] leading-[0.92] tracking-tight">
-          <span className="block overflow-hidden"><span className="line block">{t('hero.headline_1')}</span></span>
+          <span className="block overflow-hidden"><span className="line block" style={{ opacity: 0, visibility: 'hidden', transform: 'translateY(110%)' }}>{t('hero.headline_1')}</span></span>
           <span className="block overflow-hidden text-white/90">
-            <span className="line block">
+            <span className="line block" style={{ opacity: 0, visibility: 'hidden', transform: 'translateY(110%)' }}>
               <span className="relative">
                 {t('hero.headline_2')}
                 <span className="absolute -bottom-1 left-0 h-1 w-24 bg-[#E10600]" />
@@ -92,11 +92,11 @@ export function HeroSection() {
           </span>
         </h1>
 
-        <p ref={subRef} className="mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
+        <p ref={subRef} style={{ opacity: 0, visibility: 'hidden' }} className="mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
           {t('hero.sub')}
         </p>
 
-        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center gap-4">
+        <div ref={ctaRef} style={{ opacity: 0, visibility: 'hidden' }} className="mt-10 flex flex-wrap items-center gap-4">
           <Link to="/shop" data-testid="hero-primary-cta-button" className="ty-btn-primary h-12 px-6 text-sm tracking-[0.18em] uppercase">
             {t('hero.cta_primary')}
             <ArrowRight className="h-4 w-4 ml-1" />
@@ -107,7 +107,7 @@ export function HeroSection() {
         </div>
 
         {/* Telemetry strip */}
-        <div ref={telemetryRef} data-testid="hero-spec-strip" className="mt-16 md:mt-24 grid grid-cols-3 max-w-2xl gap-4">
+        <div ref={telemetryRef} style={{ opacity: 0, visibility: 'hidden' }} data-testid="hero-spec-strip" className="mt-16 md:mt-24 grid grid-cols-3 max-w-2xl gap-4">
           {Object.entries(t('hero.telemetry', { returnObjects: true })).map(([k, v]) => (
             <div key={k} className="relative pl-3 border-l border-[#F2C94C]/30">
               <span className="absolute -left-px top-0 h-2 w-px bg-[#F2C94C]" />
