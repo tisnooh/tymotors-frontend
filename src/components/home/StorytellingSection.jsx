@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -37,7 +37,7 @@ export function StorytellingSection() {
   const addImage = (el) => el && !imagesRef.current.includes(el) && imagesRef.current.push(el);
   const addBeat = (el) => el && !beatsRef.current.includes(el) && beatsRef.current.push(el);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
 
@@ -47,7 +47,7 @@ export function StorytellingSection() {
         gsap.set(img, i === 0 ? { autoAlpha: 1, scale: 1 } : { autoAlpha: 0, scale: 1.1 });
       });
       beatsRef.current.forEach((bt, i) => {
-        gsap.set(bt, { autoAlpha: i === 0 ? 1 : 0, y: 12 });
+        gsap.set(bt, { autoAlpha: i === 0 ? 1 : 0, y: i === 0 ? 0 : 12 });
       });
 
       const tl = gsap.timeline({
@@ -73,8 +73,8 @@ export function StorytellingSection() {
 
   return (
     <section ref={sectionRef} data-testid="scroll-story-section" className="relative h-[100svh] w-full overflow-hidden bg-[#050608]">
-      {BEAT_IMAGES.map((src) => (
-        <div key={src} ref={addImage} className="absolute inset-0">
+      {BEAT_IMAGES.map((src, i) => (
+        <div key={src} ref={addImage} className="absolute inset-0" style={{ opacity: i === 0 ? 1 : 0 }}>
           <img src={src} alt="" className="h-full w-full object-cover" />
         </div>
       ))}
@@ -90,7 +90,12 @@ export function StorytellingSection() {
         <h2 className="mt-3 ty-display text-white text-3xl md:text-6xl mb-8">{t('story.title')}</h2>
         <div className="relative h-44 md:h-32">
           {beats.map((beat, i) => (
-            <div key={beat.title} ref={addBeat} className="absolute inset-0 max-w-2xl">
+            <div
+              key={beat.title}
+              ref={addBeat}
+              className="absolute inset-0 max-w-2xl"
+              style={{ opacity: i === 0 ? 1 : 0 }}
+            >
               <div className="flex items-start gap-4">
                 <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
                   0{i + 1}

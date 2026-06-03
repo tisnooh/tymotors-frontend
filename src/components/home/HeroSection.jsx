@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ChevronDown } from 'lucide-react';
@@ -17,26 +17,17 @@ export function HeroSection() {
   const eyebrowRef = useRef(null);
   const ctaRef = useRef(null);
   const telemetryRef = useRef(null);
-  const wrapRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Hide wrapper immediately before first paint via GSAP (runs sync in useLayoutEffect timing)
-    const lines = headlineRef.current?.querySelectorAll('.line') || [];
-    gsap.set(eyebrowRef.current, { opacity: 0 });
-    gsap.set(lines, { yPercent: 110, opacity: 0 });
-    gsap.set(subRef.current, { opacity: 0 });
-    gsap.set(ctaRef.current, { opacity: 0 });
-    gsap.set(telemetryRef.current, { opacity: 0 });
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.to(eyebrowRef.current, { opacity: 1, duration: 0.6 }, 0.05)
-        .to(lines, { yPercent: 0, opacity: 1, duration: 1.0, stagger: 0.08 }, 0.15)
-        .to(subRef.current, { opacity: 1, duration: 0.7 }, 0.6)
-        .to(ctaRef.current, { opacity: 1, duration: 0.6 }, 0.8)
-        .to(telemetryRef.current, { opacity: 1, duration: 0.55 }, 1.1);
+      tl.fromTo(eyebrowRef.current, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.05)
+        .fromTo(headlineRef.current?.querySelectorAll('.line'), { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 1.0, stagger: 0.08 }, 0.15)
+        .fromTo(subRef.current, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.6)
+        .fromTo(ctaRef.current?.children || [], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08 }, 0.8)
+        .fromTo(telemetryRef.current?.children || [], { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08 }, 1.1);
 
       if (!reduced && imgRef.current) {
         gsap.fromTo(
@@ -76,7 +67,7 @@ export function HeroSection() {
       <div className="absolute top-24 left-0 h-px w-24 bg-[#F2C94C]/50" />
       <div className="absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
 
-      <div ref={wrapRef} className="relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
+      <div className="relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
         <p ref={eyebrowRef} className="font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
           <span className="h-px w-10 bg-[#F2C94C]" data-testid="hero-eyebrow"/>
           {t('hero.eyebrow')}
