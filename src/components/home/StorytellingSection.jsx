@@ -6,12 +6,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const BEAT_IMAGES = [
-  'https://images.unsplash.com/photo-1605283176568-9b41fde3eba3?auto=format&fit=crop&w=2000&q=85',
-  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1606577924006-27d39b132ae2?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1658055467065-073f0e1d0601?auto=format&fit=crop&w=2000&q=85',
   'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=2000&q=85',
-  'https://images.unsplash.com/photo-1611740801993-2c9c8c4b6e1b?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1719780711623-6a55225017c5?auto=format&fit=crop&w=2000&q=85',
   'https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=2000&q=85',
-  'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1639928845095-b2c86c3cde80?auto=format&fit=crop&w=2000&q=85',
 ];
 
 function CornerBrackets() {

@@ -4,12 +4,12 @@ import { Heart, Play, Instagram } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
 
 const CARDS = [
-  { id: 'nico-builds', src: 'https://images.unsplash.com/photo-1605559424843-9e4d1c12b8ed?auto=format&fit=crop&w=1200&q=80', handle: '@nico.builds', likes: '24.1k', kind: 'video' },
+  { id: 'nico-builds', src: 'https://images.unsplash.com/photo-1639928197975-719885038475?auto=format&fit=crop&w=1200&q=80', handle: '@nico.builds', likes: '24.1k', kind: 'video' },
   { id: 'tymotors-eu', src: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80', handle: '@tymotors.eu', likes: '18.3k', kind: 'photo' },
   { id: 'lior-garage', src: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80', handle: '@lior.garage', likes: '12.8k', kind: 'photo' },
-  { id: 'porsche-paris', src: 'https://images.unsplash.com/photo-1611821064430-0d40291922d2?auto=format&fit=crop&w=1200&q=80', handle: '@porscheparis', likes: '32.4k', kind: 'video' },
-  { id: 'aki-builds', src: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', handle: '@aki.builds', likes: '9.6k', kind: 'photo' },
-  { id: 'drift-mtl', src: 'https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=1200&q=80', handle: '@drift.mtl', likes: '15.2k', kind: 'video' },
+  { id: 'porsche-paris', src: 'https://images.unsplash.com/photo-1639928846767-2b900c357a30?auto=format&fit=crop&w=1200&q=80', handle: '@porscheparis', likes: '32.4k', kind: 'video' },
+  { id: 'aki-builds', src: 'https://images.unsplash.com/photo-1701012187548-03b07619ba48?auto=format&fit=crop&w=1200&q=80', handle: '@aki.builds', likes: '9.6k', kind: 'photo' },
+  { id: 'drift-mtl', src: 'https://images.unsplash.com/photo-1639928846190-9d342619118a?auto=format&fit=crop&w=1200&q=80', handle: '@drift.mtl', likes: '15.2k', kind: 'video' },
 ];
 
 function CommunityCard({ card, delay }) {

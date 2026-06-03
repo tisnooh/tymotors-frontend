@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const HERO_IMG = 'https://images.unsplash.com/photo-1611821064430-0d40291922d2?auto=format&fit=crop&w=2000&q=85';
+const HERO_IMG = 'https://images.unsplash.com/photo-1760551662083-73dfcd07985a?auto=format&fit=crop&w=2000&q=85';
 
 export function HeroSection() {
   const { t } = useTranslation();
