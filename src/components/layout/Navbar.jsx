@@ -72,7 +72,7 @@ function NavbarLeft() {
 
 function NavbarCenter({ items }) {
   return (
-    <nav className="hidden lg:flex items-center gap-7" data-testid="navbar-main-nav">
+    <nav className="hidden lg:flex items-center gap-10" data-testid="navbar-main-nav">
       {items.map((item) => (
         <NavLinkItem
           key={item.to}
