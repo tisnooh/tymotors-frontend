@@ -117,8 +117,12 @@ export default function AdminPanel() {
       fd.append('file', file);
       const res = await fetch(`${API}/api/admin/upload-image`, { method: 'POST', body: fd });
       const data = await res.json();
-      setForm(f => ({ ...f, images: [...f.images, data.url] }));
-      notify('Image uploadée !');
+      if (!res.ok) {
+        notify(`Erreur upload: ${data.detail || res.status}`, 'error');
+      } else {
+        setForm(f => ({ ...f, images: [...f.images, data.url] }));
+        notify('Image uploadée !');
+      }
     } catch (e) {
       notify('Erreur upload image', 'error');
     }
@@ -290,6 +294,11 @@ export default function AdminPanel() {
                 onChange={v => setForm(f => ({ ...f, badges: v }))}
               />
 
+              <SpecsEditor
+                specs={form.specs}
+                onChange={v => setForm(f => ({ ...f, specs: v }))}
+              />
+
               <label style={styles.checkRow}>
                 <input type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} />
                 <span style={{ marginLeft: 8, color: '#C9A84C', fontWeight: 700 }}>Produit Featured</span>
@@ -343,6 +352,51 @@ export default function AdminPanel() {
               <button style={{ ...styles.btnPrimary, background: '#7f1d1d' }} onClick={() => deleteProduct(deleteConfirm.slug)}>SUPPRIMER</button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SpecsEditor({ specs, onChange }) {
+  const [key, setKey] = useState('');
+  const [val, setVal] = useState('');
+
+  function add() {
+    const k = key.trim();
+    const v = val.trim();
+    if (!k || !v) return;
+    onChange({ ...specs, [k]: v });
+    setKey(''); setVal('');
+  }
+
+  function remove(k) {
+    const updated = { ...specs };
+    delete updated[k];
+    onChange(updated);
+  }
+
+  return (
+    <div style={styles.field}>
+      <label style={styles.fieldLabel}>SPÉCIFICATIONS</label>
+      <div style={{ display: 'flex', gap: 6 }}>
+        <input style={{ ...styles.input, flex: 1 }} placeholder="Clé (ex: Material)" value={key}
+          onChange={e => setKey(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} />
+        <input style={{ ...styles.input, flex: 1 }} placeholder="Valeur (ex: Carbon)" value={val}
+          onChange={e => setVal(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} />
+        <button style={styles.btnAdd} onClick={add}>+</button>
+      </div>
+      {Object.keys(specs).length > 0 && (
+        <div style={{ marginTop: 8, border: '1px solid #1A2030', borderRadius: 4, overflow: 'hidden' }}>
+          {Object.entries(specs).map(([k, v]) => (
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid #1A2030' }}>
+              <span style={{ fontSize: 12, color: '#A0AEC0' }}>{k}</span>
+              <span style={{ fontSize: 12, color: '#F2F4F7', display: 'flex', alignItems: 'center', gap: 10 }}>
+                {v}
+                <span style={{ cursor: 'pointer', color: '#7f1d1d', fontSize: 11 }} onClick={() => remove(k)}>✕</span>
+              </span>
+            </div>
+          ))}
         </div>
       )}
     </div>
