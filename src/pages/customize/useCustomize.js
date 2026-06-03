@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { Brands as BrandsApi, Compatibility, Products } from '@/lib/api';
 
 export const HOTSPOTS = [
-  { id: 'front', label: 'Front', x: 22, y: 60, categories: ['performance'], subcats: ['Grilles', 'Exterior'] },
-  { id: 'lighting', label: 'Lighting', x: 34, y: 50, categories: ['performance'], subcats: ['Grilles'] },
-  { id: 'rear', label: 'Rear', x: 82, y: 65, categories: ['performance'], subcats: ['Spoilers', 'Diffusers', 'Exhaust Tips', 'Silencieux'] },
-  { id: 'interior', label: 'Interior', x: 56, y: 35, categories: ['interior'], subcats: ['Steering Wheels', 'Digital Dashboards', 'Carbon Interior', 'Ambient Lighting'] },
-  { id: 'technology', label: 'Technology', x: 50, y: 58, categories: ['technology'], subcats: ['CarPlay Screens', 'Dashcams', 'Reverse Cameras'] },
+  { id: 'front', label: 'Avant', x: 22, y: 60, categories: ['performance'], subcats: ['Calandres', 'Extérieur'] },
+  { id: 'lighting', label: 'Éclairage', x: 34, y: 50, categories: ['performance'], subcats: ['Calandres', 'Extérieur'] },
+  { id: 'rear', label: 'Arrière', x: 82, y: 65, categories: ['performance'], subcats: ['Spoilers', 'Diffuseurs', "Sorties d'échappement", 'Silencieux'] },
+  { id: 'interior', label: 'Intérieur', x: 56, y: 35, categories: ['interior'], subcats: ['Volants', 'Tableaux de bord', 'Intérieur carbone', 'Éclairage ambiant'] },
+  { id: 'technology', label: 'Technologie', x: 50, y: 58, categories: ['technology'], subcats: ['Écrans CarPlay', 'Dashcams', 'Caméras de recul'] },
 ];
 
 export function useBrands() {
@@ -16,7 +16,6 @@ export function useBrands() {
     BrandsApi.list()
       .then((data) => { if (!cancelled) setBrands(data); })
       .catch((e) => {
-        // eslint-disable-next-line no-console
         console.warn('[TYMotors] brand list failed:', e?.message || e);
       });
     return () => { cancelled = true; };
@@ -32,7 +31,6 @@ export function useCompatibility(brandSlug) {
     Compatibility.list(brandSlug)
       .then((data) => { if (!cancelled) setModels(data); })
       .catch((e) => {
-        // eslint-disable-next-line no-console
         console.warn('[TYMotors] compatibility load failed:', e?.message || e);
       });
     return () => { cancelled = true; };
@@ -59,7 +57,6 @@ export function useRecommendedForHotspot(hotspotId, brandSlug) {
         setRecommended(filtered.slice(0, 6));
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
         console.warn('[TYMotors] recommended products failed:', e?.message || e);
         if (!cancelled) setRecommended([]);
       })
