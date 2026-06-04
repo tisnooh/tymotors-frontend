@@ -20,8 +20,17 @@ import Customize from '@/pages/Customize';
 import Cart from '@/pages/Cart';
 import Wishlist from '@/pages/Wishlist';
 import AdminPanel from '@/pages/AdminPanel';
+import {
+  ContactPage,
+  ShippingPage,
+  ReturnsPage,
+  FAQPage,
+  TrackPage,
+  PrivacyPage,
+  TermsPage,
+  CookiesPage,
+} from '@/pages/SupportPages';
 
-// Stable references prevent unnecessary Toaster re-renders
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
   color: '#F2F4F7',
@@ -39,7 +48,7 @@ function Shell() {
     <div className="App relative">
       {!ready && <Loader onDone={handleDone} />}
       <Routes>
-        {/* Admin route — sans Navbar/Footer */}
+        {/* Admin — sans Navbar/Footer */}
         <Route path="/admin" element={<AdminPanel />} />
 
         {/* Routes publiques */}
@@ -58,6 +67,16 @@ function Shell() {
               <Route path="/customize" element={<Customize />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Wishlist />} />
+              {/* Support */}
+              <Route path="/support/contact" element={<ContactPage />} />
+              <Route path="/support/shipping" element={<ShippingPage />} />
+              <Route path="/support/returns" element={<ReturnsPage />} />
+              <Route path="/support/faq" element={<FAQPage />} />
+              <Route path="/support/track" element={<TrackPage />} />
+              {/* Légal */}
+              <Route path="/legal/privacy" element={<PrivacyPage />} />
+              <Route path="/legal/terms" element={<TermsPage />} />
+              <Route path="/legal/cookies" element={<CookiesPage />} />
               <Route path="*" element={<Home />} />
             </Routes>
             <Footer />
