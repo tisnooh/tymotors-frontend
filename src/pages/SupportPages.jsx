@@ -371,9 +371,30 @@ export function CookiesPage() {
                 type="button"
                 disabled={locked}
                 onClick={() => !locked && setPrefs(p => ({ ...p, [key]: !p[key] }))}
-                className={`relative h-6 w-11 rounded-full transition-colors shrink-0 mt-0.5 ${prefs[key] ? 'bg-[#E10600]' : 'bg-[#232B3A]'} ${locked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                style={{
+                  position: 'relative',
+                  width: 44,
+                  height: 24,
+                  borderRadius: 12,
+                  border: 'none',
+                  background: prefs[key] ? '#E10600' : '#232B3A',
+                  cursor: locked ? 'not-allowed' : 'pointer',
+                  opacity: locked ? 0.6 : 1,
+                  flexShrink: 0,
+                  marginTop: 2,
+                  transition: 'background 0.2s',
+                }}
               >
-                <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${prefs[key] ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                <span style={{
+                  position: 'absolute',
+                  top: 2,
+                  left: prefs[key] ? 22 : 2,
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  background: '#fff',
+                  transition: 'left 0.2s',
+                }} />
               </button>
             </div>
           ))}
