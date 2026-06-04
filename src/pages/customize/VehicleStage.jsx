@@ -4,37 +4,31 @@ import { Sparkles } from 'lucide-react';
 import { HOTSPOTS } from './useCustomize';
 
 const MODEL_IMAGES = {
-  // BMW
   'bmw::M2': 'https://images.unsplash.com/photo-1764712097872-30f2ddc1afde?auto=format&fit=crop&w=2400&q=80',
   'bmw::M3': 'https://images.unsplash.com/photo-1768352725353-d498db8a1722?auto=format&fit=crop&w=2400&q=80',
   'bmw::M4': 'https://images.unsplash.com/photo-1741889838631-e8a1850854dc?auto=format&fit=crop&w=2400&q=80',
   'bmw::Série 3 (G20)': 'https://images.unsplash.com/photo-1750670951414-c71778b857f6?auto=format&fit=crop&w=2400&q=80',
   'bmw::X5': 'https://images.unsplash.com/photo-1635990215241-4d2805d729bb?auto=format&fit=crop&w=2400&q=80',
-  // Mercedes
   'mercedes-benz::CLA': 'https://images.unsplash.com/photo-1751156109342-9eb8ed818009?auto=format&fit=crop&w=2400&q=80',
   'mercedes-benz::Classe C': 'https://images.unsplash.com/photo-1765446607390-aa61ae857a50?auto=format&fit=crop&w=2400&q=80',
   'mercedes-benz::Classe E': 'https://images.unsplash.com/photo-1761231558029-ccb3f0830250?auto=format&fit=crop&w=2400&q=80',
   'mercedes-benz::GLC': 'https://images.unsplash.com/photo-1760137157471-7a8a435d8846?auto=format&fit=crop&w=2400&q=80',
   'mercedes-benz::AMG GT': 'https://images.unsplash.com/photo-1741014154802-ecd803813064?auto=format&fit=crop&w=2400&q=80',
-  // Audi
   'audi::A3': 'https://images.unsplash.com/photo-1546088626-8f9b425f61ca?auto=format&fit=crop&w=2400&q=80',
   'audi::S3': 'https://images.unsplash.com/photo-1748466245851-8ad81af47e41?auto=format&fit=crop&w=2400&q=80',
   'audi::RS3': 'https://images.unsplash.com/photo-1655126675552-2130fcc1e7df?auto=format&fit=crop&w=2400&q=80',
   'audi::A4': 'https://images.unsplash.com/photo-1539119838978-ce22e2fd0212?auto=format&fit=crop&w=2400&q=80',
   'audi::RS6': 'https://images.unsplash.com/photo-1762028160438-191f46f4d0f8?auto=format&fit=crop&w=2400&q=80',
-  // Porsche
   'porsche::911': 'https://images.unsplash.com/photo-1614244788272-f6dcdfd8df9f?auto=format&fit=crop&w=2400&q=80',
   'porsche::Cayman': 'https://images.unsplash.com/photo-1699325413806-48286e94351c?auto=format&fit=crop&w=2400&q=80',
   'porsche::Boxster': 'https://images.unsplash.com/photo-1750097296925-cbe35257d0f1?auto=format&fit=crop&w=2400&q=80',
   'porsche::Macan': 'https://images.unsplash.com/photo-1744618146254-b24cf8bda7df?auto=format&fit=crop&w=2400&q=80',
   'porsche::Cayenne': 'https://images.unsplash.com/photo-1762120516501-bc1229824b4d?auto=format&fit=crop&w=2400&q=80',
-  // Volkswagen
   'volkswagen::Golf GTI': 'https://images.unsplash.com/photo-1748466245947-bb2e22e758ed?auto=format&fit=crop&w=2400&q=80',
   'volkswagen::Golf R': 'https://images.unsplash.com/photo-1749417483088-9ed77c3c3e15?auto=format&fit=crop&w=2400&q=80',
   'volkswagen::Polo GTI': 'https://images.unsplash.com/photo-1630485077137-d847400ed360?auto=format&fit=crop&w=2400&q=80',
   'volkswagen::Tiguan': 'https://images.unsplash.com/photo-1760713173223-59ef015ad368?auto=format&fit=crop&w=2400&q=80',
   'volkswagen::Passat': 'https://images.unsplash.com/photo-1762028159329-4d1f3f8e84f6?auto=format&fit=crop&w=2400&q=80',
-  // Toyota
   'toyota::GR Yaris': 'https://images.unsplash.com/photo-1748939238043-403668614be9?auto=format&fit=crop&w=2400&q=80',
   'toyota::GR Supra': 'https://images.unsplash.com/photo-1752560904748-390f9fa28bdb?auto=format&fit=crop&w=2400&q=80',
   'toyota::Corolla': 'https://images.unsplash.com/photo-1742445135930-076c6105ce7d?auto=format&fit=crop&w=2400&q=80',
@@ -52,15 +46,21 @@ const BRAND_FALLBACK = {
   'default': 'https://images.unsplash.com/photo-1634673970798-a15ae56f6c65?auto=format&fit=crop&w=2400&q=90',
 };
 
-function getImage(brand, model) {
-  if (brand && model) {
-    const key = `${brand}::${model}`;
-    if (MODEL_IMAGES[key]) return MODEL_IMAGES[key];
-  }
+const HOTSPOT_IMAGES = {
+  front: 'https://images.unsplash.com/photo-1605283176568-9b41fde3eba3?auto=format&fit=crop&w=2400&q=80',
+  lighting: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2400&q=80',
+  rear: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2400&q=80',
+  interior: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=2400&q=80',
+  technology: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2400&q=80',
+};
+
+function getImage(brand, model, activeHotspot) {
+  if (activeHotspot && HOTSPOT_IMAGES[activeHotspot]) return HOTSPOT_IMAGES[activeHotspot];
+  if (brand && model && MODEL_IMAGES[`${brand}::${model}`]) return MODEL_IMAGES[`${brand}::${model}`];
   return BRAND_FALLBACK[brand] || BRAND_FALLBACK['default'];
 }
 
-function Hotspot({ hotspot, onClick, disabled }) {
+function Hotspot({ hotspot, onClick, disabled, isActive }) {
   return (
     <button
       type="button"
@@ -68,7 +68,14 @@ function Hotspot({ hotspot, onClick, disabled }) {
       onClick={() => onClick(hotspot.id)}
       disabled={disabled}
       className="ty-hotspot"
-      style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%`, opacity: disabled ? 0.35 : 1 }}
+      style={{
+        left: `${hotspot.x}%`,
+        top: `${hotspot.y}%`,
+        opacity: disabled ? 0.35 : 1,
+        transform: isActive ? 'translate(-50%, -50%) scale(1.4)' : 'translate(-50%, -50%) scale(1)',
+        transition: 'transform 0.2s ease',
+        boxShadow: isActive ? '0 0 0 4px rgba(225,6,0,0.4)' : 'none',
+      }}
       aria-label={hotspot.label}
     >
       <span className="sr-only">{hotspot.label}</span>
@@ -87,10 +94,10 @@ function CornerBrackets() {
   );
 }
 
-export function VehicleStage({ brand, model, onHotspotClick }) {
+export function VehicleStage({ brand, model, onHotspotClick, activeHotspot }) {
   const { t } = useTranslation();
   const brandSelected = Boolean(brand);
-  const targetImg = getImage(brand, model);
+  const targetImg = getImage(brand, model, activeHotspot);
 
   const [imgs, setImgs] = useState([{ src: targetImg, id: 0 }]);
   const [active, setActive] = useState(0);
@@ -99,8 +106,7 @@ export function VehicleStage({ brand, model, onHotspotClick }) {
     setImgs(prev => {
       const last = prev[prev.length - 1];
       if (last.src === targetImg) return prev;
-      const newId = last.id + 1;
-      return [...prev, { src: targetImg, id: newId }];
+      return [...prev, { src: targetImg, id: last.id + 1 }];
     });
   }, [targetImg]);
 
@@ -125,7 +131,7 @@ export function VehicleStage({ brand, model, onHotspotClick }) {
             className="absolute inset-0 h-full w-full object-cover"
             style={{
               opacity: id === active ? 0.75 : 0,
-              transition: 'opacity 0.6s cubic-bezier(0.4,0,0.2,1)',
+              transition: 'opacity 0.5s cubic-bezier(0.4,0,0.2,1)',
             }}
           />
         ))}
@@ -137,11 +143,20 @@ export function VehicleStage({ brand, model, onHotspotClick }) {
           <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono">
             <Sparkles className="h-3 w-3" />
             {brand.toUpperCase()}{model ? ` · ${model}` : ''}
+            {activeHotspot && (
+              <span className="ml-2 opacity-70">· {t(`customize.hotspots.${activeHotspot}`)}</span>
+            )}
           </div>
         )}
 
         {HOTSPOTS.map((h) => (
-          <Hotspot key={h.id} hotspot={h} onClick={onHotspotClick} disabled={!brandSelected} />
+          <Hotspot
+            key={h.id}
+            hotspot={h}
+            onClick={onHotspotClick}
+            disabled={!brandSelected}
+            isActive={activeHotspot === h.id}
+          />
         ))}
 
         {!brandSelected && (
@@ -152,12 +167,23 @@ export function VehicleStage({ brand, model, onHotspotClick }) {
           </div>
         )}
       </div>
+
       <div className="px-4 py-3 border-t border-[#151A23] flex flex-wrap gap-3 text-xs text-ty-textMid">
         {HOTSPOTS.map((h) => (
-          <span key={h.id} className="inline-flex items-center gap-2 font-mono uppercase tracking-[0.22em]">
-            <span className="h-2 w-2 rounded-full bg-[#E10600]" />
+          <button
+            key={h.id}
+            type="button"
+            disabled={!brandSelected}
+            onClick={() => onHotspotClick(h.id)}
+            className="inline-flex items-center gap-2 font-mono uppercase tracking-[0.22em] disabled:opacity-40 hover:text-white transition-colors"
+            style={{ color: activeHotspot === h.id ? '#E10600' : undefined }}
+          >
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ background: activeHotspot === h.id ? '#E10600' : '#E10600', opacity: activeHotspot === h.id ? 1 : 0.5 }}
+            />
             {t(`customize.hotspots.${h.id}`)}
-          </span>
+          </button>
         ))}
       </div>
     </div>

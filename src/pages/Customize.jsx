@@ -74,7 +74,7 @@ export default function Customize() {
           </SelectCard>
         </div>
 
-        <VehicleStage brand={brand} model={model} onHotspotClick={handleHotspotClick} />
+        <VehicleStage brand={brand} model={model} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} />
 
         <RecommendedDrawer
           activeHotspot={activeHotspot}
