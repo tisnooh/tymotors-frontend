@@ -27,10 +27,10 @@
     "cta_secondary": "Personnaliser Votre Véhicule",
     "scroll": "Défiler",
     "telemetry": {
-      "hp": "+18 CH AJOUTÉS",
-      "weight": "-12% MASSE NON SUSPENDUE",
-      "downforce": "+22% APPUI ARRIÈRE"
-    }
+  "hp": "+500 PIÈCES DISPONIBLES",
+  "weight": "+6 MARQUES PERFORMANCE",
+  "downforce": "100% PASSION AUTOMOBILE"
+}
   },
   "brands": {
     "eyebrow": "CONSTRUIT POUR",
