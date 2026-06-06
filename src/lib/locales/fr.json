@@ -2,11 +2,11 @@
   "nav": {
     "shop_all": "Boutique",
     "performance": "Performance",
-    "interior": "Int\u00e9rieur",
+    "interior": "Intérieur",
     "technology": "Technologie",
     "brands": "Marques",
     "customize": "Personnaliser",
-    "customize_long": "Personnaliser Votre V\u00e9hicule",
+    "customize_long": "Personnaliser Votre Véhicule",
     "shop_now": "Acheter",
     "search": "Rechercher",
     "account": "Compte",
@@ -16,92 +16,130 @@
     "close": "Fermer"
   },
   "loader": {
-    "tagline": "Performance. Technologie. Identit\u00e9."
+    "tagline": "Performance. Technologie. Identité."
   },
   "hero": {
     "eyebrow": "TYMotors // Collection 2026",
     "headline_1": "Transformez",
-    "headline_2": "Votre V\u00e9hicule",
-    "sub": "Pi\u00e8ces de tuning premium et technologie automobile pour BMW, Mercedes-Benz, Audi, Porsche, Volkswagen et Toyota.",
-    "cta_primary": "D\u00e9couvrir les Produits",
-    "cta_secondary": "Personnaliser Votre V\u00e9hicule",
-    "scroll": "D\u00e9filer",
+    "headline_2": "Votre Véhicule",
+    "sub": "Pièces de tuning premium et technologie automobile pour BMW, Mercedes-Benz, Audi, Porsche, Volkswagen et Toyota.",
+    "cta_primary": "Découvrir les Produits",
+    "cta_secondary": "Personnaliser Votre Véhicule",
+    "scroll": "Défiler",
     "telemetry": {
-      "hp": "+18 CH AJOUT\u00c9S",
+      "hp": "+18 CH AJOUTÉS",
       "weight": "-12% MASSE NON SUSPENDUE",
-      "downforce": "+22% APPUI ARRI\u00c8RE"
+      "downforce": "+22% APPUI ARRIÈRE"
     }
   },
   "brands": {
     "eyebrow": "CONSTRUIT POUR",
-    "title": "Six plateformes l\u00e9gendaires.",
-    "sub": "Des ajustements con\u00e7us pour les propri\u00e9taires les plus exigeants.",
-    "explore": "D\u00e9couvrir"
+    "title": "Six plateformes légendaires.",
+    "sub": "Des ajustements conçus pour les propriétaires les plus exigeants.",
+    "explore": "Découvrir"
   },
   "story": {
-    "eyebrow": "AU C\u0152UR DE LA MACHINE",
-    "title": "Chaque d\u00e9tail. Ing\u00e9ni\u00e9.",
+    "eyebrow": "AU CŒUR DE LA MACHINE",
+    "title": "Chaque Pièce. Une Transformation.",
     "beats": [
-      { "title": "Phares Sculpt\u00e9s", "desc": "Matrices LED align\u00e9es au laser pour une signature nocturne unique." },
-      { "title": "Carbone Pos\u00e9 \u00e0 la Main", "desc": "Fibre de carbone pr\u00e9-impr\u00e9gn\u00e9e, vernis qualit\u00e9 UV." },
-      { "title": "Calandres Performance", "desc": "Prises d\u2019air optimis\u00e9es pour le refroidissement et le design." },
-      { "title": "Jantes Forg\u00e9es", "desc": "Construction monobloc l\u00e9g\u00e8re pour une r\u00e9ponse plus pr\u00e9cise." },
-      { "title": "\u00c9chappements Titane", "desc": "Son race, homologu\u00e9 ECE pour un usage quotidien." },
-      { "title": "Cockpits Num\u00e9riques", "desc": "Tableaux de bord AMOLED courbes avec t\u00e9l\u00e9m\u00e9trie custom." }
+      {
+        "title": "Phares LED Premium",
+        "desc": "Éclairage moderne, visibilité renforcée et design agressif."
+      },
+      {
+        "title": "Pièces Carbone",
+        "desc": "Finition haut de gamme pour un look sportif exclusif."
+      },
+      {
+        "title": "Calandres Sport",
+        "desc": "Une face avant plus agressive et plus distinctive."
+      },
+      {
+        "title": "Jantes Performance",
+        "desc": "Style, légèreté et présence sur la route."
+      },
+      {
+        "title": "Échappements Sport",
+        "desc": "Sonorité sportive et finition premium."
+      },
+      {
+        "title": "Cockpits Digitaux",
+        "desc": "Technologie moderne inspirée des véhicules récents."
+      }
     ]
   },
   "categories": {
     "eyebrow": "TROIS DOMAINES",
-    "title": "Performance. Int\u00e9rieur. Technologie.",
-    "sub": "Catalogues s\u00e9lectionn\u00e9s pour votre fa\u00e7on de conduire.",
-    "explore": "D\u00e9couvrir"
+    "title": "Extérieur. Intérieur. Éclairage.",
+    "sub": "Catalogues sélectionnés pour votre façon de conduire.",
+    "explore": "Découvrir",
+    "items": [
+      {
+        "num": "01",
+        "label": "EXTÉRIEUR",
+        "title": "Style Sans Compromis.",
+        "desc": "Calandres, spoilers et kits carrosserie pour transformer votre véhicule."
+      },
+      {
+        "num": "02",
+        "label": "INTÉRIEUR",
+        "title": "Cockpit Modernisé.",
+        "desc": "Écrans CarPlay, tableaux de bord digitaux et accessoires premium."
+      },
+      {
+        "num": "03",
+        "label": "ÉCLAIRAGE",
+        "title": "Visibilité Réinventée.",
+        "desc": "Projecteurs LED, feux dynamiques et signatures lumineuses modernes."
+      }
+    ]
   },
   "featured": {
     "eyebrow": "COLLECTION SIGNATURE",
-    "title": "Pi\u00e8ces en Vedette.",
-    "sub": "S\u00e9lection \u00e9diteur des meilleures upgrades TYMotors.",
+    "title": "Pièces en Vedette.",
+    "sub": "Sélection éditeur des meilleures upgrades TYMotors.",
     "view_all": "Voir tous les produits"
   },
   "before_after": {
     "eyebrow": "TRANSFORMATIONS",
-    "title": "De stock \u00e0 spectaculaire.",
-    "sub": "Glissez pour r\u00e9v\u00e9ler une transformation TYMotors compl\u00e8te.",
+    "title": "De stock à spectaculaire.",
+    "sub": "Glissez pour révéler une transformation TYMotors complète.",
     "before": "Avant",
-    "after": "Apr\u00e8s"
+    "after": "Après"
   },
   "community": {
-    "eyebrow": "UNIVERS PROPRI\u00c9TAIRES",
-    "title": "Construit par des passionn\u00e9s. Aim\u00e9 partout.",
-    "sub": "Builds r\u00e9els de la communaut\u00e9 TYMotors."
+    "eyebrow": "UNIVERS TYMOTORS",
+    "title": "Des milliers de passionnés. Une même vision.",
+    "sub": "Découvrez les plus belles préparations et inspirations de la communauté automobile."
   },
   "cta": {
-    "eyebrow": "PR\u00caT ?",
-    "title": "Construit Pour les Passionn\u00e9s.",
-    "sub": "Livraison UE offerte d\u00e8s 350\u20ac. Garantie 2 ans. Support propri\u00e9taire.",
-    "button": "D\u00e9couvrir TYMotors"
+    "eyebrow": "PRÊT ?",
+    "title": "Construit Pour les Passionnés.",
+    "sub": "Livraison UE offerte dès 350€. Garantie 2 ans. Support propriétaire.",
+    "button": "Découvrir TYMotors"
   },
   "footer": {
-    "brand_desc": "Tuning premium, modernisation et technologie automobile pour les passionn\u00e9s.",
+    "brand_desc": "Tuning premium, modernisation et technologie automobile pour les passionnés.",
     "shop": "Boutique",
     "brands": "Marques",
     "support": "Support",
-    "company": "Soci\u00e9t\u00e9",
-    "newsletter_title": "Restez inform\u00e9",
+    "company": "Société",
+    "newsletter_title": "Restez informé",
     "newsletter_sub": "Drops, lancements et builds pros directement par mail.",
     "newsletter_placeholder": "votre@email.com",
-    "newsletter_button": "S\u2019inscrire",
-    "copyright": "\u00A9 2026 TYMotors. Tous droits r\u00e9serv\u00e9s.",
+    "newsletter_button": "S’inscrire",
+    "copyright": "© 2026 TYMotors. Tous droits réservés.",
     "links": {
       "shop_all": "Boutique",
-      "new_arrivals": "Nouveaut\u00e9s",
+      "new_arrivals": "Nouveautés",
       "best_sellers": "Best Sellers",
       "contact": "Contact",
       "shipping": "Livraison",
       "returns": "Retours",
       "faq": "FAQ",
-      "compatibility": "Guide Compatibilit\u00e9",
+      "compatibility": "Guide Compatibilité",
       "track": "Suivi de commande",
-      "privacy": "Confidentialit\u00e9",
+      "privacy": "Confidentialité",
       "terms": "Conditions",
       "cookies": "Cookies"
     }
@@ -113,40 +151,40 @@
     "sort": "Trier",
     "price": "Prix",
     "brand": "Marque",
-    "category": "Cat\u00e9gorie",
+    "category": "Catégorie",
     "all": "Tous",
-    "results": "r\u00e9sultats",
+    "results": "résultats",
     "empty": "Aucun produit ne correspond aux filtres.",
-    "reset": "R\u00e9initialiser"
+    "reset": "Réinitialiser"
   },
   "product": {
     "add_to_cart": "Ajouter au Panier",
     "buy_now": "Acheter Maintenant",
     "wishlist": "Favoris",
     "sku": "SKU",
-    "compatibility": "Compatibilit\u00e9",
-    "specs": "Sp\u00e9cifications",
+    "compatibility": "Compatibilité",
+    "specs": "Spécifications",
     "description": "Description",
     "compatible_with": "Compatible avec",
     "in_stock": "En Stock",
     "price": "Prix",
     "related": "Vous aimerez aussi",
-    "loading": "Chargement\u2026"
+    "loading": "Chargement…"
   },
   "customize": {
-    "title": "Personnalisez Votre V\u00e9hicule",
-    "sub": "S\u00e9lectionnez votre v\u00e9hicule, puis touchez une zone pour d\u00e9couvrir les upgrades compatibles.",
+    "title": "Personnalisez Votre Véhicule",
+    "sub": "Sélectionnez votre véhicule, puis touchez une zone pour découvrir les upgrades compatibles.",
     "select_brand": "Marque",
-    "select_model": "Mod\u00e8le",
-    "select_generation": "G\u00e9n\u00e9ration",
+    "select_model": "Modèle",
+    "select_generation": "Génération",
     "hotspots": {
       "front": "Avant",
-      "rear": "Arri\u00e8re",
-      "interior": "Int\u00e9rieur",
-      "lighting": "\u00c9clairage",
+      "rear": "Arrière",
+      "interior": "Intérieur",
+      "lighting": "Éclairage",
       "technology": "Technologie"
     },
-    "recommended": "Upgrades recommand\u00e9s",
+    "recommended": "Upgrades recommandés",
     "add_to_cart": "Ajouter au Panier",
     "not_compatible": "Aucun produit pour cette combinaison."
   },
@@ -156,11 +194,11 @@
     "continue": "Continuer les achats",
     "subtotal": "Sous-total",
     "shipping": "Livraison",
-    "shipping_free": "Offerte d\u00e8s 350\u20ac",
+    "shipping_free": "Offerte dès 350€",
     "total": "Total",
     "checkout": "Passer Commande",
     "remove": "Retirer",
-    "quantity": "Quantit\u00e9"
+    "quantity": "Quantité"
   },
   "wishlist": {
     "title": "Vos Favoris",
@@ -169,7 +207,7 @@
   },
   "common": {
     "learn_more": "En savoir plus",
-    "explore": "D\u00e9couvrir",
-    "loading": "Chargement\u2026"
+    "explore": "Découvrir",
+    "loading": "Chargement…"
   }
 }
