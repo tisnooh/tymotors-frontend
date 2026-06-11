@@ -13,7 +13,9 @@ export default function Home() {
     <main data-testid="page-home">
       <HeroSection />
       <BrandsSection />
-      <StorytellingSection />
+      <div className="overflow-hidden">
+        <StorytellingSection />
+      </div>
       <CategoriesSection />
       <FeaturedProducts />
       <BeforeAfterSlider />
