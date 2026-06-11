@@ -41,6 +41,10 @@ export function StorytellingSection() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
 
+    // Sur mobile, le pin:true de GSAP crée un pin-spacer qui se place mal avec Lenis
+    // On désactive le pin sur mobile (< 768px)
+    const isMobile = window.innerWidth < 768;
+
     const ctx = gsap.context(() => {
       const totalBeats = imagesRef.current.length;
       imagesRef.current.forEach((img, i) => {
@@ -56,8 +60,9 @@ export function StorytellingSection() {
           start: 'top top',
           end: `+=${totalBeats * 55}%`,
           scrub: true,
-          pin: true,
-          anticipatePin: 1,
+          pin: !isMobile,
+          anticipatePin: isMobile ? 0 : 1,
+          pinSpacing: !isMobile,
         },
       });
 
