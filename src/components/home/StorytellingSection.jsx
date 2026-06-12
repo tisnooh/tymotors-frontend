@@ -25,7 +25,7 @@ function CornerBrackets() {
   );
 }
 
-// Version desktop : animée avec GSAP pin
+// Desktop : GSAP pin animation
 function StorytellingDesktop({ beats, t }) {
   const sectionRef = useRef(null);
   const imagesRef = useRef([]);
@@ -106,37 +106,71 @@ function StorytellingDesktop({ beats, t }) {
   );
 }
 
-// Version mobile : cards empilées, scroll naturel
+// Mobile : scroll-snap natif iOS, fade CSS entre cards
 function StorytellingMobile({ beats, t }) {
   return (
-    <section data-testid="scroll-story-section" className="bg-[#050608]">
+    <section
+      data-testid="scroll-story-section"
+      style={{
+        height: '100svh',
+        overflowY: 'scroll',
+        scrollSnapType: 'y mandatory',
+        scrollBehavior: 'smooth',
+      }}
+    >
       {beats.map((beat, i) => (
-        <div key={beat.title} className="relative h-[100svh] w-full overflow-hidden">
-          <img src={BEAT_IMAGES[i]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div
+          key={beat.title}
+          style={{
+            scrollSnapAlign: 'start',
+            scrollSnapStop: 'always',
+          }}
+          className="relative h-[100svh] w-full overflow-hidden bg-[#050608]"
+        >
+          <img
+            src={BEAT_IMAGES[i]}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ animation: 'storyFadeIn 0.8s ease forwards' }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-[#050608]/85" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
           <div className="pointer-events-none absolute inset-6 border border-[#F2C94C]/15 rounded-3xl" />
           <CornerBrackets />
-          <div className="relative h-full w-full ty-container flex flex-col justify-end pb-24">
+          <div className="relative h-full w-full px-6 flex flex-col justify-end pb-20">
             {i === 0 && (
               <>
-                <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
+                <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2 mb-3">
                   <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
                 </p>
-                <h2 className="mt-3 ty-display text-white text-3xl mb-8">{t('story.title')}</h2>
+                <h2 className="ty-display text-white text-3xl mb-6">{t('story.title')}</h2>
               </>
             )}
-            {i > 0 && <div className="mb-8" />}
             <div className="flex items-start gap-4">
               <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
                 0{i + 1}
               </span>
               <div>
                 <h3 className="text-white ty-display text-xl">{beat.title}</h3>
-                <p className="mt-2 text-sm text-ty-textMid max-w-xl">{beat.desc}</p>
+                <p className="mt-2 text-sm text-ty-textMid">{beat.desc}</p>
               </div>
             </div>
+            {/* Indicateur de progression */}
+            <div className="flex gap-1.5 mt-6">
+              {beats.map((_, j) => (
+                <div
+                  key={j}
+                  className={`h-px flex-1 ${j === i ? 'bg-[#F2C94C]' : 'bg-white/20'}`}
+                />
+              ))}
+            </div>
           </div>
+          <style>{`
+            @keyframes storyFadeIn {
+              from { opacity: 0; transform: scale(1.05); }
+              to   { opacity: 1; transform: scale(1); }
+            }
+          `}</style>
         </div>
       ))}
     </section>
