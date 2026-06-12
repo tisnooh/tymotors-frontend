@@ -25,9 +25,8 @@ function CornerBrackets() {
   );
 }
 
-export function StorytellingSection() {
-  const { t } = useTranslation();
-  const beats = t('story.beats', { returnObjects: true });
+// Version desktop : animée avec GSAP pin
+function StorytellingDesktop({ beats, t }) {
   const sectionRef = useRef(null);
   const imagesRef = useRef([]);
   const beatsRef = useRef([]);
@@ -40,10 +39,6 @@ export function StorytellingSection() {
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
-
-    // Sur mobile, le pin:true de GSAP crée un pin-spacer qui se place mal avec Lenis
-    // On désactive le pin sur mobile (< 768px)
-    const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
       const totalBeats = imagesRef.current.length;
@@ -60,9 +55,8 @@ export function StorytellingSection() {
           start: 'top top',
           end: `+=${totalBeats * 55}%`,
           scrub: true,
-          pin: !isMobile,
-          anticipatePin: isMobile ? 0 : 1,
-          pinSpacing: !isMobile,
+          pin: true,
+          anticipatePin: 1,
         },
       });
 
@@ -85,15 +79,14 @@ export function StorytellingSection() {
       ))}
       <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-[#050608]/85" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
-      <div className="pointer-events-none absolute inset-6 md:inset-10 border border-[#F2C94C]/15 rounded-3xl" />
+      <div className="pointer-events-none absolute inset-10 border border-[#F2C94C]/15 rounded-3xl" />
       <CornerBrackets />
-
       <div className="relative h-full w-full ty-container flex flex-col justify-end pb-24">
         <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
           <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
         </p>
-        <h2 className="mt-3 ty-display text-white text-3xl md:text-6xl mb-8">{t('story.title')}</h2>
-        <div className="relative h-44 md:h-32">
+        <h2 className="mt-3 ty-display text-white text-6xl mb-8">{t('story.title')}</h2>
+        <div className="relative h-32">
           {beats.map((beat, i) => (
             <div key={beat.title} ref={addBeat} className="absolute inset-0 max-w-2xl">
               <div className="flex items-start gap-4">
@@ -101,8 +94,8 @@ export function StorytellingSection() {
                   0{i + 1}
                 </span>
                 <div>
-                  <h3 className="text-white ty-display text-xl md:text-3xl">{beat.title}</h3>
-                  <p className="mt-2 text-sm md:text-base text-ty-textMid max-w-xl">{beat.desc}</p>
+                  <h3 className="text-white ty-display text-3xl">{beat.title}</h3>
+                  <p className="mt-2 text-base text-ty-textMid max-w-xl">{beat.desc}</p>
                 </div>
               </div>
             </div>
@@ -111,4 +104,51 @@ export function StorytellingSection() {
       </div>
     </section>
   );
+}
+
+// Version mobile : cards empilées, scroll naturel
+function StorytellingMobile({ beats, t }) {
+  return (
+    <section data-testid="scroll-story-section" className="bg-[#050608]">
+      {beats.map((beat, i) => (
+        <div key={beat.title} className="relative h-[100svh] w-full overflow-hidden">
+          <img src={BEAT_IMAGES[i]} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-[#050608]/85" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-6 border border-[#F2C94C]/15 rounded-3xl" />
+          <CornerBrackets />
+          <div className="relative h-full w-full ty-container flex flex-col justify-end pb-24">
+            {i === 0 && (
+              <>
+                <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
+                  <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
+                </p>
+                <h2 className="mt-3 ty-display text-white text-3xl mb-8">{t('story.title')}</h2>
+              </>
+            )}
+            {i > 0 && <div className="mb-8" />}
+            <div className="flex items-start gap-4">
+              <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
+                0{i + 1}
+              </span>
+              <div>
+                <h3 className="text-white ty-display text-xl">{beat.title}</h3>
+                <p className="mt-2 text-sm text-ty-textMid max-w-xl">{beat.desc}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+export function StorytellingSection() {
+  const { t } = useTranslation();
+  const beats = t('story.beats', { returnObjects: true });
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  return isMobile
+    ? <StorytellingMobile beats={beats} t={t} />
+    : <StorytellingDesktop beats={beats} t={t} />;
 }
