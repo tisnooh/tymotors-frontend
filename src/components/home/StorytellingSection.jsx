@@ -25,9 +25,8 @@ function CornerBrackets() {
   );
 }
 
-export function StorytellingSection() {
-  const { t } = useTranslation();
-  const beats = t('story.beats', { returnObjects: true });
+// MOBILE : version originale pin:true
+function StorytellingMobile({ beats, t }) {
   const sectionRef = useRef(null);
   const imagesRef = useRef([]);
   const beatsRef = useRef([]);
@@ -80,14 +79,14 @@ export function StorytellingSection() {
       ))}
       <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-[#050608]/85" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
-      <div className="pointer-events-none absolute inset-6 md:inset-10 border border-[#F2C94C]/15 rounded-3xl" />
+      <div className="pointer-events-none absolute inset-6 border border-[#F2C94C]/15 rounded-3xl" />
       <CornerBrackets />
       <div className="relative h-full w-full ty-container flex flex-col justify-end pb-24">
         <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
           <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
         </p>
-        <h2 className="mt-3 ty-display text-white text-3xl md:text-6xl mb-8">{t('story.title')}</h2>
-        <div className="relative h-44 md:h-32">
+        <h2 className="mt-3 ty-display text-white text-3xl mb-8">{t('story.title')}</h2>
+        <div className="relative h-44">
           {beats.map((beat, i) => (
             <div key={beat.title} ref={addBeat} className="absolute inset-0 max-w-2xl">
               <div className="flex items-start gap-4">
@@ -95,8 +94,8 @@ export function StorytellingSection() {
                   0{i + 1}
                 </span>
                 <div>
-                  <h3 className="text-white ty-display text-xl md:text-3xl">{beat.title}</h3>
-                  <p className="mt-2 text-sm md:text-base text-ty-textMid max-w-xl">{beat.desc}</p>
+                  <h3 className="text-white ty-display text-xl">{beat.title}</h3>
+                  <p className="mt-2 text-sm text-ty-textMid max-w-xl">{beat.desc}</p>
                 </div>
               </div>
             </div>
@@ -105,4 +104,102 @@ export function StorytellingSection() {
       </div>
     </section>
   );
+}
+
+// DESKTOP : layout 2 colonnes — image à droite sticky, beats à gauche en scroll
+function StorytellingDesktop({ beats, t }) {
+  const itemsRef = useRef([]);
+  itemsRef.current = [];
+  const addItem = (el) => el && !itemsRef.current.includes(el) && itemsRef.current.push(el);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return undefined;
+
+    const ctx = gsap.context(() => {
+      itemsRef.current.forEach((el) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0, duration: 0.8,
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 80%',
+              end: 'top 40%',
+              scrub: false,
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section data-testid="scroll-story-section" className="bg-[#050608] py-32">
+      <div className="ty-container">
+        {/* Header */}
+        <div className="mb-20">
+          <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2 mb-4">
+            <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
+          </p>
+          <h2 className="ty-display text-white text-6xl">{t('story.title')}</h2>
+        </div>
+
+        {/* Grid : beats à gauche, image à droite */}
+        <div className="grid grid-cols-2 gap-24 items-start">
+          {/* Colonne gauche : liste des beats */}
+          <div className="flex flex-col gap-16">
+            {beats.map((beat, i) => (
+              <div key={beat.title} ref={addItem} className="flex items-start gap-6 opacity-0">
+                <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs mt-1">
+                  0{i + 1}
+                </span>
+                <div className="border-t border-white/10 pt-4 flex-1">
+                  <h3 className="text-white ty-display text-2xl mb-2">{beat.title}</h3>
+                  <p className="text-ty-textMid text-base">{beat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Colonne droite : image sticky */}
+          <div className="sticky top-24 h-[70vh] overflow-hidden rounded-2xl border border-[#F2C94C]/15">
+            <div className="pointer-events-none absolute inset-4 z-10 border border-[#F2C94C]/15 rounded-xl" />
+            <CornerBrackets />
+            {BEAT_IMAGES.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+                style={{ opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0 }}
+              />
+            ))}
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050608]/60 via-transparent to-transparent" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function StorytellingSection() {
+  const { t } = useTranslation();
+  const beats = t('story.beats', { returnObjects: true });
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : true
+  );
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  return isMobile
+    ? <StorytellingMobile beats={beats} t={t} />
+    : <StorytellingDesktop beats={beats} t={t} />;
 }
