@@ -123,6 +123,22 @@ function StorytellingDesktop({ beats, t }) {
     return () => el.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Convertit le scroll vertical de la molette en scroll horizontal
+  // (Lenis intercepte le wheel, donc on agit directement sur le scrollLeft)
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      // Si l'utilisateur scrolle verticalement sur le track, on traduit en horizontal
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
   const goTo = (i) => {
     const el = trackRef.current;
     if (!el) return;
