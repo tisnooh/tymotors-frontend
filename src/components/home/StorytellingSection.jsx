@@ -106,86 +106,110 @@ function StorytellingMobile({ beats, t }) {
   );
 }
 
-// DESKTOP : horizontal scroll pinné — cards défilent latéralement
+// DESKTOP : scroll horizontal CSS natif, zéro conflit Lenis
 function StorytellingDesktop({ beats, t }) {
-  const wrapperRef = useRef(null);
+  const [active, setActive] = useState(0);
   const trackRef = useRef(null);
 
+  // Écoute le scroll horizontal pour mettre à jour l'index actif
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return undefined;
-
-    const ctx = gsap.context(() => {
-      const track = trackRef.current;
-      const totalWidth = track.scrollWidth - window.innerWidth;
-
-      gsap.to(track, {
-        x: -totalWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: 'top top',
-          end: `+=${totalWidth}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
-    }, wrapperRef);
-
-    return () => ctx.revert();
+    const el = trackRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const idx = Math.round(el.scrollLeft / el.clientWidth);
+      setActive(idx);
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
   }, []);
 
-  return (
-    <div ref={wrapperRef} data-testid="scroll-story-section" className="overflow-hidden bg-[#050608]">
-      <div ref={trackRef} className="flex h-screen will-change-transform">
+  const goTo = (i) => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
+  };
 
-        {/* Première card : titre + beat 01 */}
-        <div className="relative shrink-0 w-screen h-screen overflow-hidden">
-          <img src={BEAT_IMAGES[0]} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050608]/80 via-transparent to-transparent" />
-          <CornerBrackets />
-          <div className="relative h-full flex flex-col justify-end pb-24 pl-20 max-w-2xl">
-            <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2 mb-4">
-              <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
-            </p>
-            <h2 className="ty-display text-white text-6xl mb-10">{t('story.title')}</h2>
-            <div className="flex items-start gap-4">
-              <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
-                01
-              </span>
-              <div>
-                <h3 className="text-white ty-display text-2xl">{beats[0]?.title}</h3>
-                <p className="mt-2 text-base text-ty-textMid">{beats[0]?.desc}</p>
-              </div>
-            </div>
+  return (
+    <section data-testid="scroll-story-section" className="bg-[#050608] relative">
+      {/* Header au-dessus */}
+      <div className="max-w-7xl mx-auto px-12 pt-20 pb-10">
+        <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2 mb-4">
+          <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
+        </p>
+        <div className="flex items-end justify-between">
+          <h2 className="ty-display text-white text-5xl xl:text-6xl">{t('story.title')}</h2>
+          {/* Dots navigation */}
+          <div className="flex gap-2 items-center pb-2">
+            {beats.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`transition-all duration-300 rounded-full ${active === i ? 'w-6 h-2 bg-[#E10600]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'}`}
+              />
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Cards 02 → 06 */}
-        {beats.slice(1).map((beat, i) => (
-          <div key={beat.title} className="relative shrink-0 w-screen h-screen overflow-hidden">
-            <img src={BEAT_IMAGES[i + 1]} alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/90 via-[#050608]/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050608]/70 via-transparent to-transparent" />
+      {/* Track horizontal scroll-snap */}
+      <div
+        ref={trackRef}
+        className="flex overflow-x-auto"
+        style={{
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: 'smooth',
+          WebkitOverflowScrolling: 'touch',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        }}
+      >
+        <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+
+        {beats.map((beat, i) => (
+          <div
+            key={beat.title}
+            className="relative shrink-0 h-[70vh] mx-3 first:ml-12 last:mr-12 rounded-2xl overflow-hidden"
+            style={{
+              width: 'calc(40vw)',
+              scrollSnapAlign: 'start',
+            }}
+          >
+            <img
+              src={BEAT_IMAGES[i]}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/60 via-transparent to-transparent" />
             <CornerBrackets />
-            <div className="relative h-full flex flex-col justify-end pb-24 pl-20 max-w-xl">
-              <div className="flex items-start gap-4">
-                <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
-                  0{i + 2}
+            <div className="relative h-full flex flex-col justify-end p-8">
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs">
+                  0{i + 1}
                 </span>
                 <div>
-                  <h3 className="text-white ty-display text-3xl mb-2">{beat.title}</h3>
-                  <p className="text-base text-ty-textMid">{beat.desc}</p>
+                  <h3 className="text-white ty-display text-xl mb-1">{beat.title}</h3>
+                  <p className="text-sm text-ty-textMid">{beat.desc}</p>
                 </div>
               </div>
             </div>
           </div>
         ))}
-
       </div>
-    </div>
+
+      {/* Barre de progression */}
+      <div className="max-w-7xl mx-auto px-12 py-6">
+        <div className="flex gap-1">
+          {beats.map((_, i) => (
+            <div
+              key={i}
+              className="h-px flex-1 transition-colors duration-500"
+              style={{ background: i === active ? '#F2C94C' : 'rgba(255,255,255,0.15)' }}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
