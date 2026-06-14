@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -17,15 +17,15 @@ const BEAT_IMAGES = [
 function CornerBrackets() {
   return (
     <>
-      <div className="pointer-events-none absolute top-10 left-10 h-2 w-2 border-t border-l border-[#F2C94C]" />
-      <div className="pointer-events-none absolute top-10 right-10 h-2 w-2 border-t border-r border-[#F2C94C]" />
-      <div className="pointer-events-none absolute bottom-10 left-10 h-2 w-2 border-b border-l border-[#F2C94C]" />
-      <div className="pointer-events-none absolute bottom-10 right-10 h-2 w-2 border-b border-r border-[#F2C94C]" />
+      <div className="pointer-events-none absolute top-6 left-6 h-3 w-3 border-t-2 border-l-2 border-[#F2C94C]" />
+      <div className="pointer-events-none absolute top-6 right-6 h-3 w-3 border-t-2 border-r-2 border-[#F2C94C]" />
+      <div className="pointer-events-none absolute bottom-6 left-6 h-3 w-3 border-b-2 border-l-2 border-[#F2C94C]" />
+      <div className="pointer-events-none absolute bottom-6 right-6 h-3 w-3 border-b-2 border-r-2 border-[#F2C94C]" />
     </>
   );
 }
 
-// MOBILE : version originale pin:true
+// MOBILE : version originale pin:true — inchangée
 function StorytellingMobile({ beats, t }) {
   const sectionRef = useRef(null);
   const imagesRef = useRef([]);
@@ -106,80 +106,105 @@ function StorytellingMobile({ beats, t }) {
   );
 }
 
-// DESKTOP : layout 2 colonnes — image à droite sticky, beats à gauche en scroll
+// DESKTOP : image sticky à droite, beats scrollent à gauche avec GSAP reveal
 function StorytellingDesktop({ beats, t }) {
+  const containerRef = useRef(null);
+  const imageRef = useRef(null);
   const itemsRef = useRef([]);
   itemsRef.current = [];
   const addItem = (el) => el && !itemsRef.current.includes(el) && itemsRef.current.push(el);
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
 
     const ctx = gsap.context(() => {
-      itemsRef.current.forEach((el) => {
+      itemsRef.current.forEach((el, i) => {
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 60%',
+          onEnter: () => setActiveIndex(i),
+          onEnterBack: () => setActiveIndex(i),
+        });
+
         gsap.fromTo(el,
-          { opacity: 0, y: 40 },
+          { opacity: 0, x: -30 },
           {
-            opacity: 1, y: 0, duration: 0.8,
+            opacity: 1, x: 0, duration: 0.7, ease: 'power2.out',
             scrollTrigger: {
               trigger: el,
-              start: 'top 80%',
-              end: 'top 40%',
-              scrub: false,
+              start: 'top 75%',
               toggleActions: 'play none none reverse',
             },
           }
         );
       });
-    });
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section data-testid="scroll-story-section" className="bg-[#050608] py-32">
-      <div className="ty-container">
+    <section
+      ref={containerRef}
+      data-testid="scroll-story-section"
+      className="bg-[#050608] py-24"
+    >
+      <div className="max-w-7xl mx-auto px-8">
         {/* Header */}
-        <div className="mb-20">
+        <div className="mb-16">
           <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2 mb-4">
             <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
           </p>
-          <h2 className="ty-display text-white text-6xl">{t('story.title')}</h2>
+          <h2 className="ty-display text-white text-5xl xl:text-6xl">{t('story.title')}</h2>
         </div>
 
-        {/* Grid : beats à gauche, image à droite */}
-        <div className="grid grid-cols-2 gap-24 items-start">
-          {/* Colonne gauche : liste des beats */}
-          <div className="flex flex-col gap-16">
+        {/* Layout 2 colonnes */}
+        <div className="flex gap-16 items-start">
+
+          {/* Gauche : beats */}
+          <div className="flex-1 flex flex-col gap-12 py-8">
             {beats.map((beat, i) => (
-              <div key={beat.title} ref={addItem} className="flex items-start gap-6 opacity-0">
-                <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#E10600] text-white font-mono text-xs mt-1">
+              <div
+                key={beat.title}
+                ref={addItem}
+                style={{ opacity: 0 }}
+                className="flex items-start gap-5 cursor-default"
+              >
+                <span className={`shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full font-mono text-xs transition-colors duration-500 ${activeIndex === i ? 'bg-[#E10600] text-white' : 'bg-white/10 text-white/50'}`}>
                   0{i + 1}
                 </span>
-                <div className="border-t border-white/10 pt-4 flex-1">
-                  <h3 className="text-white ty-display text-2xl mb-2">{beat.title}</h3>
-                  <p className="text-ty-textMid text-base">{beat.desc}</p>
+                <div className={`border-t pt-3 flex-1 transition-colors duration-500 ${activeIndex === i ? 'border-[#F2C94C]/40' : 'border-white/10'}`}>
+                  <h3 className={`ty-display text-2xl mb-2 transition-colors duration-500 ${activeIndex === i ? 'text-white' : 'text-white/40'}`}>
+                    {beat.title}
+                  </h3>
+                  <p className={`text-sm transition-colors duration-500 ${activeIndex === i ? 'text-ty-textMid' : 'text-white/20'}`}>
+                    {beat.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Colonne droite : image sticky */}
-          <div className="sticky top-24 h-[70vh] overflow-hidden rounded-2xl border border-[#F2C94C]/15">
-            <div className="pointer-events-none absolute inset-4 z-10 border border-[#F2C94C]/15 rounded-xl" />
-            <CornerBrackets />
-            {BEAT_IMAGES.map((src, i) => (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
-                style={{ opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0 }}
-              />
-            ))}
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050608]/60 via-transparent to-transparent" />
+          {/* Droite : image sticky */}
+          <div className="w-[48%] sticky top-24">
+            <div ref={imageRef} className="relative h-[65vh] rounded-2xl overflow-hidden border border-[#F2C94C]/10">
+              <CornerBrackets />
+              {BEAT_IMAGES.map((src, i) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+                  style={{ opacity: activeIndex === i ? 1 : 0, zIndex: activeIndex === i ? 1 : 0 }}
+                />
+              ))}
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050608]/50 via-transparent to-transparent" />
+            </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -189,7 +214,7 @@ function StorytellingDesktop({ beats, t }) {
 export function StorytellingSection() {
   const { t } = useTranslation();
   const beats = t('story.beats', { returnObjects: true });
-  const [isMobile, setIsMobile] = React.useState(
+  const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < 768 : true
   );
 
