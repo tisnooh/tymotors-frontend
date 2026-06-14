@@ -41,13 +41,8 @@ export function StorytellingSection() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return undefined;
 
-    // ScrollTrigger.isTouch === 1 = mobile touch-only, === 2 = hybrid
-    // Sur touch, on désactive le pin pour éviter les conflits avec Lenis
-    const isTouch = ScrollTrigger.isTouch === 1;
-
     const ctx = gsap.context(() => {
       const totalBeats = imagesRef.current.length;
-
       imagesRef.current.forEach((img, i) => {
         gsap.set(img, i === 0 ? { autoAlpha: 1, scale: 1 } : { autoAlpha: 0, scale: 1.1 });
       });
@@ -61,11 +56,8 @@ export function StorytellingSection() {
           start: 'top top',
           end: `+=${totalBeats * 55}%`,
           scrub: true,
-          // Sur mobile touch : pas de pin, ScrollTrigger.isTouch le gère
-          pin: !isTouch,
-          anticipatePin: isTouch ? 0 : 1,
-          // Sur mobile : normalizeScroll évite les conflits Lenis/native
-          ...(isTouch && { normalizeScroll: true }),
+          pin: true,
+          anticipatePin: 1,
         },
       });
 
@@ -76,16 +68,11 @@ export function StorytellingSection() {
           .to(beatsRef.current[i], { autoAlpha: 1, y: 0, duration: 0.5 }, '<+0.15');
       }
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      data-testid="scroll-story-section"
-      className="relative h-[100svh] w-full overflow-hidden bg-[#050608]"
-    >
+    <section ref={sectionRef} data-testid="scroll-story-section" className="relative h-[100svh] w-full overflow-hidden bg-[#050608]">
       {BEAT_IMAGES.map((src) => (
         <div key={src} ref={addImage} className="absolute inset-0">
           <img src={src} alt="" className="h-full w-full object-cover" />
