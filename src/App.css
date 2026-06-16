@@ -143,3 +143,8 @@ html.lenis {
     font-size: 18px;
     z-index: 2;
 }
+
+/* Fix GSAP pin-spacer overflow on mobile */
+.pin-spacer {
+  overflow: hidden !important;
+}
