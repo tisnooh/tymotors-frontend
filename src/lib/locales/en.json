@@ -42,12 +42,12 @@
     "eyebrow": "INSIDE THE MACHINE",
     "title": "Every detail. Engineered.",
     "beats": [
-      { "title": "Sculpted Headlights", "desc": "Laser-aligned LED matrices for a signature presence at night." },
-      { "title": "Hand-laid Carbon", "desc": "Pre-preg carbon fiber finished with UV-grade lacquer." },
-      { "title": "Performance Grilles", "desc": "Aerodynamic intakes optimized for cooling and design." },
-      { "title": "Forged Wheels", "desc": "Lightweight monoblock construction for sharper response." },
-      { "title": "Titanium Exhausts", "desc": "Race-bred sound, ECE-approved for every-day driving." },
-      { "title": "Digital Cockpits", "desc": "Curved AMOLED dashboards with custom telemetry skins." }
+      { "title": "In-Car Technology", "desc": "CarPlay screens, digital cockpits and connected equipment to modernize your vehicle." },
+      { "title": "Performance Grilles", "desc": "A more aggressive front fascia inspired by the most sporting models." },
+      { "title": "Sport Steering Wheels", "desc": "Premium design, optimized grip and enhanced driving feel." },
+      { "title": "Active Sound", "desc": "A sporty exhaust note engineered to transform your driving experience." },
+      { "title": "Premium Accessories", "desc": "Dashcams, reversing cameras and equipment designed to improve every journey." },
+      { "title": "Sport Aerodynamics", "desc": "Spoilers, diffusers and exterior elements for a more dynamic and assertive style." }
     ]
   },
   "categories": {

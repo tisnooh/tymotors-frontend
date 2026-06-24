@@ -43,28 +43,28 @@
     "title": "Chaque Pièce. Une Transformation.",
     "beats": [
       {
-        "title": "Phares LED Premium",
-        "desc": "Éclairage moderne, visibilité renforcée et design agressif."
+        "title": "Technologie Embarquée",
+        "desc": "Écrans CarPlay, cockpits digitaux et équipements connectés pour moderniser votre véhicule."
       },
       {
-        "title": "Pièces Carbone",
-        "desc": "Finition haut de gamme pour un look sportif exclusif."
+        "title": "Calandres Performance",
+        "desc": "Une face avant plus agressive inspirée des modèles les plus sportifs."
       },
       {
-        "title": "Calandres Sport",
-        "desc": "Une face avant plus agressive et plus distinctive."
+        "title": "Volants Sport",
+        "desc": "Design premium, prise en main optimale et sensations renforcées."
       },
       {
-        "title": "Jantes Performance",
-        "desc": "Style, légèreté et présence sur la route."
+        "title": "Active Sound",
+        "desc": "Une sonorité sportive conçue pour transformer votre expérience de conduite."
       },
       {
-        "title": "Échappements Sport",
-        "desc": "Sonorité sportive et finition premium."
+        "title": "Accessoires Premium",
+        "desc": "Dashcams, caméras de recul et équipements conçus pour améliorer chaque trajet."
       },
       {
-        "title": "Cockpits Digitaux",
-        "desc": "Technologie moderne inspirée des véhicules récents."
+        "title": "Aérodynamisme Sport",
+        "desc": "Spoilers, diffuseurs et éléments extérieurs pour un style plus dynamique et affirmé."
       }
     ]
   },
