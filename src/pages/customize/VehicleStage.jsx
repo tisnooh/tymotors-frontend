@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Car, Lightbulb, Wind, Armchair, Cpu } from 'lucide-react';
 import { HOTSPOTS } from './useCustomize';
 
 const MODEL_IMAGES = {
@@ -164,23 +164,36 @@ export function VehicleStage({ brand, model, onHotspotClick, activeHotspot }) {
         )}
       </div>
 
-      <div className="px-4 py-3 border-t border-[#151A23] flex flex-wrap gap-3 text-xs text-ty-textMid">
-        {HOTSPOTS.map((h) => (
-          <button
-            key={h.id}
-            type="button"
-            disabled={!brandSelected}
-            onClick={() => onHotspotClick(h.id)}
-            className="inline-flex items-center gap-2 font-mono uppercase tracking-[0.22em] disabled:opacity-40 hover:text-white transition-colors"
-            style={{ color: activeHotspot === h.id ? '#E10600' : undefined }}
-          >
-            <span
-              className="h-2 w-2 rounded-full"
-              style={{ background: activeHotspot === h.id ? '#E10600' : '#E10600', opacity: activeHotspot === h.id ? 1 : 0.5 }}
-            />
-            {t(`customize.hotspots.${h.id}`)}
-          </button>
-        ))}
+      <div className="px-4 py-4 border-t border-[#151A23] grid grid-cols-5 gap-2">
+        {HOTSPOTS.map((h) => {
+          const isActive = activeHotspot === h.id;
+          const icons = {
+            front: <Car className="h-4 w-4" />,
+            lighting: <Lightbulb className="h-4 w-4" />,
+            rear: <Wind className="h-4 w-4" />,
+            interior: <Armchair className="h-4 w-4" />,
+            technology: <Cpu className="h-4 w-4" />,
+          };
+          return (
+            <button
+              key={h.id}
+              type="button"
+              disabled={!brandSelected}
+              onClick={() => onHotspotClick(h.id)}
+              className="flex flex-col items-center gap-2 py-3 px-2 rounded-xl border transition-all duration-200 disabled:opacity-30"
+              style={{
+                background: isActive ? 'rgba(225,6,0,0.12)' : 'rgba(255,255,255,0.03)',
+                borderColor: isActive ? '#E10600' : '#1E2330',
+                color: isActive ? '#E10600' : '#6B7280',
+              }}
+            >
+              {icons[h.id]}
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] leading-tight text-center">
+                {t(`customize.hotspots.${h.id}`)}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
