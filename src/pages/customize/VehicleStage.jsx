@@ -5,26 +5,26 @@ import { HOTSPOTS } from './useCustomize';
 
 const MODEL_IMAGES = {
   // BMW
-  'bmw::Série 3': 'https://images.unsplash.com/photo-1617531653332-bd46c16f4d68?auto=format&fit=crop&w=2400&q=80',
-  'bmw::Série 4': 'https://images.unsplash.com/photo-1741889838631-e8a1850854dc?auto=format&fit=crop&w=2400&q=80',
+  'bmw::Série 3': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784048/bmw-serie-3-g20-blanc-profil-cote-01_dptrxh.png',
+  'bmw::Série 4': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784050/bmw-serie-3-f30-blanc-profil-cote-01_wlybwk.png',
 
   // Audi
-  'audi::A3': 'https://images.unsplash.com/photo-1546088626-8f9b425f61ca?auto=format&fit=crop&w=2400&q=80',
-  'audi::A4': 'https://images.unsplash.com/photo-1539119838978-ce22e2fd0212?auto=format&fit=crop&w=2400&q=80',
-  'audi::A5': 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2400&q=80',
+  'audi::A3': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784042/audi-a3-sportback-blanc-profil-cote-01_dirzxr.png',
+  'audi::A4': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784040/audi-a4-avant-blanc-profil-cote-01_ukj4tb.png',
+  'audi::A5': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784044/audi-a5-sportback-gris-profil-cote-01_dcx9jt.png',
 
   // Mercedes-Benz
-  'mercedes-benz::Classe C': 'https://images.unsplash.com/photo-1765446607390-aa61ae857a50?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::Classe A': 'https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?auto=format&fit=crop&w=2400&q=80',
+  'mercedes-benz::Classe C': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784033/mercedes-classe-c-w205-blanc-profil-cote-01_w1qmii.png',
+  'mercedes-benz::Classe A': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784035/mercedes-classe-a-w177-blanc-profil-cote-01_lk4nrk.png',
 
   // Volkswagen
-  'volkswagen::Golf 7': 'https://images.unsplash.com/photo-1748466245947-bb2e22e758ed?auto=format&fit=crop&w=2400&q=80',
+  'volkswagen::Golf 7': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784027/volkswagen-golf-7-gti-rouge-profil-cote-01_vtqwa5.png',
 
   // Porsche
   'porsche::911':     'https://images.unsplash.com/photo-1614244788272-f6dcdfd8df9f?auto=format&fit=crop&w=2400&q=80',
   'porsche::Cayman':  'https://images.unsplash.com/photo-1699325413806-48286e94351c?auto=format&fit=crop&w=2400&q=80',
   'porsche::Boxster': 'https://images.unsplash.com/photo-1750097296925-cbe35257d0f1?auto=format&fit=crop&w=2400&q=80',
-  'porsche::Cayenne': 'https://images.unsplash.com/photo-1762120516501-bc1229824b4d?auto=format&fit=crop&w=2400&q=80',
+  'porsche::Cayenne': 'https://res.cloudinary.com/dwsyixjux/image/upload/v1782784027/porsche-cayenne-noir-profil-cote-01_xhszyy.png',
 
   // Toyota
   'toyota::GR Supra':   'https://images.unsplash.com/photo-1752560904748-390f9fa28bdb?auto=format&fit=crop&w=2400&q=80',
