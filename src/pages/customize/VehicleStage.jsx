@@ -4,36 +4,32 @@ import { Sparkles } from 'lucide-react';
 import { HOTSPOTS } from './useCustomize';
 
 const MODEL_IMAGES = {
-  'bmw::M2': 'https://images.unsplash.com/photo-1764712097872-30f2ddc1afde?auto=format&fit=crop&w=2400&q=80',
-  'bmw::M3': 'https://images.unsplash.com/photo-1768352725353-d498db8a1722?auto=format&fit=crop&w=2400&q=80',
-  'bmw::M4': 'https://images.unsplash.com/photo-1741889838631-e8a1850854dc?auto=format&fit=crop&w=2400&q=80',
-  'bmw::Série 3 (G20)': 'https://images.unsplash.com/photo-1750670951414-c71778b857f6?auto=format&fit=crop&w=2400&q=80',
-  'bmw::X5': 'https://images.unsplash.com/photo-1635990215241-4d2805d729bb?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::CLA': 'https://images.unsplash.com/photo-1751156109342-9eb8ed818009?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::Classe C': 'https://images.unsplash.com/photo-1765446607390-aa61ae857a50?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::Classe E': 'https://images.unsplash.com/photo-1761231558029-ccb3f0830250?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::GLC': 'https://images.unsplash.com/photo-1760137157471-7a8a435d8846?auto=format&fit=crop&w=2400&q=80',
-  'mercedes-benz::AMG GT': 'https://images.unsplash.com/photo-1741014154802-ecd803813064?auto=format&fit=crop&w=2400&q=80',
+  // BMW
+  'bmw::Série 3': 'https://images.unsplash.com/photo-1617531653332-bd46c16f4d68?auto=format&fit=crop&w=2400&q=80',
+  'bmw::Série 4': 'https://images.unsplash.com/photo-1741889838631-e8a1850854dc?auto=format&fit=crop&w=2400&q=80',
+
+  // Audi
   'audi::A3': 'https://images.unsplash.com/photo-1546088626-8f9b425f61ca?auto=format&fit=crop&w=2400&q=80',
-  'audi::S3': 'https://images.unsplash.com/photo-1748466245851-8ad81af47e41?auto=format&fit=crop&w=2400&q=80',
-  'audi::RS3': 'https://images.unsplash.com/photo-1655126675552-2130fcc1e7df?auto=format&fit=crop&w=2400&q=80',
   'audi::A4': 'https://images.unsplash.com/photo-1539119838978-ce22e2fd0212?auto=format&fit=crop&w=2400&q=80',
-  'audi::RS6': 'https://images.unsplash.com/photo-1762028160438-191f46f4d0f8?auto=format&fit=crop&w=2400&q=80',
-  'porsche::911': 'https://images.unsplash.com/photo-1614244788272-f6dcdfd8df9f?auto=format&fit=crop&w=2400&q=80',
-  'porsche::Cayman': 'https://images.unsplash.com/photo-1699325413806-48286e94351c?auto=format&fit=crop&w=2400&q=80',
+  'audi::A5': 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2400&q=80',
+
+  // Mercedes-Benz
+  'mercedes-benz::Classe C': 'https://images.unsplash.com/photo-1765446607390-aa61ae857a50?auto=format&fit=crop&w=2400&q=80',
+  'mercedes-benz::Classe A': 'https://images.unsplash.com/photo-1626668893632-6f3a4466d22f?auto=format&fit=crop&w=2400&q=80',
+
+  // Volkswagen
+  'volkswagen::Golf 7': 'https://images.unsplash.com/photo-1748466245947-bb2e22e758ed?auto=format&fit=crop&w=2400&q=80',
+
+  // Porsche
+  'porsche::911':     'https://images.unsplash.com/photo-1614244788272-f6dcdfd8df9f?auto=format&fit=crop&w=2400&q=80',
+  'porsche::Cayman':  'https://images.unsplash.com/photo-1699325413806-48286e94351c?auto=format&fit=crop&w=2400&q=80',
   'porsche::Boxster': 'https://images.unsplash.com/photo-1750097296925-cbe35257d0f1?auto=format&fit=crop&w=2400&q=80',
-  'porsche::Macan': 'https://images.unsplash.com/photo-1744618146254-b24cf8bda7df?auto=format&fit=crop&w=2400&q=80',
   'porsche::Cayenne': 'https://images.unsplash.com/photo-1762120516501-bc1229824b4d?auto=format&fit=crop&w=2400&q=80',
-  'volkswagen::Golf GTI': 'https://images.unsplash.com/photo-1748466245947-bb2e22e758ed?auto=format&fit=crop&w=2400&q=80',
-  'volkswagen::Golf R': 'https://images.unsplash.com/photo-1749417483088-9ed77c3c3e15?auto=format&fit=crop&w=2400&q=80',
-  'volkswagen::Polo GTI': 'https://images.unsplash.com/photo-1630485077137-d847400ed360?auto=format&fit=crop&w=2400&q=80',
-  'volkswagen::Tiguan': 'https://images.unsplash.com/photo-1760713173223-59ef015ad368?auto=format&fit=crop&w=2400&q=80',
-  'volkswagen::Passat': 'https://images.unsplash.com/photo-1762028159329-4d1f3f8e84f6?auto=format&fit=crop&w=2400&q=80',
-  'toyota::GR Yaris': 'https://images.unsplash.com/photo-1748939238043-403668614be9?auto=format&fit=crop&w=2400&q=80',
-  'toyota::GR Supra': 'https://images.unsplash.com/photo-1752560904748-390f9fa28bdb?auto=format&fit=crop&w=2400&q=80',
-  'toyota::Corolla': 'https://images.unsplash.com/photo-1742445135930-076c6105ce7d?auto=format&fit=crop&w=2400&q=80',
-  'toyota::GT86': 'https://images.unsplash.com/photo-1541878117466-0e3000a65864?auto=format&fit=crop&w=2400&q=80',
-  'toyota::Land Cruiser': 'https://images.unsplash.com/photo-1576676825635-472f74a821ec?auto=format&fit=crop&w=2400&q=80',
+
+  // Toyota
+  'toyota::GR Supra':   'https://images.unsplash.com/photo-1752560904748-390f9fa28bdb?auto=format&fit=crop&w=2400&q=80',
+  'toyota::GR Yaris':   'https://images.unsplash.com/photo-1748939238043-403668614be9?auto=format&fit=crop&w=2400&q=80',
+  'toyota::GR86 / GT86':'https://images.unsplash.com/photo-1541878117466-0e3000a65864?auto=format&fit=crop&w=2400&q=80',
 };
 
 const BRAND_FALLBACK = {
