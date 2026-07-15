@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+# Phase de test : remplacer par les règles publiques et ajouter le sitemap au lancement.

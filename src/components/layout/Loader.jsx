@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next';
 function Logo({ phase }) {
   return (
     <div className="relative overflow-hidden">
-      <h1
+      <div
+        aria-label="TYMotors"
         className="ty-display text-5xl md:text-7xl lg:text-8xl font-bold text-white"
         style={{ letterSpacing: '0.18em', animation: 'logo-reveal 0.9s ease-out forwards' }}
       >
         TYMOTORS
-      </h1>
+      </div>
       <div
         className={`pointer-events-none absolute inset-y-0 w-1/2 ${phase >= 1 ? 'animate-red-sweep' : 'opacity-0 -translate-x-full'}`}
         style={{

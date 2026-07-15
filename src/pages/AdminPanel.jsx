@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
-const ADMIN_PASSWORD = '03092004Aa';
 
 const CATEGORIES = ['performance', 'interior', 'technology'];
 const BRANDS = ['bmw', 'mercedes', 'audi', 'porsche', 'ferrari', 'lamborghini', 'aston-martin'];
@@ -12,21 +11,27 @@ function emptyProduct() {
     price: '', compare_at_price: '', currency: 'EUR',
     images: [], category_slug: 'performance', subcategory: '',
     compatible_brands: [], badges: [], sku: '', stock: 25,
-    rating: 4.8, review_count: 0, featured: false, specs: {},
+    rating: 0, review_count: 0, featured: false, specs: {},
   };
 }
 
 function PasswordGate({ onAuth }) {
   const [pwd, setPwd] = useState('');
   const [error, setError] = useState(false);
+  const [checking, setChecking] = useState(false);
 
-  function submit() {
-    if (pwd === ADMIN_PASSWORD) {
-      sessionStorage.setItem('ty_admin', '1');
-      onAuth();
-    } else {
+  async function submit() {
+    if (!pwd || checking) return;
+    setChecking(true);
+    try {
+      const response = await fetch(`${API}/api/admin/verify`, { headers: { 'X-Admin-Key': pwd } });
+      if (!response.ok) throw new Error('unauthorized');
+      onAuth(pwd);
+    } catch (e) {
       setError(true);
       setPwd('');
+    } finally {
+      setChecking(false);
     }
   }
 
@@ -56,7 +61,7 @@ function PasswordGate({ onAuth }) {
 }
 
 export default function AdminPanel() {
-  const [auth, setAuth] = useState(sessionStorage.getItem('ty_admin') === '1');
+  const [adminKey, setAdminKey] = useState('');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('list'); // 'list' | 'edit' | 'create'
@@ -69,9 +74,9 @@ export default function AdminPanel() {
   const [search, setSearch] = useState('');
   const fileRef = useRef();
 
-  useEffect(() => { if (auth) fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (adminKey) fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!auth) return <PasswordGate onAuth={() => setAuth(true)} />;
+  if (!adminKey) return <PasswordGate onAuth={setAdminKey} />;
 
   async function fetchProducts() {
     setLoading(true);
@@ -115,7 +120,7 @@ export default function AdminPanel() {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch(`${API}/api/admin/upload-image`, { method: 'POST', body: fd });
+      const res = await fetch(`${API}/api/admin/upload-image`, { method: 'POST', headers: { 'X-Admin-Key': adminKey }, body: fd });
       const data = await res.json();
       if (!res.ok) {
         notify(`Erreur upload: ${data.detail || res.status}`, 'error');
@@ -148,7 +153,7 @@ export default function AdminPanel() {
       const method = view === 'create' ? 'POST' : 'PUT';
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
@@ -167,7 +172,8 @@ export default function AdminPanel() {
 
   async function deleteProduct(slug) {
     try {
-      await fetch(`${API}/api/admin/products/${slug}`, { method: 'DELETE' });
+      const response = await fetch(`${API}/api/admin/products/${slug}`, { method: 'DELETE', headers: { 'X-Admin-Key': adminKey } });
+      if (!response.ok) throw new Error('delete_failed');
       notify('Produit supprimé');
       setDeleteConfirm(null);
       await fetchProducts();

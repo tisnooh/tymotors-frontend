@@ -8,10 +8,10 @@ import { toast } from 'sonner';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 
 const SOCIAL_LINKS = [
-  { href: 'https://instagram.com', icon: Instagram, label: 'Instagram' },
-  { href: 'https://facebook.com', icon: Facebook, label: 'Facebook' },
-  { href: 'https://youtube.com', icon: Youtube, label: 'YouTube' },
-];
+  { href: process.env.REACT_APP_INSTAGRAM_URL, icon: Instagram, label: 'Instagram' },
+  { href: process.env.REACT_APP_FACEBOOK_URL, icon: Facebook, label: 'Facebook' },
+  { href: process.env.REACT_APP_YOUTUBE_URL, icon: Youtube, label: 'YouTube' },
+].filter((link) => Boolean(link.href));
 
 const BRAND_LINKS = [
   { slug: 'bmw', name: 'BMW' },
@@ -47,7 +47,7 @@ function BrandColumn() {
       <p className="mt-5 text-sm leading-relaxed text-ty-textMid max-w-sm">{t('footer.brand_desc')}</p>
       <div className="mt-6 flex items-center gap-3">
         {SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
-          <a key={label} href={href} aria-label={label} className="h-9 w-9 rounded-full border border-[#232B3A] flex items-center justify-center text-ty-textMid hover:text-white hover:border-[#2E394D] transition-colors">
+          <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="h-9 w-9 rounded-full border border-[#232B3A] flex items-center justify-center text-ty-textMid hover:text-white hover:border-[#2E394D] transition-colors">
             <Icon className="h-4 w-4" />
           </a>
         ))}

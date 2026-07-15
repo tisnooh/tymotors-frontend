@@ -59,3 +59,12 @@ export const Wishlist = {
 export const Newsletter = {
   signup: (email, locale = 'en') => api.post('/newsletter', { email, locale }).then((r) => r.data),
 };
+
+export const Contact = {
+  send: (payload) => api.post('/contact', payload).then((r) => r.data),
+};
+
+export const Checkout = {
+  create: () => api.post('/create-checkout-session').then((r) => r.data),
+  get: (sessionId) => api.get(`/checkout-session/${encodeURIComponent(sessionId)}`).then((r) => r.data),
+};

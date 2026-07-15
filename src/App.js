@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer';
 import { MobileMenu } from '@/components/layout/MobileMenu';
 import { SearchOverlay } from '@/components/layout/SearchOverlay';
 import { Loader } from '@/components/layout/Loader';
+import { SeoManager } from '@/components/layout/SeoManager';
 import Home from '@/pages/Home';
 import Shop from '@/pages/Shop';
 import CategoryPage from '@/pages/CategoryPage';
@@ -20,6 +21,8 @@ import Customize from '@/pages/Customize';
 import Cart from '@/pages/Cart';
 import Wishlist from '@/pages/Wishlist';
 import AdminPanel from '@/pages/AdminPanel';
+import OrderSuccess from '@/pages/OrderSuccess';
+import NotFound from '@/pages/NotFound';
 import {
   ContactPage,
   ShippingPage,
@@ -46,6 +49,7 @@ function Shell() {
 
   return (
     <div className="App relative">
+      <SeoManager />
       {!ready && <Loader onDone={handleDone} />}
       <Routes>
         {/* Admin — sans Navbar/Footer */}
@@ -67,6 +71,7 @@ function Shell() {
               <Route path="/customize" element={<Customize />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
               {/* Support */}
               <Route path="/support/contact" element={<ContactPage />} />
               <Route path="/support/shipping" element={<ShippingPage />} />
@@ -77,7 +82,7 @@ function Shell() {
               <Route path="/legal/privacy" element={<PrivacyPage />} />
               <Route path="/legal/terms" element={<TermsPage />} />
               <Route path="/legal/cookies" element={<CookiesPage />} />
-              <Route path="*" element={<Home />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
           </>

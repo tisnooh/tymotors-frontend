@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Package, RotateCcw, HelpCircle, Truck, Shield, FileText, Cookie } from 'lucide-react';
+import { Contact } from '@/lib/api';
+
+const CONTACT_DETAILS = [
+  { icon: Mail, label: 'Email', value: process.env.REACT_APP_SUPPORT_EMAIL },
+  { icon: Phone, label: 'Téléphone', value: process.env.REACT_APP_SUPPORT_PHONE },
+  { icon: MapPin, label: 'Adresse', value: process.env.REACT_APP_BUSINESS_ADDRESS },
+].filter((detail) => Boolean(detail.value));
 
 // ─── SHARED LAYOUT ───────────────────────────────────────────────────────────
 
@@ -33,24 +40,31 @@ function Section({ title, children }) {
 // ─── CONTACT ─────────────────────────────────────────────────────────────────
 
 export function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSent(true);
+    setSending(true);
+    setError(false);
+    try {
+      await Contact.send(form);
+      setSent(true);
+    } catch (requestError) {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
-    <PageLayout eyebrow="SUPPORT" title="Contact" subtitle="Une question ? Notre équipe vous répond sous 24h.">
+    <PageLayout eyebrow="SUPPORT" title="Contact" subtitle="Une question ? Envoyez-nous votre demande, notre équipe vous répondra dès que possible.">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
           <div className="space-y-6">
-            {[
-              { icon: Mail, label: 'Email', value: 'support@tymotors.com' },
-              { icon: Phone, label: 'Téléphone', value: '+33 1 00 00 00 00' },
-              { icon: MapPin, label: 'Adresse', value: 'Paris, France' },
-            ].map(({ icon: Icon, label, value }) => (
+            {CONTACT_DETAILS.map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-center gap-4 p-4 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
                 <div className="h-10 w-10 rounded-full bg-[#E10600]/10 flex items-center justify-center">
                   <Icon className="h-5 w-5 text-[#E10600]" />
@@ -61,6 +75,7 @@ export function ContactPage() {
                 </div>
               </div>
             ))}
+            {CONTACT_DETAILS.length === 0 && <div className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]"><Mail className="h-6 w-6 text-[#E10600]" /><p className="text-white mt-3">Formulaire de contact sécurisé</p><p className="text-ty-textMid text-sm mt-1">Votre demande sera enregistrée dans l’espace de support.</p></div>}
           </div>
         </div>
 
@@ -75,6 +90,7 @@ export function ContactPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="text" name="website" value={form.website} onChange={e => setForm(f => ({ ...f, website: e.target.value }))} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
               {[
                 { key: 'name', label: 'Nom', type: 'text', placeholder: 'Votre nom' },
                 { key: 'email', label: 'Email', type: 'email', placeholder: 'votre@email.com' },
@@ -103,8 +119,9 @@ export function ContactPage() {
                   className="w-full px-4 py-3 rounded-xl bg-[#0F1115] border border-[#232B3A] text-sm text-white placeholder:text-ty-textLow focus:border-[#E10600] focus:outline-none transition-colors resize-none"
                 />
               </div>
-              <button type="submit" className="ty-btn-primary w-full h-12 uppercase tracking-[0.18em] text-xs">
-                Envoyer le message
+              {error && <p role="alert" className="text-red-300 text-sm">Le message n’a pas pu être envoyé. Veuillez réessayer.</p>}
+              <button type="submit" disabled={sending} className="ty-btn-primary w-full h-12 uppercase tracking-[0.18em] text-xs disabled:opacity-50">
+                {sending ? 'Envoi…' : 'Envoyer le message'}
               </button>
             </form>
           )}
@@ -120,14 +137,13 @@ export function ShippingPage() {
   return (
     <PageLayout eyebrow="SUPPORT" title="Livraison" subtitle="Livraison rapide et sécurisée dans toute l'Europe.">
       <Section title="Zones de livraison">
-        <p>TYMotors livre dans tous les pays de l'Union Européenne, ainsi qu'en Suisse, au Royaume-Uni et en Norvège.</p>
+        <p>La livraison est actuellement disponible en France, Belgique, Allemagne, Espagne, Italie, Luxembourg, Pays-Bas et Portugal.</p>
       </Section>
       <Section title="Délais">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {[
-            { zone: 'France', délai: '2-3 jours ouvrés', prix: 'Gratuit dès 350€' },
-            { zone: 'Europe', délai: '3-5 jours ouvrés', prix: 'À partir de 9,90€' },
-            { zone: 'Express', délai: '24-48h', prix: 'À partir de 19,90€' },
+            { zone: 'Livraison UE suivie', délai: 'Délai confirmé après expédition', prix: '15 €' },
+            { zone: 'Commande dès 350 €', délai: 'Même niveau de suivi', prix: 'Livraison offerte' },
           ].map(({ zone, délai, prix }) => (
             <div key={zone} className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
               <div className="flex items-center gap-2 mb-3">
@@ -147,7 +163,7 @@ export function ShippingPage() {
         <p>• TYMotors n'est pas responsable des retards causés par les douanes pour les livraisons hors UE.</p>
       </Section>
       <Section title="Transporteurs">
-        <p>Nous travaillons avec DHL, Chronopost et UPS pour vous garantir les meilleures conditions de livraison.</p>
+        <p>Le transporteur et le numéro de suivi sont communiqués lors de l’expédition de la commande.</p>
       </Section>
     </PageLayout>
   );
@@ -164,7 +180,7 @@ export function ReturnsPage() {
       <Section title="Comment effectuer un retour">
         <div className="space-y-4 mt-4">
           {[
-            { step: '01', title: 'Contactez-nous', desc: "Envoyez un email à support@tymotors.com avec votre numéro de commande et la raison du retour." },
+            { step: '01', title: 'Contactez-nous', desc: "Utilisez le formulaire de contact avec votre numéro de commande et la raison du retour." },
             { step: '02', title: 'Emballez l\'article', desc: "Remballez l'article soigneusement dans son emballage d'origine avec tous les accessoires." },
             { step: '03', title: 'Expédiez', desc: "Déposez le colis chez le transporteur de votre choix. Conservez le justificatif d'envoi." },
             { step: '04', title: 'Remboursement', desc: "Une fois l'article reçu et vérifié, le remboursement est effectué sous 5-7 jours ouvrés." },
@@ -194,7 +210,7 @@ const FAQ_ITEMS = [
   { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Utilisez notre configurateur de compatibilité sur la page Personnaliser. Sélectionnez votre marque, modèle et génération pour voir tous les produits compatibles." },
   { q: "Quels sont les délais de livraison ?", a: "En France : 2-3 jours ouvrés. En Europe : 3-5 jours ouvrés. Livraison express disponible en 24-48h. Les commandes passées avant 14h sont expédiées le jour même." },
   { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
-  { q: "Puis-je retourner un article ?", a: "Oui, vous avez 30 jours pour retourner un article non installé dans son état d'origine. Contactez-nous à support@tymotors.com pour initier un retour." },
+  { q: "Puis-je retourner un article ?", a: "Oui, vous avez 30 jours pour retourner un article non installé dans son état d'origine. Utilisez le formulaire de contact pour initier un retour." },
   { q: "Les produits sont-ils garantis ?", a: "Tous nos produits bénéficient d'une garantie de 2 ans contre les défauts de fabrication. La garantie ne couvre pas les dommages liés à une mauvaise installation." },
   { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
   { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
@@ -277,7 +293,7 @@ export function TrackPage() {
 
         <div className="mt-10 p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
           <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#F2C94C] mb-3">Vous avez reçu un email de suivi ?</p>
-          <p className="text-ty-textMid text-sm">Un lien de suivi DHL/Chronopost/UPS vous a été envoyé par email lors de l'expédition. Vérifiez également vos spams.</p>
+          <p className="text-ty-textMid text-sm">Le lien du transporteur vous est envoyé par e-mail lors de l’expédition. Vérifiez également vos spams.</p>
         </div>
       </div>
     </PageLayout>
@@ -300,10 +316,10 @@ export function PrivacyPage() {
         <p>• Améliorer nos services et notre site</p>
       </Section>
       <Section title="Partage des données">
-        <p>TYMotors ne vend jamais vos données personnelles. Elles peuvent être partagées avec nos partenaires de livraison (DHL, Chronopost, UPS) et notre prestataire de paiement (Stripe) uniquement dans le cadre du traitement de vos commandes.</p>
+        <p>TYMotors ne vend jamais vos données personnelles. Elles peuvent être partagées avec le transporteur retenu pour votre commande et avec Stripe uniquement dans le cadre du traitement de votre achat.</p>
       </Section>
       <Section title="Vos droits">
-        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits, contactez-nous à <a href="mailto:privacy@tymotors.com" className="text-[#E10600] hover:underline">privacy@tymotors.com</a>.</p>
+        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits, utilisez notre <Link to="/support/contact" className="text-[#E10600] hover:underline">formulaire de contact</Link>.</p>
       </Section>
       <Section title="Cookies">
         <p>Nous utilisons des cookies essentiels au fonctionnement du site et des cookies analytiques pour améliorer votre expérience. Vous pouvez gérer vos préférences depuis notre <Link to="/legal/cookies" className="text-[#E10600] hover:underline">politique de cookies</Link>.</p>
@@ -319,7 +335,7 @@ export function TermsPage() {
   return (
     <PageLayout eyebrow="LÉGAL" title="Conditions générales" subtitle="Conditions d'utilisation et de vente TYMotors.">
       <Section title="1. Objet">
-        <p>Les présentes conditions générales régissent l'utilisation du site tymotors.com et les achats effectués sur celui-ci. En utilisant ce site, vous acceptez ces conditions dans leur intégralité.</p>
+        <p>Les présentes conditions générales régissent l'utilisation du site TYMotors et les achats effectués sur celui-ci. En utilisant ce site, vous acceptez ces conditions dans leur intégralité.</p>
       </Section>
       <Section title="2. Produits et prix">
         <p>TYMotors se réserve le droit de modifier ses prix à tout moment. Les prix affichés sont en euros TTC. Les commandes sont facturées au prix en vigueur au moment de la validation.</p>
@@ -328,7 +344,7 @@ export function TermsPage() {
         <p>Toute commande validée constitue un contrat de vente entre TYMotors et l'acheteur. TYMotors se réserve le droit d'annuler une commande en cas de stock insuffisant, d'erreur de prix manifeste ou de fraude suspectée.</p>
       </Section>
       <Section title="4. Paiement">
-        <p>Les paiements sont sécurisés par Stripe. TYMotors accepte les cartes bancaires Visa, Mastercard et American Express, ainsi que le paiement en plusieurs fois sans frais.</p>
+        <p>Les paiements sont traités sur la page sécurisée de Stripe. Les moyens de paiement effectivement disponibles sont affichés par Stripe au moment du règlement.</p>
       </Section>
       <Section title="5. Garantie">
         <p>Tous les produits TYMotors bénéficient d'une garantie légale de 2 ans conformément à la directive européenne sur la vente de biens. La garantie couvre les défauts de fabrication mais pas les dommages liés à une installation incorrecte.</p>
@@ -347,7 +363,19 @@ export function TermsPage() {
 // ─── COOKIES ─────────────────────────────────────────────────────────────────
 
 export function CookiesPage() {
-  const [prefs, setPrefs] = useState({ essential: true, analytics: true, marketing: false });
+  const [prefs, setPrefs] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ty_cookie_preferences')) || { essential: true, analytics: false, marketing: false };
+    } catch (error) {
+      return { essential: true, analytics: false, marketing: false };
+    }
+  });
+  const [saved, setSaved] = useState(false);
+
+  function savePreferences() {
+    localStorage.setItem('ty_cookie_preferences', JSON.stringify(prefs));
+    setSaved(true);
+  }
 
   return (
     <PageLayout eyebrow="LÉGAL" title="Cookies" subtitle="Gestion de vos préférences de cookies.">
@@ -369,6 +397,9 @@ export function CookiesPage() {
               </div>
               <button
                 type="button"
+                role="switch"
+                aria-checked={prefs[key]}
+                aria-label={label}
                 disabled={locked}
                 onClick={() => !locked && setPrefs(p => ({ ...p, [key]: !p[key] }))}
                 style={{
@@ -399,9 +430,10 @@ export function CookiesPage() {
             </div>
           ))}
         </div>
-        <button type="button" className="ty-btn-primary mt-6 h-11 px-8 text-xs uppercase tracking-[0.18em]">
+        <button type="button" onClick={savePreferences} className="ty-btn-primary mt-6 h-11 px-8 text-xs uppercase tracking-[0.18em]">
           Enregistrer mes préférences
         </button>
+        {saved && <p role="status" className="text-emerald-300 text-sm mt-3">Préférences enregistrées sur cet appareil.</p>}
       </Section>
       <p className="text-ty-textLow text-xs mt-8">Dernière mise à jour : Juin 2026</p>
     </PageLayout>

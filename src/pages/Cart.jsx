@@ -1,19 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { Trash2, ArrowRight, Truck, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
+import { Checkout } from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Cart() {
   const { t, i18n } = useTranslation();
   const { cart, updateCart, removeFromCart } = useApp();
+  const [checkingOut, setCheckingOut] = useState(false);
 
   const subtotal = cart.subtotal || 0;
-  const shippingFree = subtotal >= 350;
-  const shipping = shippingFree ? 0 : 15;
-  const total = subtotal + shipping;
+  const shipping = cart.shipping || 0;
+  const shippingFree = shipping === 0;
+  const total = cart.total ?? (subtotal + shipping);
+
+  const startCheckout = async () => {
+    try {
+      setCheckingOut(true);
+      const data = await Checkout.create();
+      if (!data.url) throw new Error('missing_checkout_url');
+      window.location.assign(data.url);
+    } catch (error) {
+      const message = error?.response?.data?.detail;
+      toast.error(message || (i18n.language?.startsWith('fr') ? 'Le paiement est momentanément indisponible.' : 'Checkout is temporarily unavailable.'));
+      setCheckingOut(false);
+    }
+  };
 
   return (
     <main data-testid="page-cart" className="pt-28 pb-24">
@@ -43,9 +59,9 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
-                        <button onClick={() => updateCart(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
+                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
-                        <button onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white">+</button>
+                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= it.stock} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
                       <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(it.line_total, 'EUR', i18n.language)}</p>
                       <button onClick={() => removeFromCart(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
@@ -69,25 +85,16 @@ export default function Cart() {
                   <span className="text-ty-textMid">{t('cart.total')}</span>
                   <span data-testid="cart-total" className="text-white font-mono text-2xl">{formatPrice(total, 'EUR', i18n.language)}</span>
                 </div>
-                <button 
-  data-testid="cart-checkout-button" 
-  className="mt-6 w-full ty-btn-primary h-12 text-xs uppercase tracking-[0.18em]"
-  onClick={async () => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/create-checkout-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart.items.map(i => ({ product_id: i.product_id, quantity: i.quantity })) })
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch (e) {
-      console.error('Checkout error:', e);
-    }
-  }}
->
-  {t('cart.checkout')} <ArrowRight className="h-4 w-4" />
-</button>
+                <button
+                  type="button"
+                  data-testid="cart-checkout-button"
+                  className="mt-6 w-full ty-btn-primary h-12 text-xs uppercase tracking-[0.18em]"
+                  onClick={startCheckout}
+                  disabled={checkingOut}
+                >
+                  {checkingOut ? 'Redirection sécurisée…' : t('cart.checkout')} <ArrowRight className="h-4 w-4" />
+                </button>
+                <p className="mt-3 text-[11px] leading-relaxed text-ty-textLow text-center">Paiement traité par Stripe. En continuant, vous acceptez nos <Link to="/legal/terms" className="underline hover:text-white">conditions de vente</Link>.</p>
                 <div className="mt-5 grid grid-cols-3 gap-2">
                   <Trust icon={<Truck className="h-4 w-4" />} label="EU SHIP" />
                   <Trust icon={<ShieldCheck className="h-4 w-4" />} label="2Y WARR" />
