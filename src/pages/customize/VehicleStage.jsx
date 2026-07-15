@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, Car, Lightbulb, Wind, Armchair, Cpu } from 'lucide-react';
+import { Sparkles, Car, CircleGauge, Wind, Armchair, Cpu } from 'lucide-react';
 import { HOTSPOTS } from './useCustomize';
 
 const MODEL_IMAGES = {
@@ -44,7 +44,7 @@ const BRAND_FALLBACK = {
 
 const HOTSPOT_IMAGES = {
   front: 'https://images.unsplash.com/photo-1605283176568-9b41fde3eba3?auto=format&fit=crop&w=2400&q=80',
-  lighting: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2400&q=80',
+  steering: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=2400&q=80',
   rear: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2400&q=80',
   interior: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=2400&q=80',
   technology: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2400&q=80',
@@ -169,7 +169,7 @@ export function VehicleStage({ brand, model, onHotspotClick, activeHotspot }) {
           const isActive = activeHotspot === h.id;
           const icons = {
             front: <Car className="h-4 w-4" />,
-            lighting: <Lightbulb className="h-4 w-4" />,
+            steering: <CircleGauge className="h-4 w-4" />,
             rear: <Wind className="h-4 w-4" />,
             interior: <Armchair className="h-4 w-4" />,
             technology: <Cpu className="h-4 w-4" />,

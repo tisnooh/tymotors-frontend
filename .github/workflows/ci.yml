@@ -1,0 +1,34 @@
+name: Frontend CI
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+        env:
+          CI: true
+          REACT_APP_BACKEND_URL: http://localhost:8000
+          REACT_APP_SITE_URL: http://localhost:3000
+          REACT_APP_SITE_MODE: test
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: gitleaks/gitleaks-action@v2

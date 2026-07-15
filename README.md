@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# TYMotors frontend — branche de test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Boutique React TYMotors avec recherche par véhicule, catalogue, panier, Stripe Checkout et administration protégée côté backend.
 
-## Available Scripts
+## Démarrage
 
-In the project directory, you can run:
+1. Copier `.env.example` vers `.env.local`.
+2. Définir `REACT_APP_BACKEND_URL` vers le backend local ou le backend de staging.
+3. Installer les dépendances avec `yarn install --frozen-lockfile`.
+4. Lancer `yarn start` ou vérifier avec `yarn build`.
 
-### `npm start`
+Le frontend ne doit contenir aucune clé Stripe secrète, clé Cloudinary privée, URI MongoDB ou mot de passe administrateur. La connexion `/admin` envoie le mot de passe au backend et conserve uniquement un jeton court en mémoire.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Vercel Preview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+La branche `develop` doit rester un Preview Deployment. Configurer :
 
-### `npm test`
+- `REACT_APP_BACKEND_URL` : URL du backend Render de staging ;
+- `REACT_APP_SITE_URL` : URL de Preview ou domaine de test ;
+- `REACT_APP_SITE_MODE=test` : maintient `noindex,nofollow` ;
+- les coordonnées de support uniquement lorsqu'elles sont réelles.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Ne pas promouvoir le déploiement en production et ne pas fusionner `develop` dans `main` avant validation du webhook Stripe, du catalogue et d'une commande test complète.
 
-### `npm run build`
+## Parcours à tester
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. sélectionner marque, modèle, génération et année dans le hero ;
+2. ouvrir une fiche produit et vérifier la compatibilité ;
+3. ajouter au panier avec le véhicule mémorisé ;
+4. vérifier prix, livraison et statut de compatibilité ;
+5. payer avec une carte Stripe de test ;
+6. confirmer que la commande devient `paid` uniquement après webhook ;
+7. vérifier la commande dans `/admin`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Le build de test reste une SPA Create React App. Une migration vers un rendu serveur pourra être évaluée après la sécurisation et la validation commerciale du MVP.

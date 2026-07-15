@@ -3,9 +3,9 @@ import { Brands as BrandsApi, Compatibility, Products } from '@/lib/api';
 
 export const HOTSPOTS = [
   { id: 'front', label: 'Avant', x: 22, y: 60, categories: ['performance'], subcats: ['Calandres', 'Extérieur'] },
-  { id: 'lighting', label: 'Éclairage', x: 34, y: 50, categories: ['performance'], subcats: ['Calandres', 'Extérieur'] },
+  { id: 'steering', label: 'Volants', x: 43, y: 42, categories: ['interior'], subcats: ['Volants'] },
   { id: 'rear', label: 'Arrière', x: 82, y: 65, categories: ['performance'], subcats: ['Spoilers', 'Diffuseurs', "Sorties d'échappement", 'Silencieux'] },
-  { id: 'interior', label: 'Intérieur', x: 56, y: 35, categories: ['interior'], subcats: ['Volants', 'Tableaux de bord', 'Intérieur carbone', 'Éclairage ambiant'] },
+  { id: 'interior', label: 'Intérieur', x: 56, y: 35, categories: ['interior'], subcats: ['Volants', 'Tableaux de bord', 'Accessoires intérieurs'] },
   { id: 'technology', label: 'Technologie', x: 50, y: 58, categories: ['technology'], subcats: ['Écrans CarPlay', 'Dashcams', 'Caméras de recul'] },
 ];
 

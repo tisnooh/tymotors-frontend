@@ -1,7 +1,7 @@
 import React from 'react';
 import '@/App.css';
 import '@/lib/i18n';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AppProvider } from '@/contexts/AppContext';
 import { SmoothScrollProvider } from '@/components/layout/SmoothScrollProvider';
@@ -11,18 +11,6 @@ import { MobileMenu } from '@/components/layout/MobileMenu';
 import { SearchOverlay } from '@/components/layout/SearchOverlay';
 import { Loader } from '@/components/layout/Loader';
 import { SeoManager } from '@/components/layout/SeoManager';
-import Home from '@/pages/Home';
-import Shop from '@/pages/Shop';
-import CategoryPage from '@/pages/CategoryPage';
-import ProductDetail from '@/pages/ProductDetail';
-import BrandsIndex from '@/pages/BrandsIndex';
-import BrandDetail from '@/pages/BrandDetail';
-import Customize from '@/pages/Customize';
-import Cart from '@/pages/Cart';
-import Wishlist from '@/pages/Wishlist';
-import AdminPanel from '@/pages/AdminPanel';
-import OrderSuccess from '@/pages/OrderSuccess';
-import NotFound from '@/pages/NotFound';
 import {
   ContactPage,
   ShippingPage,
@@ -34,6 +22,19 @@ import {
   CookiesPage,
 } from '@/pages/SupportPages';
 
+const Home = React.lazy(() => import('@/pages/Home'));
+const Shop = React.lazy(() => import('@/pages/Shop'));
+const CategoryPage = React.lazy(() => import('@/pages/CategoryPage'));
+const ProductDetail = React.lazy(() => import('@/pages/ProductDetail'));
+const BrandsIndex = React.lazy(() => import('@/pages/BrandsIndex'));
+const BrandDetail = React.lazy(() => import('@/pages/BrandDetail'));
+const Customize = React.lazy(() => import('@/pages/Customize'));
+const Cart = React.lazy(() => import('@/pages/Cart'));
+const Wishlist = React.lazy(() => import('@/pages/Wishlist'));
+const AdminPanel = React.lazy(() => import('@/pages/AdminPanel'));
+const OrderSuccess = React.lazy(() => import('@/pages/OrderSuccess'));
+const NotFound = React.lazy(() => import('@/pages/NotFound'));
+
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
   color: '#F2F4F7',
@@ -44,14 +45,20 @@ const TOASTER_STYLE = {
 const TOAST_OPTIONS = { style: TOASTER_STYLE };
 
 function Shell() {
-  const [ready, setReady] = React.useState(false);
-  const handleDone = React.useCallback(() => setReady(true), []);
+  const location = useLocation();
+  const [ready, setReady] = React.useState(() => sessionStorage.getItem('ty_loader_seen') === '1');
+  const handleDone = React.useCallback(() => {
+    sessionStorage.setItem('ty_loader_seen', '1');
+    setReady(true);
+  }, []);
+  const showLoader = !ready && location.pathname !== '/admin';
 
   return (
     <div className="App relative">
       <SeoManager />
-      {!ready && <Loader onDone={handleDone} />}
-      <Routes>
+      {showLoader && <Loader onDone={handleDone} />}
+      <React.Suspense fallback={<div className="min-h-screen bg-[#050608]" aria-label="Chargement" />}>
+        <Routes>
         {/* Admin — sans Navbar/Footer */}
         <Route path="/admin" element={<AdminPanel />} />
 
@@ -87,7 +94,8 @@ function Shell() {
             <Footer />
           </>
         } />
-      </Routes>
+        </Routes>
+      </React.Suspense>
     </div>
   );
 }

@@ -36,7 +36,7 @@ export default function Cart() {
       <div className="ty-container">
         <Reveal className="mb-10">
           <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
-            <span className="h-px w-8 bg-[#F2C94C]" /> Checkout
+            <span className="h-px w-8 bg-[#F2C94C]" /> Commande
           </p>
           <h1 className="mt-3 ty-display text-white text-4xl md:text-6xl">{t('cart.title')}</h1>
         </Reveal>
@@ -56,6 +56,12 @@ export default function Cart() {
                       <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[#F2C94C]/80">{it.subcategory}</p>
                       <Link to={`/product/${it.slug}`} className="text-white font-display text-base md:text-lg hover:text-[#FF1A12] transition-colors block truncate">{it.name}</Link>
                       <p className="text-xs text-ty-textLow truncate mt-0.5">{it.subtitle}</p>
+                      {it.selected_vehicle && (
+                        <p className="mt-1 text-xs text-[#F2C94C]">
+                          Véhicule : {[it.selected_vehicle.brand_slug, it.selected_vehicle.model, it.selected_vehicle.chassis, it.selected_vehicle.year].filter(Boolean).join(' · ')}
+                          {' '}({it.selected_vehicle.compatibility_status === 'compatible' ? 'vérifié' : 'contrôle requis'})
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
@@ -75,7 +81,7 @@ export default function Cart() {
 
             <div className="lg:col-span-4">
               <div className="lg:sticky lg:top-24 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6">
-                <h3 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-5">Summary</h3>
+                <h3 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-5">Récapitulatif</h3>
                 <dl className="space-y-3 text-sm">
                   <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.subtotal')}</dt><dd data-testid="cart-subtotal" className="text-white font-mono">{formatPrice(subtotal, 'EUR', i18n.language)}</dd></div>
                   <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.shipping')}</dt><dd className="text-white font-mono">{shippingFree ? <span className="text-[#F2C94C]">{t('cart.shipping_free')}</span> : formatPrice(shipping, 'EUR', i18n.language)}</dd></div>
@@ -94,11 +100,11 @@ export default function Cart() {
                 >
                   {checkingOut ? 'Redirection sécurisée…' : t('cart.checkout')} <ArrowRight className="h-4 w-4" />
                 </button>
-                <p className="mt-3 text-[11px] leading-relaxed text-ty-textLow text-center">Paiement traité par Stripe. En continuant, vous acceptez nos <Link to="/legal/terms" className="underline hover:text-white">conditions de vente</Link>.</p>
+                <p className="mt-3 text-[11px] leading-relaxed text-ty-textLow text-center">Paiement Stripe en environnement de test : aucune carte réelle ne doit être utilisée. En continuant, vous acceptez nos <Link to="/legal/terms" className="underline hover:text-white">conditions de vente</Link>.</p>
                 <div className="mt-5 grid grid-cols-3 gap-2">
-                  <Trust icon={<Truck className="h-4 w-4" />} label="EU SHIP" />
-                  <Trust icon={<ShieldCheck className="h-4 w-4" />} label="2Y WARR" />
-                  <Trust icon={<BadgeCheck className="h-4 w-4" />} label="OEM FIT" />
+                  <Trust icon={<Truck className="h-4 w-4" />} label="SUIVI" />
+                  <Trust icon={<ShieldCheck className="h-4 w-4" />} label="STRIPE TEST" />
+                  <Trust icon={<BadgeCheck className="h-4 w-4" />} label="VÉRIFIER" />
                 </div>
               </div>
             </div>
@@ -122,7 +128,7 @@ function EmptyCart() {
   const { t } = useTranslation();
   return (
     <div data-testid="cart-empty-state" className="py-20 text-center max-w-md mx-auto">
-      <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]">// EMPTY //</p>
+      <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]">// PANIER VIDE //</p>
       <h2 className="mt-3 ty-display text-white text-3xl">{t('cart.empty')}</h2>
       <Link to="/shop" className="mt-6 inline-flex ty-btn-primary h-11 text-xs uppercase tracking-[0.18em]">{t('cart.continue')}</Link>
     </div>

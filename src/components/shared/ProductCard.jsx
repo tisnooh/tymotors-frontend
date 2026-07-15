@@ -43,7 +43,7 @@ function QuickAddButton({ onClick, label }) {
       type="button"
       onClick={onClick}
       data-testid="product-card-add-to-cart-button"
-      className="absolute bottom-3 right-3 h-10 px-3 rounded-xl bg-[#E10600] hover:bg-[#FF1A12] text-white flex items-center gap-2 text-xs font-medium tracking-wide uppercase opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all"
+      className="absolute bottom-3 right-3 h-10 px-3 rounded-xl bg-[#E10600] hover:bg-[#FF1A12] text-white flex items-center gap-2 text-xs font-medium tracking-wide uppercase opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all"
     >
       <ShoppingBag className="h-4 w-4" /> {label}
     </button>
@@ -85,6 +85,10 @@ export function ProductCard({ product, index = 0 }) {
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if (product.compatibilities?.length) {
+        toast.info(i18n.language?.startsWith('fr') ? 'Ouvrez la fiche pour vérifier votre véhicule.' : 'Open the product page to verify your vehicle.');
+        return;
+      }
       try {
         await addToCart(product.id, 1);
         toast.success(i18n.language?.startsWith('fr') ? 'Ajout\u00e9 au panier' : 'Added to cart');
@@ -94,7 +98,7 @@ export function ProductCard({ product, index = 0 }) {
         toast.error(i18n.language?.startsWith('fr') ? 'Erreur lors de l\u2019ajout' : 'Could not add to cart');
       }
     },
-    [addToCart, product.id, i18n.language]
+    [addToCart, product.compatibilities?.length, product.id, i18n.language]
   );
 
   const onWish = useCallback(
@@ -165,7 +169,9 @@ export function ProductCard({ product, index = 0 }) {
               </span>
             )}
           </div>
-          <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#8E97A6]">{product.sku}</span>
+          <span className={`font-mono text-[10px] uppercase ${product.stock > 0 ? 'text-emerald-300' : 'text-red-300'}`}>
+            {product.stock > 0 ? 'Disponible' : 'Indisponible'}
+          </span>
         </div>
       </div>
     </Link>

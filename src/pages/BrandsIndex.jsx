@@ -32,7 +32,7 @@ export default function BrandsIndex() {
                 data-testid="brand-card-index"
                 className="group relative block aspect-[4/5] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
-                <img src={b.image} alt={b.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-55 group-hover:opacity-80 transition-all duration-[800ms] group-hover:scale-[1.05]" />
+                <img src={b.image} alt={b.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-55 group-hover:opacity-80 transition-all duration-700 group-hover:scale-[1.05]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-transparent" />
                 <div className="relative h-full p-6 flex flex-col justify-between">
                   <div className="flex items-center justify-between">

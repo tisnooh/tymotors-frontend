@@ -40,7 +40,7 @@ export function CategoriesSection() {
                   src={c.image}
                   alt={c.name}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-all duration-[800ms] group-hover:scale-[1.06] group-hover:opacity-95 opacity-70"
+                  className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06] group-hover:opacity-95 opacity-70"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-transparent" />
                 <div className="absolute top-5 left-5 flex items-center gap-2">

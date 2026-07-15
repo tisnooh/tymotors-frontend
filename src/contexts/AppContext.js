@@ -40,8 +40,8 @@ export function AppProvider({ children }) {
     refreshWishlist();
   }, [refreshCart, refreshWishlist]);
 
-  const addToCart = useCallback(async (productId, quantity = 1) => {
-    const data = await Cart.add(productId, quantity);
+  const addToCart = useCallback(async (productId, quantity = 1, selectedVehicle = null) => {
+    const data = await Cart.add(productId, quantity, selectedVehicle);
     setCart(data);
     return data;
   }, []);

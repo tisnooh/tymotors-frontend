@@ -20,16 +20,22 @@
   },
   "hero": {
     "eyebrow": "TYMotors // Collection 2026",
-    "headline_1": "Transformez",
-    "headline_2": "Votre Véhicule",
-    "sub": "Pièces de tuning premium et technologie automobile pour BMW, Mercedes-Benz, Audi, Porsche, Volkswagen et Toyota.",
+    "headline_1": "Personnalisez",
+    "headline_2": "Sans Erreur",
+    "sub": "Sélectionnez votre véhicule pour découvrir uniquement les équipements dont la compatibilité peut être vérifiée.",
+    "selector_label": "Recherche par véhicule",
+    "select_brand": "Marque",
+    "select_model": "Modèle",
+    "select_generation": "Génération / châssis",
+    "select_year": "Année",
+    "view_compatible": "Voir les produits",
     "cta_primary": "Découvrir les Produits",
     "cta_secondary": "Personnaliser Votre Véhicule",
     "scroll": "Défiler",
     "telemetry": {
-  "hp": "+500 PIÈCES DISPONIBLES",
-  "weight": "+6 MARQUES PERFORMANCE",
-  "downforce": "100% PASSION AUTOMOBILE"
+  "hp": "SÉLECTION PAR VÉHICULE",
+  "weight": "6 MARQUES AUTOMOBILES",
+  "downforce": "ASSISTANCE AVANT COMMANDE"
 }
   },
   "brands": {
@@ -181,7 +187,7 @@
       "front": "Avant",
       "rear": "Arrière",
       "interior": "Intérieur",
-      "lighting": "Éclairage",
+      "steering": "Volants",
       "technology": "Technologie"
     },
     "recommended": "Upgrades recommandés",

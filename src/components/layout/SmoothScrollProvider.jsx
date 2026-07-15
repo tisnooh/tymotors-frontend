@@ -22,13 +22,6 @@ export function SmoothScrollProvider({ children }) {
     });
     lenisRef.current = lenis;
 
-    let rafId = 0;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
     const onScroll = () => ScrollTrigger.update();
     lenis.on('scroll', onScroll);
 
@@ -37,7 +30,6 @@ export function SmoothScrollProvider({ children }) {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
       gsap.ticker.remove(tickerHandler);
       lenis.off('scroll', onScroll);
       lenis.destroy();

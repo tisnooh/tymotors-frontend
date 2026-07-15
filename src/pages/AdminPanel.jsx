@@ -2,16 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
 
-const CATEGORIES = ['performance', 'interior', 'technology'];
-const BRANDS = ['bmw', 'mercedes', 'audi', 'porsche', 'ferrari', 'lamborghini', 'aston-martin'];
+const CATEGORIES = ['performance', 'interior', 'technology', 'steering-wheels', 'active-sound', 'practical-accessories'];
+const BRANDS = ['bmw', 'mercedes-benz', 'audi', 'volkswagen', 'porsche', 'toyota'];
 
 function emptyProduct() {
   return {
     slug: '', name: '', subtitle: '', description: '',
     price: '', compare_at_price: '', currency: 'EUR',
     images: [], category_slug: 'performance', subcategory: '',
-    compatible_brands: [], badges: [], sku: '', stock: 25,
-    rating: 0, review_count: 0, featured: false, specs: {},
+    compatible_brands: [], compatibilities: [], badges: [], sku: '', stock: 0,
+    rating: null, review_count: 0, featured: false, specs: {},
+    package_contents: [], installation_difficulty: '', installation_minutes: null,
+    tools_required: [], warranty_months: null, delivery_estimate: '',
+    status: 'draft', is_verified: false,
+    admin: { supplier_reference: '', supplier_name: '', supplier_url: '', cost_price: null, shipping_cost: null, landed_cost: null, margin_amount: null, margin_percent: null },
   };
 }
 
@@ -24,9 +28,14 @@ function PasswordGate({ onAuth }) {
     if (!pwd || checking) return;
     setChecking(true);
     try {
-      const response = await fetch(`${API}/api/admin/verify`, { headers: { 'X-Admin-Key': pwd } });
+      const response = await fetch(`${API}/api/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      });
       if (!response.ok) throw new Error('unauthorized');
-      onAuth(pwd);
+      const data = await response.json();
+      onAuth(data.access_token);
     } catch (e) {
       setError(true);
       setPwd('');
@@ -48,7 +57,7 @@ function PasswordGate({ onAuth }) {
           onKeyDown={e => e.key === 'Enter' && submit()}
           style={{ width: '100%', background: '#0F1218', border: `1px solid ${error ? '#7f1d1d' : '#1A2030'}`, borderRadius: 4, padding: '12px 16px', color: '#E8E8E8', fontSize: 15, outline: 'none', fontFamily: "'Rajdhani', sans-serif", boxSizing: 'border-box', marginBottom: 8 }}
         />
-        {error && <div style={{ color: '#ef4444', fontSize: 12, letterSpacing: 1, marginBottom: 12 }}>Mot de passe incorrect</div>}
+        {error && <div style={{ color: '#ef4444', fontSize: 12, letterSpacing: 1, marginBottom: 12 }}>Connexion refusée ou temporairement limitée</div>}
         <button
           onClick={submit}
           style={{ width: '100%', background: '#C9A84C', color: '#000', border: 'none', padding: '13px', fontWeight: 800, letterSpacing: 2, fontSize: 13, cursor: 'pointer', borderRadius: 4, fontFamily: "'Rajdhani', sans-serif", marginTop: 8 }}
@@ -61,8 +70,10 @@ function PasswordGate({ onAuth }) {
 }
 
 export default function AdminPanel() {
-  const [adminKey, setAdminKey] = useState('');
+  const [adminToken, setAdminToken] = useState('');
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [section, setSection] = useState('products');
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('list'); // 'list' | 'edit' | 'create'
   const [selected, setSelected] = useState(null);
@@ -74,20 +85,49 @@ export default function AdminPanel() {
   const [search, setSearch] = useState('');
   const fileRef = useRef();
 
-  useEffect(() => { if (adminKey) fetchProducts(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (adminToken) { fetchProducts(); fetchOrders(); } }, [adminToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!adminKey) return <PasswordGate onAuth={setAdminKey} />;
+  if (!adminToken) return <PasswordGate onAuth={setAdminToken} />;
 
   async function fetchProducts() {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/api/products?limit=200`);
+      const res = await fetch(`${API}/api/admin/products?limit=200`, { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (res.status === 401) {
+        setAdminToken('');
+        throw new Error('session_expired');
+      }
       const data = await res.json();
       setProducts(data.items || []);
     } catch (e) {
       notify('Erreur chargement produits', 'error');
     }
     setLoading(false);
+  }
+
+  async function fetchOrders() {
+    try {
+      const res = await fetch(`${API}/api/admin/orders?limit=100`, { headers: { Authorization: `Bearer ${adminToken}` } });
+      if (!res.ok) throw new Error('orders_failed');
+      const data = await res.json();
+      setOrders(data.items || []);
+    } catch (e) {
+      notify('Erreur chargement commandes', 'error');
+    }
+  }
+
+  async function updateOrder(orderId, fulfillmentStatus) {
+    const response = await fetch(`${API}/api/admin/orders/${orderId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+      body: JSON.stringify({ fulfillment_status: fulfillmentStatus }),
+    });
+    if (!response.ok) {
+      notify('Mise à jour de commande refusée', 'error');
+      return;
+    }
+    notify('Commande mise à jour');
+    await fetchOrders();
   }
 
   function notify(text, type = 'ok') {
@@ -104,13 +144,18 @@ export default function AdminPanel() {
   function openEdit(p) {
     setSelected(p);
     setForm({
+      ...emptyProduct(),
       ...p,
       price: p.price?.toString() || '',
       compare_at_price: p.compare_at_price?.toString() || '',
       images: p.images || [],
       compatible_brands: p.compatible_brands || [],
+      compatibilities: p.compatibilities || [],
       badges: p.badges || [],
       specs: p.specs || {},
+      package_contents: p.package_contents || [],
+      tools_required: p.tools_required || [],
+      admin: p.admin || emptyProduct().admin,
     });
     setView('edit');
   }
@@ -120,7 +165,7 @@ export default function AdminPanel() {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch(`${API}/api/admin/upload-image`, { method: 'POST', headers: { 'X-Admin-Key': adminKey }, body: fd });
+      const res = await fetch(`${API}/api/admin/upload-image`, { method: 'POST', headers: { Authorization: `Bearer ${adminToken}` }, body: fd });
       const data = await res.json();
       if (!res.ok) {
         notify(`Erreur upload: ${data.detail || res.status}`, 'error');
@@ -145,7 +190,11 @@ export default function AdminPanel() {
         ...form,
         price: parseFloat(form.price),
         compare_at_price: form.compare_at_price ? parseFloat(form.compare_at_price) : null,
-        stock: parseInt(form.stock),
+        stock: Number.parseInt(form.stock, 10) || 0,
+        rating: form.rating === '' || form.rating == null ? null : Number.parseFloat(form.rating),
+        installation_difficulty: form.installation_difficulty || null,
+        installation_minutes: form.installation_minutes ? Number.parseInt(form.installation_minutes, 10) : null,
+        warranty_months: form.warranty_months ? Number.parseInt(form.warranty_months, 10) : null,
       };
       const url = view === 'create'
         ? `${API}/api/admin/products`
@@ -153,7 +202,7 @@ export default function AdminPanel() {
       const method = view === 'create' ? 'POST' : 'PUT';
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
@@ -170,15 +219,15 @@ export default function AdminPanel() {
     setSaving(false);
   }
 
-  async function deleteProduct(slug) {
+  async function archiveProduct(slug) {
     try {
-      const response = await fetch(`${API}/api/admin/products/${slug}`, { method: 'DELETE', headers: { 'X-Admin-Key': adminKey } });
+      const response = await fetch(`${API}/api/admin/products/${slug}`, { method: 'DELETE', headers: { Authorization: `Bearer ${adminToken}` } });
       if (!response.ok) throw new Error('delete_failed');
-      notify('Produit supprimé');
+      notify('Produit archivé');
       setDeleteConfirm(null);
       await fetchProducts();
     } catch (e) {
-      notify('Erreur suppression', 'error');
+      notify('Erreur archivage', 'error');
     }
   }
 
@@ -204,14 +253,19 @@ export default function AdminPanel() {
           <div style={styles.subtitle}>ADMIN — GESTION PRODUITS</div>
         </div>
         {view === 'list' ? (
-          <button style={styles.btnPrimary} onClick={openCreate}>+ NOUVEAU PRODUIT</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button style={section === 'products' ? styles.btnPrimary : styles.btnGhost} onClick={() => setSection('products')}>PRODUITS</button>
+            <button style={section === 'orders' ? styles.btnPrimary : styles.btnGhost} onClick={() => setSection('orders')}>COMMANDES ({orders.length})</button>
+            <button style={styles.btnGhost} onClick={() => setAdminToken('')}>DÉCONNEXION</button>
+            {section === 'products' && <button style={styles.btnPrimary} onClick={openCreate}>+ NOUVEAU PRODUIT</button>}
+          </div>
         ) : (
           <button style={styles.btnGhost} onClick={() => setView('list')}>← RETOUR</button>
         )}
       </div>
 
       {/* LIST VIEW */}
-      {view === 'list' && (
+      {view === 'list' && section === 'products' && (
         <div style={styles.container}>
           <div style={styles.toolbar}>
             <input
@@ -241,12 +295,38 @@ export default function AdminPanel() {
                     <div style={styles.cardName}>{p.name}</div>
                     <div style={styles.cardPrice}>€{p.price?.toFixed(2)}</div>
                     <div style={styles.cardStock}>Stock: {p.stock}</div>
+                    <div style={styles.cardStock}>Statut: {p.status || 'legacy'} · {p.is_verified ? 'vérifié' : 'non vérifié'}</div>
                   </div>
                   <div style={styles.cardActions}>
                     <button style={styles.btnEdit} onClick={() => openEdit(p)}>MODIFIER</button>
-                    <button style={styles.btnDelete} onClick={() => setDeleteConfirm(p)}>SUPPRIMER</button>
+                    <button style={styles.btnDelete} onClick={() => setDeleteConfirm(p)}>ARCHIVER</button>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {view === 'list' && section === 'orders' && (
+        <div style={styles.container}>
+          <div style={styles.formTitle}>COMMANDES DE TEST</div>
+          {orders.length === 0 ? <div style={styles.loading}>Aucune commande enregistrée.</div> : (
+            <div style={{ display: 'grid', gap: 12 }}>
+              {orders.map(order => (
+                <article key={order.id} style={{ ...styles.card, padding: 18 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                    <div>
+                      <div style={styles.cardCat}>{order.order_number} · {order.payment_status}</div>
+                      <div style={styles.cardName}>{order.customer_email || 'E-mail en attente'}</div>
+                      <div style={styles.cardStock}>{order.items?.length || 0} article(s) · {((order.total_cents || 0) / 100).toFixed(2)} {order.currency || 'EUR'}</div>
+                      {order.requires_compatibility_review && <div style={{ ...styles.cardStock, color: '#F2C94C' }}>Compatibilité à contrôler manuellement</div>}
+                    </div>
+                    <select value={order.fulfillment_status} onChange={event => updateOrder(order.id, event.target.value)} style={{ ...styles.input, width: 210, height: 42 }}>
+                      {['unfulfilled', 'processing', 'requires_review', 'shipped', 'delivered', 'cancelled'].map(status => <option key={status} value={status}>{status}</option>)}
+                    </select>
+                  </div>
+                </article>
               ))}
             </div>
           )}
@@ -287,11 +367,28 @@ export default function AdminPanel() {
               />
               <Field label="Sous-catégorie" value={form.subcategory} onChange={v => setForm(f => ({ ...f, subcategory: v }))} />
 
+              <SelectField
+                label="Statut de publication"
+                value={form.status}
+                onChange={v => setForm(f => ({ ...f, status: v }))}
+                options={['draft', 'active', 'archived']}
+              />
+
+              <label style={styles.checkRow}>
+                <input type="checkbox" checked={form.is_verified} onChange={e => setForm(f => ({ ...f, is_verified: e.target.checked }))} />
+                <span style={{ marginLeft: 8, color: '#C9A84C', fontWeight: 700 }}>Données et compatibilités vérifiées</span>
+              </label>
+
               <CheckboxGroup
                 label="Marques compatibles"
                 options={BRANDS}
                 selected={form.compatible_brands}
                 onChange={v => setForm(f => ({ ...f, compatible_brands: v }))}
+              />
+
+              <CompatibilityEditor
+                compatibilities={form.compatibilities}
+                onChange={v => setForm(f => ({ ...f, compatibilities: v }))}
               />
 
               <TagInput
@@ -304,6 +401,19 @@ export default function AdminPanel() {
                 specs={form.specs}
                 onChange={v => setForm(f => ({ ...f, specs: v }))}
               />
+
+              <TagInput label="Contenu du colis" tags={form.package_contents} onChange={v => setForm(f => ({ ...f, package_contents: v }))} />
+              <TagInput label="Outils nécessaires" tags={form.tools_required} onChange={v => setForm(f => ({ ...f, tools_required: v }))} />
+
+              <div style={styles.row}>
+                <div style={{ width: 'calc(50% - 6px)' }}><SelectField label="Difficulté de montage" value={form.installation_difficulty} onChange={v => setForm(f => ({ ...f, installation_difficulty: v }))} options={['', 'easy', 'medium', 'advanced', 'professional']} /></div>
+                <Field label="Durée de montage (min)" value={form.installation_minutes || ''} onChange={v => setForm(f => ({ ...f, installation_minutes: v }))} type="number" half />
+              </div>
+
+              <div style={styles.row}>
+                <Field label="Garantie réelle (mois)" value={form.warranty_months || ''} onChange={v => setForm(f => ({ ...f, warranty_months: v }))} type="number" half />
+                <Field label="Délai estimé" value={form.delivery_estimate} onChange={v => setForm(f => ({ ...f, delivery_estimate: v }))} half />
+              </div>
 
               <label style={styles.checkRow}>
                 <input type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} />
@@ -334,6 +444,15 @@ export default function AdminPanel() {
                   </div>
                 ))}
               </div>
+
+              <div style={{ ...styles.fieldLabel, marginTop: 24 }}>DONNÉES FOURNISSEUR — PRIVÉES</div>
+              <Field label="Fournisseur" value={form.admin?.supplier_name || ''} onChange={v => setForm(f => ({ ...f, admin: { ...f.admin, supplier_name: v } }))} />
+              <Field label="Référence fournisseur" value={form.admin?.supplier_reference || ''} onChange={v => setForm(f => ({ ...f, admin: { ...f.admin, supplier_reference: v } }))} />
+              <Field label="URL fournisseur" value={form.admin?.supplier_url || ''} onChange={v => setForm(f => ({ ...f, admin: { ...f.admin, supplier_url: v } }))} />
+              <div style={styles.row}>
+                <Field label="Coût produit" value={form.admin?.cost_price || ''} onChange={v => setForm(f => ({ ...f, admin: { ...f.admin, cost_price: v ? Number(v) : null } }))} type="number" half />
+                <Field label="Coût livraison" value={form.admin?.shipping_cost || ''} onChange={v => setForm(f => ({ ...f, admin: { ...f.admin, shipping_cost: v ? Number(v) : null } }))} type="number" half />
+              </div>
             </div>
           </div>
 
@@ -350,16 +469,68 @@ export default function AdminPanel() {
       {deleteConfirm && (
         <div style={styles.overlay}>
           <div style={styles.modal}>
-            <div style={styles.modalTitle}>SUPPRIMER CE PRODUIT ?</div>
+            <div style={styles.modalTitle}>ARCHIVER CE PRODUIT ?</div>
             <div style={styles.modalName}>{deleteConfirm.name}</div>
-            <div style={styles.modalSub}>Cette action est irréversible.</div>
+            <div style={styles.modalSub}>Le produit ne sera plus visible dans la boutique et restera récupérable.</div>
             <div style={styles.modalActions}>
               <button style={styles.btnGhost} onClick={() => setDeleteConfirm(null)}>ANNULER</button>
-              <button style={{ ...styles.btnPrimary, background: '#7f1d1d' }} onClick={() => deleteProduct(deleteConfirm.slug)}>SUPPRIMER</button>
+              <button style={{ ...styles.btnPrimary, background: '#7f1d1d' }} onClick={() => archiveProduct(deleteConfirm.slug)}>ARCHIVER</button>
             </div>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function CompatibilityEditor({ compatibilities, onChange }) {
+  const blank = {
+    brand_slug: 'bmw', model: '', chassis: '', generation: '', year_from: '', year_to: '',
+    body_types: [], facelift: 'unknown', required_trim: [], excluded_trims: [], camera_compatible: null,
+    parking_sensor_compatible: null, notes: '', is_verified: false,
+  };
+  const [entry, setEntry] = useState(blank);
+
+  function add() {
+    if (!entry.brand_slug || !entry.model || !entry.chassis || !entry.year_from || !entry.year_to) return;
+    onChange([
+      ...compatibilities,
+      {
+        ...entry,
+        generation: entry.generation || entry.chassis,
+        year_from: Number(entry.year_from),
+        year_to: Number(entry.year_to),
+      },
+    ]);
+    setEntry(blank);
+  }
+
+  return (
+    <div style={styles.field}>
+      <label style={styles.fieldLabel}>COMPATIBILITÉS PRÉCISES</label>
+      <div style={{ ...styles.row, flexWrap: 'wrap' }}>
+        <select style={{ ...styles.input, flex: 1, minWidth: 140 }} value={entry.brand_slug} onChange={e => setEntry(v => ({ ...v, brand_slug: e.target.value }))}>
+          {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+        </select>
+        <input style={{ ...styles.input, flex: 1, minWidth: 140 }} placeholder="Modèle" value={entry.model} onChange={e => setEntry(v => ({ ...v, model: e.target.value }))} />
+        <input style={{ ...styles.input, flex: 1, minWidth: 110 }} placeholder="Châssis" value={entry.chassis} onChange={e => setEntry(v => ({ ...v, chassis: e.target.value }))} />
+        <input style={{ ...styles.input, width: 90 }} type="number" placeholder="De" value={entry.year_from} onChange={e => setEntry(v => ({ ...v, year_from: e.target.value }))} />
+        <input style={{ ...styles.input, width: 90 }} type="number" placeholder="À" value={entry.year_to} onChange={e => setEntry(v => ({ ...v, year_to: e.target.value }))} />
+      </div>
+      <input style={styles.input} placeholder="Notes ou exclusions de compatibilité" value={entry.notes} onChange={e => setEntry(v => ({ ...v, notes: e.target.value }))} />
+      <label style={styles.checkRow}>
+        <input type="checkbox" checked={entry.is_verified} onChange={e => setEntry(v => ({ ...v, is_verified: e.target.checked }))} />
+        <span style={{ marginLeft: 8 }}>Compatibilité vérifiée</span>
+      </label>
+      <button type="button" style={styles.btnAdd} onClick={add}>+ AJOUTER LA COMPATIBILITÉ</button>
+      {compatibilities.map((item, index) => (
+        <div key={`${item.brand_slug}-${item.chassis}-${item.year_from}-${index}`} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, padding: 10, border: '1px solid #1A2030', borderRadius: 4 }}>
+          <span style={{ fontSize: 12, color: '#A0AEC0' }}>
+            {item.brand_slug} · {item.model} · {item.chassis} · {item.year_from}–{item.year_to} · {item.is_verified ? 'vérifiée' : 'à confirmer'}
+          </span>
+          <button type="button" style={{ ...styles.btnDelete, flex: 'none', borderLeft: 0, padding: 0 }} onClick={() => onChange(compatibilities.filter((_, i) => i !== index))}>RETIRER</button>
+        </div>
+      ))}
     </div>
   );
 }

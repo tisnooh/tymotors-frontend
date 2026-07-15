@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
 const API = `${BACKEND_URL}/api`;
 
 // Get/generate persistent session id
@@ -36,6 +36,7 @@ export const Categories = {
 export const Products = {
   list: (params = {}) => api.get('/products', { params }).then((r) => r.data),
   get: (slug) => api.get(`/products/${slug}`).then((r) => r.data),
+  checkCompatibility: (slug, vehicle) => api.post(`/products/${slug}/compatibility`, vehicle).then((r) => r.data),
 };
 
 export const Compatibility = {
@@ -44,7 +45,7 @@ export const Compatibility = {
 
 export const Cart = {
   get: () => api.get('/cart').then((r) => r.data),
-  add: (product_id, quantity = 1) => api.post('/cart', { product_id, quantity }).then((r) => r.data),
+  add: (product_id, quantity = 1, selected_vehicle = null) => api.post('/cart', { product_id, quantity, selected_vehicle }).then((r) => r.data),
   update: (product_id, quantity) => api.put('/cart', { product_id, quantity }).then((r) => r.data),
   remove: (product_id) => api.delete(`/cart/${product_id}`).then((r) => r.data),
   clear: () => api.delete('/cart').then((r) => r.data),

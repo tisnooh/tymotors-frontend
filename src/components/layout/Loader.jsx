@@ -7,7 +7,7 @@ function Logo({ phase }) {
       <div
         aria-label="TYMotors"
         className="ty-display text-5xl md:text-7xl lg:text-8xl font-bold text-white"
-        style={{ letterSpacing: '0.18em', animation: 'logo-reveal 0.9s ease-out forwards' }}
+        style={{ letterSpacing: '0.18em', animation: 'logo-reveal 0.35s ease-out forwards' }}
       >
         TYMOTORS
       </div>
@@ -36,12 +36,12 @@ export function Loader({ onDone }) {
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
-      const t0 = setTimeout(() => onDone?.(), 200);
+      const t0 = setTimeout(() => onDone?.(), 50);
       return () => clearTimeout(t0);
     }
-    const t1 = setTimeout(() => setPhase(1), 700);
-    const t2 = setTimeout(() => setPhase(2), 1500);
-    const t3 = setTimeout(() => onDone?.(), 1900);
+    const t1 = setTimeout(() => setPhase(1), 160);
+    const t2 = setTimeout(() => setPhase(2), 420);
+    const t3 = setTimeout(() => onDone?.(), 540);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -54,7 +54,7 @@ export function Loader({ onDone }) {
   return (
     <div
       data-testid="loader-overlay"
-      className={`fixed inset-0 z-[100] bg-[#050608] flex items-center justify-center transition-opacity duration-500 ${isOut ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      className={`fixed inset-0 z-[100] bg-[#050608] flex items-center justify-center transition-opacity duration-150 ${isOut ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
     >
       <div className="absolute inset-0 ty-grid-lines opacity-[0.07]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E10600]/40 to-transparent" />
@@ -68,7 +68,7 @@ export function Loader({ onDone }) {
         <div className="mt-6 mx-auto h-px w-40 bg-[#232B3A] overflow-hidden">
           <div
             className="h-full bg-[#E10600] origin-left"
-            style={{ transform: `scaleX(${progressScale(phase)})`, transition: 'transform 0.9s ease-out' }}
+            style={{ transform: `scaleX(${progressScale(phase)})`, transition: 'transform 0.25s ease-out' }}
           />
         </div>
       </div>

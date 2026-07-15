@@ -40,7 +40,7 @@ export function BrandsSection() {
                   src={b.image}
                   alt={b.name}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-[1.05] transition-all duration-[800ms]"
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-[1.05] transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />
                 <div className="absolute inset-0 ty-noise" />

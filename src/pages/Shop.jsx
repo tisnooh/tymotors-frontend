@@ -37,7 +37,7 @@ function FilterItem({ active, onClick, children }) {
 
 function ProductSkeletonGrid() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
       {SKELETON_KEYS.map((k) => (
         <div key={k} className="aspect-[4/5] rounded-2xl bg-[#0F1115] border border-[#151A23] animate-pulse" />
       ))}
@@ -61,7 +61,7 @@ function ProductGridSection({ loading, products, onReset }) {
   if (loading) return <ProductSkeletonGrid />;
   if (products.length === 0) return <EmptyState onReset={onReset} />;
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
       {products.map((p, idx) => (
         <Reveal key={p.id} delay={(idx % 6) * 0.04}><ProductCard product={p} index={idx} /></Reveal>
       ))}
@@ -81,6 +81,11 @@ export default function Shop() {
 
   const brand = params.get('brand') || '';
   const category = params.get('category') || '';
+  const model = params.get('model') || '';
+  const chassis = params.get('chassis') || '';
+  const year = params.get('year') || '';
+  const bodyType = params.get('body_type') || '';
+  const sort = params.get('sort') || 'relevance';
 
   useEffect(() => {
     Promise.all([BrandsApi.list(), CategoriesApi.list()])
@@ -96,6 +101,11 @@ export default function Shop() {
     const args = { limit: 100 };
     if (brand) args.brand = brand;
     if (category) args.category = category;
+    if (model) args.model = model;
+    if (chassis) args.chassis = chassis;
+    if (year) args.year = year;
+    if (bodyType) args.body_type = bodyType;
+    if (sort) args.sort = sort;
     let cancelled = false;
     Products.list(args)
       .then((d) => {
@@ -109,11 +119,14 @@ export default function Shop() {
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [brand, category]);
+  }, [brand, bodyType, category, chassis, model, sort, year]);
 
   const setFilter = (key, value) => {
     const next = new URLSearchParams(params);
     if (!value) next.delete(key); else next.set(key, value);
+    if (key === 'brand') {
+      ['model', 'chassis', 'year', 'body_type'].forEach((field) => next.delete(field));
+    }
     setParams(next);
   };
 
@@ -137,17 +150,33 @@ export default function Shop() {
           <p className="mt-3 text-ty-textMid max-w-xl">{t('shop.sub')}</p>
         </Reveal>
 
-        <div className="flex items-center justify-between mb-6">
+        {(brand || model || chassis || year) && (
+          <div className="mb-5 rounded-xl border border-[#F2C94C]/25 bg-[#F2C94C]/5 p-3 text-sm text-ty-textMid">
+            <span className="font-mono text-[#F2C94C]">VOTRE VÉHICULE :</span>{' '}
+            {[brand, model, chassis, year].filter(Boolean).join(' · ')}
+            <span className="ml-2 text-xs text-ty-textLow">Les résultats ne valent confirmation que si la fiche indique « Compatible ».</span>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <p data-testid="shop-results-count" className="font-mono text-xs tracking-wider text-ty-textLow">
             {total} {t('shop.results')}
           </p>
-          <button
-            type="button"
-            onClick={() => setMobileFilters((v) => !v)}
-            className="lg:hidden ty-btn-ghost h-10 text-xs tracking-[0.18em] uppercase"
-          >
-            <SlidersHorizontal className="h-4 w-4" /> {t('shop.filters')}
-          </button>
+          <div className="flex items-center gap-2">
+            <select aria-label="Trier les produits" value={sort} onChange={(event) => setFilter('sort', event.target.value)} className="h-10 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-xs text-white">
+              <option value="relevance">Pertinence</option>
+              <option value="price_asc">Prix croissant</option>
+              <option value="price_desc">Prix décroissant</option>
+              <option value="newest">Nouveautés</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setMobileFilters((v) => !v)}
+              className="lg:hidden ty-btn-ghost h-10 text-xs tracking-[0.18em] uppercase"
+            >
+              <SlidersHorizontal className="h-4 w-4" /> {t('shop.filters')}
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -166,6 +195,22 @@ export default function Shop() {
                   <FilterItem key={b.slug} active={brand === b.slug} onClick={() => setFilter('brand', b.slug)}>{b.name}</FilterItem>
                 ))}
               </FilterGroup>
+
+              <div>
+                <h4 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-3">Véhicule précis</h4>
+                <div className="space-y-2">
+                  <input aria-label="Modèle" placeholder="Modèle" value={model} onChange={(event) => setFilter('model', event.target.value)} className="h-10 w-full rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white" />
+                  <input aria-label="Génération ou châssis" placeholder="Génération / châssis" value={chassis} onChange={(event) => setFilter('chassis', event.target.value)} className="h-10 w-full rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white" />
+                  <input aria-label="Année" type="number" min="1980" max="2035" placeholder="Année" value={year} onChange={(event) => setFilter('year', event.target.value)} className="h-10 w-full rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white" />
+                  <select aria-label="Carrosserie" value={bodyType} onChange={(event) => setFilter('body_type', event.target.value)} className="h-10 w-full rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white">
+                    <option value="">Toutes carrosseries</option>
+                    <option value="berline">Berline</option>
+                    <option value="break">Break</option>
+                    <option value="coupe">Coupé</option>
+                    <option value="hatchback">Compacte</option>
+                  </select>
+                </div>
+              </div>
 
               <button type="button" onClick={reset} data-testid="shop-reset-button" className="ty-btn-line h-10 w-full text-xs tracking-[0.18em] uppercase">
                 {t('shop.reset')}
