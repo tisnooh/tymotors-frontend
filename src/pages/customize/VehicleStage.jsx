@@ -21,6 +21,7 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
       <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
       {selectionComplete && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
       {hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
+      {image && generation?.image_attribution && <a href={generation.image_source_url || undefined} target="_blank" rel="noreferrer" className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/70 hover:text-white">{generation.image_attribution}</a>}
     </div>
     <div className="px-4 py-4 border-t border-[#151A23]">
       {!selectionComplete && <p className="text-sm text-ty-textMid flex items-center gap-2"><Car className="h-4 w-4" />Marque, modèle puis génération : aucune image générique ne sera substituée.</p>}
