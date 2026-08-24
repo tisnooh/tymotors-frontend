@@ -13,8 +13,9 @@ export default function Cart() {
   const { cart, updateCart, removeFromCart } = useApp();
   const [checkingOut, setCheckingOut] = useState(false);
 
-  const subtotal = cart.subtotal || 0;
-  const shipping = cart.shipping || 0;
+  const currency = cart.currency || 'EUR';
+  const subtotal = cart.subtotal ?? 0;
+  const shipping = cart.shipping ?? 0;
   const shippingFree = shipping === 0;
   const total = cart.total ?? (subtotal + shipping);
 
@@ -47,7 +48,10 @@ export default function Cart() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8">
               <ul className="divide-y divide-[#151A23] border-y border-[#151A23]">
-                {cart.items.map((it) => (
+                {cart.items.map((it) => {
+                  const compatibilityStatus = it.compatibility_result?.status || it.selected_vehicle?.compatibility_status;
+                  const lineTotal = it.line_total ?? ((it.price || 0) * it.quantity);
+                  return (
                   <li key={it.product_id} data-testid="cart-item" className="py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                     <Link to={`/product/${it.slug}`} className="h-24 w-32 rounded-xl overflow-hidden bg-[#0F1115] border border-[#151A23] shrink-0">
                       <img src={it.image} alt={it.name} className="h-full w-full object-cover" />
@@ -59,7 +63,7 @@ export default function Cart() {
                       {it.selected_vehicle && (
                         <p className="mt-1 text-xs text-[#F2C94C]">
                           Véhicule : {[it.selected_vehicle.brand_slug, it.selected_vehicle.model, it.selected_vehicle.chassis, it.selected_vehicle.year].filter(Boolean).join(' · ')}
-                          {' '}({it.selected_vehicle.compatibility_status === 'compatible' ? 'vérifié' : 'contrôle requis'})
+                          {' '}({compatibilityStatus === 'compatible' ? 'vérifié' : 'contrôle requis'})
                         </p>
                       )}
                     </div>
@@ -69,13 +73,14 @@ export default function Cart() {
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
                         <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= it.stock} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
-                      <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(it.line_total, 'EUR', i18n.language)}</p>
+                      <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(lineTotal, currency, i18n.language)}</p>
                       <button onClick={() => removeFromCart(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
 
@@ -83,13 +88,13 @@ export default function Cart() {
               <div className="lg:sticky lg:top-24 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6">
                 <h3 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-5">Récapitulatif</h3>
                 <dl className="space-y-3 text-sm">
-                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.subtotal')}</dt><dd data-testid="cart-subtotal" className="text-white font-mono">{formatPrice(subtotal, 'EUR', i18n.language)}</dd></div>
-                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.shipping')}</dt><dd className="text-white font-mono">{shippingFree ? <span className="text-[#F2C94C]">{t('cart.shipping_free')}</span> : formatPrice(shipping, 'EUR', i18n.language)}</dd></div>
+                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.subtotal')}</dt><dd data-testid="cart-subtotal" className="text-white font-mono">{formatPrice(subtotal, currency, i18n.language)}</dd></div>
+                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.shipping')}</dt><dd data-testid="cart-shipping" className="text-white font-mono">{shippingFree ? <span className="text-[#F2C94C]">{t('cart.shipping_free')}</span> : formatPrice(shipping, currency, i18n.language)}</dd></div>
                 </dl>
                 <div className="my-4 h-px bg-[#151A23]" />
                 <div className="flex justify-between items-baseline">
                   <span className="text-ty-textMid">{t('cart.total')}</span>
-                  <span data-testid="cart-total" className="text-white font-mono text-2xl">{formatPrice(total, 'EUR', i18n.language)}</span>
+                  <span data-testid="cart-total" className="text-white font-mono text-2xl">{formatPrice(total, currency, i18n.language)}</span>
                 </div>
                 <button
                   type="button"
