@@ -7,6 +7,7 @@ import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { Heart, ShoppingBag, Truck, ShieldCheck, BadgeCheck, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -52,7 +53,14 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
 function CompatibilityChecker({ product, onSelection }) {
   const detailed = product.compatibilities || [];
   const brands = [...new Set([...detailed.map((item) => item.brand_slug), ...(product.compatible_brands || [])])];
-  const [vehicle, setVehicle] = useState({ brand_slug: '', model: '', chassis: '', year: '' });
+  const [vehicle, setVehicle] = useState(() => {
+    const saved = readVehicleSelection();
+    const brand_slug = brands.includes(saved.brand) ? saved.brand : '';
+    const model = detailed.some((item) => item.brand_slug === brand_slug && item.model === saved.model) ? saved.model : '';
+    const chassis = detailed.some((item) => item.brand_slug === brand_slug && item.model === model
+      && [item.chassis, item.generation].includes(saved.generation)) ? saved.generation : '';
+    return { brand_slug, model, chassis, year: chassis ? saved.year : '' };
+  });
   const [result, setResult] = useState(null);
   const [checking, setChecking] = useState(false);
   const models = [...new Set(detailed.filter((item) => item.brand_slug === vehicle.brand_slug).map((item) => item.model))];
@@ -61,12 +69,16 @@ function CompatibilityChecker({ product, onSelection }) {
   const update = (key, value) => {
     setResult(null);
     onSelection?.(null, null);
-    setVehicle((current) => ({
+    setVehicle((current) => {
+      const next = {
       ...current,
       [key]: value,
       ...(key === 'brand_slug' ? { model: '', chassis: '', year: '' } : {}),
       ...(key === 'model' ? { chassis: '', year: '' } : {}),
-    }));
+      };
+      saveVehicleSelection({ brand: next.brand_slug, model: next.model, generation: next.chassis, year: next.year });
+      return next;
+    });
   };
 
   const check = async () => {
@@ -78,6 +90,7 @@ function CompatibilityChecker({ product, onSelection }) {
         year: vehicle.year ? Number(vehicle.year) : null,
       });
       setResult(data);
+      saveVehicleSelection({ brand: vehicle.brand_slug, model: vehicle.model, generation: vehicle.chassis, year: vehicle.year });
       onSelection?.({ ...vehicle, year: vehicle.year ? Number(vehicle.year) : null }, data.status);
     } catch (error) {
       setResult({ status: 'unknown', reason: 'La vérification est indisponible. Contactez-nous avant de commander.' });
