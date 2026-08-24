@@ -33,7 +33,7 @@ export function SeoManager() {
 
   useEffect(() => {
     if (pathname.startsWith('/product/')) return;
-    const isPrivatePage = ['/cart', '/wishlist', '/order-success', '/admin'].some((path) => pathname.startsWith(path));
+    const isPrivatePage = ['/cart', '/wishlist', '/order-success', '/admin', '/account', '/auth'].some((path) => pathname.startsWith(path));
     let seo = ROUTES[pathname];
     if (!seo && pathname.startsWith('/category/')) seo = ['Pièces automobiles par catégorie | TYMotors', 'Explorez les pièces automobiles TYMotors classées par usage et catégorie.'];
     if (!seo && pathname.startsWith('/brands/')) seo = ['Pièces compatibles par marque | TYMotors', 'Découvrez les pièces TYMotors sélectionnées pour votre marque automobile.'];

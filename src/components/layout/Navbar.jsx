@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, Heart, ShoppingBag, Menu } from 'lucide-react';
+import { Search, Heart, ShoppingBag, Menu, UserRound } from 'lucide-react';
 import { Logo } from '@/components/shared/Logo';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { useApp } from '@/contexts/AppContext';
@@ -111,6 +111,13 @@ function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }
       >
         <ShoppingBag className="h-[18px] w-[18px]" />
         <CountBadge count={cartCount} />
+      </Link>
+      <Link
+        to="/account"
+        className="relative hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full text-ty-textMid hover:text-white hover:bg-white/5 transition-colors"
+        aria-label={t('nav.account')}
+      >
+        <UserRound className="h-[18px] w-[18px]" />
       </Link>
       <Link
         to="/shop"

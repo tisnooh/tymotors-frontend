@@ -1,14 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Brands as BrandsApi, Compatibility, Products } from '@/lib/api';
 
-export const HOTSPOTS = [
-  { id: 'front', label: 'Avant', x: 22, y: 60, categories: ['performance'], subcats: ['Calandres', 'Extérieur'] },
-  { id: 'steering', label: 'Volants', x: 43, y: 42, categories: ['interior'], subcats: ['Volants'] },
-  { id: 'rear', label: 'Arrière', x: 82, y: 65, categories: ['performance'], subcats: ['Spoilers', 'Diffuseurs', "Sorties d'échappement", 'Silencieux'] },
-  { id: 'interior', label: 'Intérieur', x: 56, y: 35, categories: ['interior'], subcats: ['Volants', 'Tableaux de bord', 'Accessoires intérieurs'] },
-  { id: 'technology', label: 'Technologie', x: 50, y: 58, categories: ['technology'], subcats: ['Écrans CarPlay', 'Dashcams', 'Caméras de recul'] },
-];
-
 export function useBrands() {
   const [brands, setBrands] = useState([]);
   useEffect(() => {
@@ -38,23 +30,24 @@ export function useCompatibility(brandSlug) {
   return models;
 }
 
-export function useRecommendedForHotspot(hotspotId, brandSlug) {
+export function useRecommendedForHotspot(hotspot, selection) {
   const [recommended, setRecommended] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!hotspotId || !brandSlug) { setRecommended([]); return undefined; }
-    const hotspot = HOTSPOTS.find((h) => h.id === hotspotId);
-    if (!hotspot) { setRecommended([]); return undefined; }
+    if (!hotspot || !selection.brand || !selection.model || !selection.generation) { setRecommended([]); return undefined; }
 
     let cancelled = false;
     setLoading(true);
-    Promise.all(hotspot.categories.map((c) => Products.list({ category: c, brand: brandSlug, limit: 50 })))
-      .then((responses) => {
+    Products.list({
+      category: hotspot.category_slug,
+      brand: selection.brand,
+      model: selection.model,
+      chassis: selection.generation,
+      limit: 50,
+    }).then((response) => {
         if (cancelled) return;
-        const all = responses.flatMap((d) => d.items || []);
-        const filtered = all.filter((p) => !hotspot.subcats || hotspot.subcats.includes(p.subcategory));
-        setRecommended(filtered.slice(0, 6));
+        setRecommended((response.items || []).slice(0, 6));
       })
       .catch((e) => {
         console.warn('[TYMotors] recommended products failed:', e?.message || e);
@@ -63,7 +56,7 @@ export function useRecommendedForHotspot(hotspotId, brandSlug) {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [hotspotId, brandSlug]);
+  }, [hotspot, selection.brand, selection.model, selection.generation]);
 
   return { recommended, loading };
 }

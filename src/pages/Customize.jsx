@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
 import { SelectCard } from './customize/SelectCard';
@@ -16,7 +16,17 @@ export default function Customize() {
   const { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj } =
     useVehicleSelection();
   const [activeHotspot, setActiveHotspot] = useState(null);
-  const { recommended, loading: loadingProducts } = useRecommendedForHotspot(activeHotspot, brand);
+  useEffect(() => setActiveHotspot(null), [brand, model, generation]);
+  const generationRecord = useMemo(
+    () => modelObj?.generation_records?.find((item) => item.name === generation) || null,
+    [generation, modelObj]
+  );
+  const activeHotspotRecord = useMemo(
+    () => generationRecord?.hotspots?.find((item) => item.id === activeHotspot) || null,
+    [activeHotspot, generationRecord]
+  );
+  const selection = useMemo(() => ({ brand, model, generation }), [brand, model, generation]);
+  const { recommended, loading: loadingProducts } = useRecommendedForHotspot(activeHotspotRecord, selection);
 
   const handleHotspotClick = useCallback((id) => setActiveHotspot(id), []);
   const handleClose = useCallback(() => setActiveHotspot(null), []);
@@ -74,7 +84,7 @@ export default function Customize() {
           </SelectCard>
         </div>
 
-        <VehicleStage brand={brand} model={model} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} />
+        <VehicleStage brand={brand} model={model} generation={generationRecord} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} />
 
         <RecommendedDrawer
           activeHotspot={activeHotspot}

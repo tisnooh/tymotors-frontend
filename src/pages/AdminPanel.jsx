@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
 
-const CATEGORIES = ['performance', 'interior', 'technology', 'steering-wheels', 'active-sound', 'practical-accessories'];
+const CATEGORIES = ['exterior', 'interior', 'multimedia-technology', 'steering-wheels', 'active-sound', 'practical-accessories'];
 const BRANDS = ['bmw', 'mercedes-benz', 'audi', 'volkswagen', 'porsche', 'toyota'];
 
 function emptyProduct() {
   return {
     slug: '', name: '', subtitle: '', description: '',
     price: '', compare_at_price: '', currency: 'EUR',
-    images: [], category_slug: 'performance', subcategory: '',
+    images: [], category_slug: 'exterior', subcategory: '',
     compatible_brands: [], compatibilities: [], badges: [], sku: '', stock: 0,
     rating: null, review_count: 0, featured: false, specs: {},
     package_contents: [], installation_difficulty: '', installation_minutes: null,
@@ -20,6 +21,7 @@ function emptyProduct() {
 }
 
 function PasswordGate({ onAuth }) {
+  const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [error, setError] = useState(false);
   const [checking, setChecking] = useState(false);
@@ -28,14 +30,7 @@ function PasswordGate({ onAuth }) {
     if (!pwd || checking) return;
     setChecking(true);
     try {
-      const response = await fetch(`${API}/api/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwd }),
-      });
-      if (!response.ok) throw new Error('unauthorized');
-      const data = await response.json();
-      onAuth(data.access_token);
+      await onAuth(email, pwd);
     } catch (e) {
       setError(true);
       setPwd('');
@@ -49,6 +44,14 @@ function PasswordGate({ onAuth }) {
       <div style={{ background: '#0D1017', border: '1px solid #1A2030', borderRadius: 8, padding: '48px 40px', width: 360, textAlign: 'center' }}>
         <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: 4, color: '#F2F4F7', marginBottom: 4 }}>TY<span style={{ color: '#C9A84C' }}>MOTORS</span></div>
         <div style={{ fontSize: 11, letterSpacing: 3, color: '#4A5568', marginBottom: 32 }}>ACCÈS ADMIN</div>
+        <input
+          type="email"
+          placeholder="E-mail administrateur"
+          value={email}
+          onChange={e => { setEmail(e.target.value); setError(false); }}
+          autoComplete="email"
+          style={{ width: '100%', background: '#0F1218', border: '1px solid #1A2030', borderRadius: 4, padding: '12px 16px', color: '#E8E8E8', fontSize: 15, outline: 'none', fontFamily: "'Rajdhani', sans-serif", boxSizing: 'border-box', marginBottom: 8 }}
+        />
         <input
           type="password"
           placeholder="Mot de passe"
@@ -70,7 +73,8 @@ function PasswordGate({ onAuth }) {
 }
 
 export default function AdminPanel() {
-  const [adminToken, setAdminToken] = useState('');
+  const { session, user, signIn, signOut } = useAuth();
+  const adminToken = session?.access_token || '';
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [section, setSection] = useState('products');
@@ -87,14 +91,14 @@ export default function AdminPanel() {
 
   useEffect(() => { if (adminToken) { fetchProducts(); fetchOrders(); } }, [adminToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!adminToken) return <PasswordGate onAuth={setAdminToken} />;
+  if (!user || !adminToken) return <PasswordGate onAuth={signIn} />;
 
   async function fetchProducts() {
     setLoading(true);
     try {
       const res = await fetch(`${API}/api/admin/products?limit=200`, { headers: { Authorization: `Bearer ${adminToken}` } });
       if (res.status === 401) {
-        setAdminToken('');
+        await signOut();
         throw new Error('session_expired');
       }
       const data = await res.json();
@@ -256,7 +260,7 @@ export default function AdminPanel() {
           <div style={{ display: 'flex', gap: 10 }}>
             <button style={section === 'products' ? styles.btnPrimary : styles.btnGhost} onClick={() => setSection('products')}>PRODUITS</button>
             <button style={section === 'orders' ? styles.btnPrimary : styles.btnGhost} onClick={() => setSection('orders')}>COMMANDES ({orders.length})</button>
-            <button style={styles.btnGhost} onClick={() => setAdminToken('')}>DÉCONNEXION</button>
+            <button style={styles.btnGhost} onClick={signOut}>DÉCONNEXION</button>
             {section === 'products' && <button style={styles.btnPrimary} onClick={openCreate}>+ NOUVEAU PRODUIT</button>}
           </div>
         ) : (

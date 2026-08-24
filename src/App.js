@@ -4,6 +4,7 @@ import '@/lib/i18n';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AppProvider } from '@/contexts/AppContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { SmoothScrollProvider } from '@/components/layout/SmoothScrollProvider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -34,6 +35,9 @@ const Wishlist = React.lazy(() => import('@/pages/Wishlist'));
 const AdminPanel = React.lazy(() => import('@/pages/AdminPanel'));
 const OrderSuccess = React.lazy(() => import('@/pages/OrderSuccess'));
 const NotFound = React.lazy(() => import('@/pages/NotFound'));
+const AuthPage = React.lazy(() => import('@/pages/AuthPage'));
+const ResetPassword = React.lazy(() => import('@/pages/ResetPassword'));
+const Account = React.lazy(() => import('@/pages/Account'));
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
@@ -79,6 +83,9 @@ function Shell() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/auth/reset" element={<ResetPassword />} />
+              <Route path="/account" element={<Account />} />
               {/* Support */}
               <Route path="/support/contact" element={<ContactPage />} />
               <Route path="/support/shipping" element={<ShippingPage />} />
@@ -103,12 +110,14 @@ function Shell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppProvider>
-        <SmoothScrollProvider>
-          <Shell />
-          <Toaster theme="dark" position="bottom-right" toastOptions={TOAST_OPTIONS} />
-        </SmoothScrollProvider>
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <SmoothScrollProvider>
+            <Shell />
+            <Toaster theme="dark" position="bottom-right" toastOptions={TOAST_OPTIONS} />
+          </SmoothScrollProvider>
+        </AppProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

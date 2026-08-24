@@ -28,6 +28,7 @@ export function MobileMenu() {
     { to: '/customize', label: t('nav.customize_long') },
     { to: '/wishlist', label: t('nav.wishlist') },
     { to: '/cart', label: t('nav.cart') },
+    { to: '/account', label: t('nav.account') },
   ];
 
   if (!mobileMenuOpen) return null;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAccessToken } from '@/lib/supabase';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
 const API = `${BACKEND_URL}/api`;
@@ -18,8 +19,10 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
   config.headers['X-Session-Id'] = getSessionId();
+  const token = await getAccessToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
@@ -49,6 +52,7 @@ export const Cart = {
   update: (product_id, quantity) => api.put('/cart', { product_id, quantity }).then((r) => r.data),
   remove: (product_id) => api.delete(`/cart/${product_id}`).then((r) => r.data),
   clear: () => api.delete('/cart').then((r) => r.data),
+  claim: () => api.post('/cart/claim').then((r) => r.data),
 };
 
 export const Wishlist = {
@@ -68,4 +72,10 @@ export const Contact = {
 export const Checkout = {
   create: () => api.post('/create-checkout-session').then((r) => r.data),
   get: (sessionId) => api.get(`/checkout-session/${encodeURIComponent(sessionId)}`).then((r) => r.data),
+};
+
+export const Account = {
+  get: () => api.get('/me').then((r) => r.data),
+  update: (payload) => api.patch('/me', payload).then((r) => r.data),
+  orders: () => api.get('/me/orders').then((r) => r.data),
 };

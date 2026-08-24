@@ -24,6 +24,8 @@ jobs:
           REACT_APP_BACKEND_URL: http://localhost:8000
           REACT_APP_SITE_URL: http://localhost:3000
           REACT_APP_SITE_MODE: test
+          REACT_APP_SUPABASE_URL: https://example.supabase.co
+          REACT_APP_SUPABASE_PUBLISHABLE_KEY: ci-publishable-placeholder
 
   secrets:
     runs-on: ubuntu-latest

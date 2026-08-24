@@ -6,6 +6,7 @@ Boutique React TYMotors avec recherche par véhicule, catalogue, panier, Stripe 
 
 1. Copier `.env.example` vers `.env.local`.
 2. Définir `REACT_APP_BACKEND_URL` vers le backend local ou le backend de staging.
+3. Définir `REACT_APP_SUPABASE_URL` et `REACT_APP_SUPABASE_PUBLISHABLE_KEY` avec les valeurs publiques du projet Supabase de staging.
 3. Installer les dépendances avec `yarn install --frozen-lockfile`.
 4. Lancer `yarn start` ou vérifier avec `yarn build`.
 
@@ -16,6 +17,8 @@ Le frontend ne doit contenir aucune clé Stripe secrète, clé Cloudinary privé
 La branche `develop` doit rester un Preview Deployment. Configurer :
 
 - `REACT_APP_BACKEND_URL` : URL du backend Render de staging ;
+- `REACT_APP_SUPABASE_URL` : URL publique du projet Supabase de staging ;
+- `REACT_APP_SUPABASE_PUBLISHABLE_KEY` : clé publique Auth (jamais la clé service-role) ;
 - `REACT_APP_SITE_URL` : URL de Preview ou domaine de test ;
 - `REACT_APP_SITE_MODE=test` : maintient `noindex,nofollow` ;
 - les coordonnées de support uniquement lorsqu'elles sont réelles.
