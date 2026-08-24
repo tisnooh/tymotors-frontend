@@ -5,6 +5,7 @@ import { Products, Brands as BrandsApi, Categories as CategoriesApi } from '@/li
 import { ProductCard } from '@/components/shared/ProductCard';
 import { Reveal } from '@/components/shared/Reveal';
 import { SlidersHorizontal } from 'lucide-react';
+import { clearVehicleSelection, readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 
 const SKELETON_KEYS = ['sh-1', 'sh-2', 'sh-3', 'sh-4', 'sh-5', 'sh-6', 'sh-7', 'sh-8', 'sh-9'];
 
@@ -88,6 +89,25 @@ export default function Shop() {
   const sort = params.get('sort') || 'relevance';
 
   useEffect(() => {
+    if (brand || model || chassis || year || bodyType) return;
+    const saved = readVehicleSelection();
+    if (!saved.brand) return;
+    const next = new URLSearchParams(params);
+    next.set('brand', saved.brand);
+    if (saved.model) next.set('model', saved.model);
+    if (saved.generation) next.set('chassis', saved.generation);
+    if (saved.year) next.set('year', saved.year);
+    if (saved.body_type) next.set('body_type', saved.body_type);
+    setParams(next, { replace: true });
+    // This hydration intentionally runs once when the catalogue opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (brand) saveVehicleSelection({ brand, model, generation: chassis, year, body_type: bodyType });
+  }, [bodyType, brand, chassis, model, year]);
+
+  useEffect(() => {
     Promise.all([BrandsApi.list(), CategoriesApi.list()])
       .then(([b, c]) => { setBrands(b); setCats(c); })
       .catch((e) => {
@@ -130,7 +150,17 @@ export default function Shop() {
     setParams(next);
   };
 
-  const reset = () => setParams(new URLSearchParams());
+  const removeVehicle = () => {
+    clearVehicleSelection();
+    const next = new URLSearchParams(params);
+    ['brand', 'model', 'chassis', 'year', 'body_type'].forEach((field) => next.delete(field));
+    setParams(next);
+  };
+
+  const reset = () => {
+    clearVehicleSelection();
+    setParams(new URLSearchParams());
+  };
 
   // Memoize body to keep parent JSX flat
   const body = useMemo(
@@ -155,6 +185,7 @@ export default function Shop() {
             <span className="font-mono text-[#F2C94C]">VOTRE VÉHICULE :</span>{' '}
             {[brand, model, chassis, year].filter(Boolean).join(' · ')}
             <span className="ml-2 text-xs text-ty-textLow">Les résultats ne valent confirmation que si la fiche indique « Compatible ».</span>
+            <button type="button" onClick={removeVehicle} className="ml-3 text-xs font-mono uppercase tracking-wider text-white underline underline-offset-4">Retirer ce véhicule</button>
           </div>
         )}
 

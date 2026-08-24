@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
 import { SelectCard } from './customize/SelectCard';
 import { VehicleStage } from './customize/VehicleStage';
@@ -13,10 +15,10 @@ const EMDASH = '\u2014';
 export default function Customize() {
   const { t } = useTranslation();
   const brands = useBrands();
-  const { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj } =
+  const { brand, setBrand, model, setModel, generation, setGeneration, year, setYear, models, modelObj } =
     useVehicleSelection();
   const [activeHotspot, setActiveHotspot] = useState(null);
-  useEffect(() => setActiveHotspot(null), [brand, model, generation]);
+  useEffect(() => setActiveHotspot(null), [brand, model, generation, year]);
   const generationRecord = useMemo(
     () => modelObj?.generation_records?.find((item) => item.name === generation) || null,
     [generation, modelObj]
@@ -25,8 +27,13 @@ export default function Customize() {
     () => generationRecord?.hotspots?.find((item) => item.id === activeHotspot) || null,
     [activeHotspot, generationRecord]
   );
-  const selection = useMemo(() => ({ brand, model, generation }), [brand, model, generation]);
+  const selection = useMemo(() => ({ brand, model, generation, year }), [brand, model, generation, year]);
   const { recommended, loading: loadingProducts } = useRecommendedForHotspot(activeHotspotRecord, selection);
+  const compatibleUrl = useMemo(() => {
+    const params = new URLSearchParams({ brand, model, chassis: generation });
+    if (year) params.set('year', year);
+    return `/shop?${params.toString()}`;
+  }, [brand, generation, model, year]);
 
   const handleHotspotClick = useCallback((id) => setActiveHotspot(id), []);
   const handleClose = useCallback(() => setActiveHotspot(null), []);
@@ -46,7 +53,7 @@ export default function Customize() {
           <p className="mt-3 text-ty-textMid max-w-2xl">{t('customize.sub')}</p>
         </Reveal>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4" data-testid="customize-selector">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4" data-testid="customize-selector">
           <SelectCard label={t('customize.select_brand')}>
             <select
               value={brand}
@@ -82,9 +89,31 @@ export default function Customize() {
               {modelObj?.generations?.map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
           </SelectCard>
+          <SelectCard label={t('hero.select_year')}>
+            <input
+              aria-label={t('hero.select_year')}
+              type="number"
+              min={generationRecord?.year_from || 1950}
+              max={generationRecord?.year_to || 2100}
+              placeholder={generationRecord ? `${generationRecord.year_from || ''}–${generationRecord.year_to || ''}` : t('hero.select_year')}
+              value={year}
+              onChange={(event) => setYear(event.target.value)}
+              disabled={!generationRecord}
+              data-testid="compatibility-year-input"
+              className="w-full h-12 bg-transparent text-white font-mono text-sm focus:outline-none disabled:opacity-50"
+            />
+          </SelectCard>
         </div>
 
         <VehicleStage brand={brand} model={model} generation={generationRecord} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} />
+
+        {brand && model && generation && (
+          <div className="mt-5 flex justify-end">
+            <Link to={compatibleUrl} className="ty-btn-primary h-12 px-6 text-xs uppercase tracking-[0.14em]">
+              Voir tous les produits compatibles <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
 
         <RecommendedDrawer
           activeHotspot={activeHotspot}

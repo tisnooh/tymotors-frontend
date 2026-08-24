@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Brands as BrandsApi, Compatibility, Products } from '@/lib/api';
+import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 
 export function useBrands() {
   const [brands, setBrands] = useState([]);
@@ -44,6 +45,7 @@ export function useRecommendedForHotspot(hotspot, selection) {
       brand: selection.brand,
       model: selection.model,
       chassis: selection.generation,
+      year: selection.year || undefined,
       limit: 50,
     }).then((response) => {
         if (cancelled) return;
@@ -56,27 +58,42 @@ export function useRecommendedForHotspot(hotspot, selection) {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [hotspot, selection.brand, selection.model, selection.generation]);
+  }, [hotspot, selection.brand, selection.model, selection.generation, selection.year]);
 
   return { recommended, loading };
 }
 
 export function useVehicleSelection() {
-  const [brand, setBrand] = useState('');
-  const [model, setModel] = useState('');
-  const [generation, setGeneration] = useState('');
+  const initial = useMemo(() => readVehicleSelection(), []);
+  const [brand, setBrandState] = useState(initial.brand);
+  const [model, setModelState] = useState(initial.model);
+  const [generation, setGenerationState] = useState(initial.generation);
+  const [year, setYear] = useState(initial.year);
   const models = useCompatibility(brand);
 
-  useEffect(() => {
-    setModel('');
-    setGeneration('');
-  }, [brand]);
+  const setBrand = (value) => {
+    setBrandState(value);
+    setModelState('');
+    setGenerationState('');
+    setYear('');
+  };
+
+  const setModel = (value) => {
+    setModelState(value);
+    setGenerationState('');
+    setYear('');
+  };
+
+  const setGeneration = (value) => {
+    setGenerationState(value);
+    setYear('');
+  };
 
   useEffect(() => {
-    setGeneration('');
-  }, [model]);
+    saveVehicleSelection({ brand, model, generation, year });
+  }, [brand, generation, model, year]);
 
   const modelObj = useMemo(() => models.find((m) => m.name === model), [models, model]);
 
-  return { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj };
+  return { brand, setBrand, model, setModel, generation, setGeneration, year, setYear, models, modelObj };
 }
