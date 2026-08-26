@@ -60,12 +60,8 @@ function NavLinkItem({ to, label, testId }) {
 
 function NavbarLeft() {
   return (
-    <div className="flex shrink-0 items-center gap-6 2xl:gap-8">
+    <div className="flex shrink-0 items-center">
       <Logo size="md" />
-      <div className="hidden md:flex items-center gap-1 font-mono text-[10px] tracking-[0.3em] uppercase text-[#F2C94C]/60">
-        <span className="h-px w-4 bg-[#F2C94C]/60" />
-        EST. 2026
-      </div>
     </div>
   );
 }
@@ -154,7 +150,7 @@ export function Navbar() {
     { to: '/category/interior', label: t('nav.interior') },
     { to: '/category/technology', label: t('nav.technology') },
     { to: '/brands', label: t('nav.brands') },
-    { to: '/customize', label: t('nav.customize_long') },
+    { to: '/customize', label: t('nav.customize') },
   ]), [t]);
 
   return (
