@@ -6,11 +6,13 @@ const BEAT_IMAGES = [
   'https://images.unsplash.com/photo-1658055467065-073f0e1d0601?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1719780711623-6a55225017c5?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1639928845095-b2c86c3cde80?auto=format&fit=crop&w=1200&q=80',
 ];
 
 export function StorytellingSection() {
   const { t } = useTranslation();
-  const beats = t('story.beats', { returnObjects: true }).slice(0, 4);
+  const beats = t('story.beats', { returnObjects: true });
 
   return (
     <section data-testid="scroll-story-section" className="bg-[#050608] py-16 md:py-24">
