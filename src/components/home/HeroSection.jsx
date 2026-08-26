@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Brands, Compatibility } from '@/lib/api';
-import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,52 +11,12 @@ const HERO_IMG = 'https://images.unsplash.com/photo-1760551662083-73dfcd07985a?a
 
 export function HeroSection() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [brands, setBrands] = useState([]);
-  const [models, setModels] = useState([]);
-  const [vehicle, setVehicle] = useState(() => readVehicleSelection());
   const imgRef = useRef(null);
   const headlineRef = useRef(null);
   const subRef = useRef(null);
   const eyebrowRef = useRef(null);
   const ctaRef = useRef(null);
   const telemetryRef = useRef(null);
-  const selectedModel = useMemo(() => models.find((item) => item.name === vehicle.model), [models, vehicle.model]);
-
-  useEffect(() => {
-    Brands.list().then(setBrands).catch(() => setBrands([]));
-  }, []);
-
-  useEffect(() => {
-    if (!vehicle.brand) {
-      setModels([]);
-      return;
-    }
-    Compatibility.list(vehicle.brand).then(setModels).catch(() => setModels([]));
-  }, [vehicle.brand]);
-
-  useEffect(() => {
-    saveVehicleSelection(vehicle);
-  }, [vehicle]);
-
-  const choose = (key, value) => {
-    setVehicle((current) => ({
-      ...current,
-      [key]: value,
-      ...(key === 'brand' ? { model: '', generation: '', year: '' } : {}),
-      ...(key === 'model' ? { generation: '', year: '' } : {}),
-    }));
-  };
-
-  const viewCompatible = () => {
-    const params = new URLSearchParams();
-    if (vehicle.brand) params.set('brand', vehicle.brand);
-    if (vehicle.model) params.set('model', vehicle.model);
-    if (vehicle.generation) params.set('chassis', vehicle.generation);
-    if (vehicle.year) params.set('year', vehicle.year);
-    navigate(`/shop?${params.toString()}`);
-  };
-
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -130,34 +88,10 @@ export function HeroSection() {
           {t('hero.sub')}
         </p>
 
-        <div className="mt-8 max-w-5xl rounded-2xl border border-white/15 bg-black/55 p-3 backdrop-blur-md" aria-label={t('hero.selector_label')}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1fr_0.7fr_auto] gap-2">
-            <select aria-label={t('hero.select_brand')} value={vehicle.brand} onChange={(event) => choose('brand', event.target.value)} className="h-12 rounded-xl border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white">
-              <option value="">{t('hero.select_brand')}</option>
-              {brands.map((brand) => <option key={brand.slug} value={brand.slug}>{brand.name}</option>)}
-            </select>
-            <select aria-label={t('hero.select_model')} value={vehicle.model} onChange={(event) => choose('model', event.target.value)} disabled={!vehicle.brand} className="h-12 rounded-xl border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white disabled:opacity-50">
-              <option value="">{t('hero.select_model')}</option>
-              {models.map((model) => <option key={model.id || model.name} value={model.name}>{model.name}</option>)}
-            </select>
-            <select aria-label={t('hero.select_generation')} value={vehicle.generation} onChange={(event) => choose('generation', event.target.value)} disabled={!selectedModel} className="h-12 rounded-xl border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white disabled:opacity-50">
-              <option value="">{t('hero.select_generation')}</option>
-              {selectedModel?.generations?.map((generation) => <option key={generation} value={generation}>{generation}</option>)}
-            </select>
-            <input aria-label={t('hero.select_year')} type="number" min={selectedModel?.generation_records?.find((item) => item.name === vehicle.generation)?.year_from || 1950} max={selectedModel?.generation_records?.find((item) => item.name === vehicle.generation)?.year_to || 2100} placeholder={t('hero.select_year')} value={vehicle.year} onChange={(event) => choose('year', event.target.value)} disabled={!vehicle.generation} className="h-12 rounded-xl border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white disabled:opacity-50" />
-            <button type="button" onClick={viewCompatible} disabled={!vehicle.brand} className="ty-btn-primary h-12 px-5 text-xs uppercase tracking-[0.14em] disabled:opacity-50">
-              {t('hero.view_compatible')} <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        <div ref={ctaRef} className="mt-5 flex flex-wrap items-center gap-4">
+        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center gap-4">
           <Link to="/shop" data-testid="hero-primary-cta-button" className="ty-btn-primary h-12 px-6 text-sm tracking-[0.18em] uppercase">
             {t('hero.cta_primary')}
             <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
-          <Link to="/customize" data-testid="hero-secondary-cta-button" className="ty-btn-ghost h-12 px-6 text-sm tracking-[0.18em] uppercase">
-            {t('hero.cta_secondary')}
           </Link>
         </div>
 
