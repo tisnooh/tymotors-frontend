@@ -1,5 +1,46 @@
 import React from 'react';
-import { Car, ImageOff, Sparkles } from 'lucide-react';
+import { Car, Sparkles } from 'lucide-react';
+
+const BRAND_PRESENTATION = {
+  bmw: { name: 'BMW', icon: 'https://cdn.simpleicons.org/bmw/FFFFFF' },
+  'mercedes-benz': { name: 'Mercedes-Benz', icon: 'https://cdn.simpleicons.org/mercedes/FFFFFF' },
+  audi: { name: 'Audi', icon: 'https://cdn.simpleicons.org/audi/FFFFFF' },
+  porsche: { name: 'Porsche', icon: 'https://cdn.simpleicons.org/porsche/FFFFFF' },
+  volkswagen: { name: 'Volkswagen', icon: 'https://cdn.simpleicons.org/volkswagen/FFFFFF' },
+  toyota: { name: 'Toyota', icon: 'https://cdn.simpleicons.org/toyota/FFFFFF' },
+};
+
+function BrandWaitingState({ brand, model, selectionComplete }) {
+  const presentation = BRAND_PRESENTATION[brand];
+  const name = presentation?.name || 'TYMotors';
+  const instruction = selectionComplete
+    ? 'Visuel exact en cours de vérification'
+    : model
+      ? 'Choisissez une génération'
+      : brand
+        ? 'Choisissez votre modèle'
+        : 'Choisissez votre marque';
+
+  return (
+    <div className="relative z-10 flex flex-col items-center px-6 text-center">
+      {presentation ? (
+        <img
+          src={presentation.icon}
+          alt={`Logo ${name}`}
+          className="h-20 w-32 object-contain md:h-28 md:w-44"
+          onError={(event) => { event.currentTarget.style.display = 'none'; }}
+        />
+      ) : (
+        <div className="ty-display text-3xl tracking-[0.24em] text-white md:text-5xl">
+          TY<span className="text-[#C7CDD6]">MOTORS</span>
+        </div>
+      )}
+      <p className="mt-6 ty-display text-xl uppercase tracking-[0.14em] text-white md:text-3xl">{name}</p>
+      <div className="my-4 h-px w-16 bg-[#E10600]" />
+      <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-ty-textLow md:text-xs">{instruction}</p>
+    </div>
+  );
+}
 
 function Hotspot({ hotspot, onClick, isActive }) {
   return <button type="button" data-testid="customize-hotspot" onClick={() => onClick(hotspot.id)} className="ty-hotspot"
@@ -17,8 +58,10 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
   const requiresRightsReview = generation?.image_rights_status === 'REQUIRES_MANUAL_REVIEW';
   const selectionComplete = Boolean(brand && model && generation);
   return <div className="mt-10 relative w-full overflow-hidden rounded-2xl border border-[#151A23] bg-[#0A0B0E]">
-    <div className="relative aspect-[16/9] flex items-center justify-center">
-      {image ? <img src={image} alt={alt} className="absolute inset-0 h-full w-full object-cover opacity-75" /> : <div className="text-center text-ty-textLow"><ImageOff className="h-12 w-12 mx-auto" /><p className="font-mono text-xs uppercase tracking-[0.2em] mt-4">{selectionComplete ? 'Image exacte en cours de vérification' : 'Sélectionne une génération'}</p></div>}
+    <div className="relative aspect-[16/9] flex items-center justify-center md:aspect-[21/8]">
+      {!image && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,6,0,0.13),transparent_38%),linear-gradient(135deg,#0A0B0E_0%,#10131A_50%,#08090C_100%)]" />}
+      {!image && <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_center,black,transparent_75%)]" />}
+      {image ? <img src={image} alt={alt} className="absolute inset-0 h-full w-full object-cover opacity-75" /> : <BrandWaitingState brand={brand} model={model} selectionComplete={selectionComplete} />}
       <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
       {selectionComplete && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
       {hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
