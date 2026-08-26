@@ -154,6 +154,7 @@ export function Navbar() {
     { to: '/category/interior', label: t('nav.interior') },
     { to: '/category/technology', label: t('nav.technology') },
     { to: '/brands', label: t('nav.brands') },
+    { to: '/customize', label: t('nav.customize_long') },
   ]), [t]);
 
   return (
