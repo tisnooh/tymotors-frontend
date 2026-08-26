@@ -12,11 +12,11 @@ export default function Home() {
   return (
     <main data-testid="page-home">
       <HeroSection />
-      <FeaturedProducts />
-      <CategoriesSection />
-      <BeforeAfterSlider />
       <BrandsSection />
       <StorytellingSection />
+      <CategoriesSection />
+      <FeaturedProducts />
+      <BeforeAfterSlider />
       <CommunitySection />
       <CtaSection />
     </main>
