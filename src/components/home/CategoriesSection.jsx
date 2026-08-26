@@ -5,6 +5,12 @@ import { ArrowRight } from 'lucide-react';
 import { Categories } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
 
+const HOME_CATEGORY_SLOTS = [
+  { slug: 'performance', sourceSlugs: ['performance', 'exterior'], labelKey: 'nav.performance' },
+  { slug: 'interior', sourceSlugs: ['interior'], labelKey: 'nav.interior' },
+  { slug: 'technology', sourceSlugs: ['technology', 'multimedia-technology'], labelKey: 'nav.technology' },
+];
+
 export function CategoriesSection() {
   const { t } = useTranslation();
   const [items, setItems] = useState([]);
@@ -12,6 +18,11 @@ export function CategoriesSection() {
   useEffect(() => {
     Categories.list().then(setItems).catch(() => setItems([]));
   }, []);
+
+  const homeItems = HOME_CATEGORY_SLOTS.map((slot) => {
+    const source = items.find((item) => slot.sourceSlugs.includes(item.slug));
+    return source ? { ...source, slug: slot.slug, name: t(slot.labelKey) } : null;
+  }).filter(Boolean);
 
   return (
     <section data-testid="categories-section" className="relative ty-section bg-[#070809]">
@@ -29,7 +40,7 @@ export function CategoriesSection() {
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          {items.map((c, idx) => (
+          {homeItems.map((c, idx) => (
             <Reveal key={c.slug} delay={idx * 0.08}>
               <Link
                 to={`/category/${c.slug}`}
