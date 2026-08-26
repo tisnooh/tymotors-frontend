@@ -45,7 +45,6 @@ export function useRecommendedForHotspot(hotspot, selection) {
       brand: selection.brand,
       model: selection.model,
       chassis: selection.generation,
-      year: selection.year || undefined,
       limit: 50,
     }).then((response) => {
         if (cancelled) return;
@@ -58,7 +57,7 @@ export function useRecommendedForHotspot(hotspot, selection) {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [hotspot, selection.brand, selection.model, selection.generation, selection.year]);
+  }, [hotspot, selection.brand, selection.model, selection.generation]);
 
   return { recommended, loading };
 }
@@ -68,32 +67,28 @@ export function useVehicleSelection() {
   const [brand, setBrandState] = useState(initial.brand);
   const [model, setModelState] = useState(initial.model);
   const [generation, setGenerationState] = useState(initial.generation);
-  const [year, setYear] = useState(initial.year);
   const models = useCompatibility(brand);
 
   const setBrand = (value) => {
     setBrandState(value);
     setModelState('');
     setGenerationState('');
-    setYear('');
   };
 
   const setModel = (value) => {
     setModelState(value);
     setGenerationState('');
-    setYear('');
   };
 
   const setGeneration = (value) => {
     setGenerationState(value);
-    setYear('');
   };
 
   useEffect(() => {
-    saveVehicleSelection({ brand, model, generation, year });
-  }, [brand, generation, model, year]);
+    saveVehicleSelection({ brand, model, generation, year: '' });
+  }, [brand, generation, model]);
 
   const modelObj = useMemo(() => models.find((m) => m.name === model), [models, model]);
 
-  return { brand, setBrand, model, setModel, generation, setGeneration, year, setYear, models, modelObj };
+  return { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj };
 }
