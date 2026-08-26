@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
 import { SelectCard } from './customize/SelectCard';
+import { ConfiguratorSelect } from './customize/ConfiguratorSelect';
 import { VehicleStage } from './customize/VehicleStage';
 import { RecommendedDrawer } from './customize/RecommendedDrawer';
 import { useBrands, useVehicleSelection, useRecommendedForHotspot } from './customize/useCustomize';
@@ -54,39 +55,33 @@ export default function Customize() {
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3" data-testid="customize-selector">
           <SelectCard label={t('customize.select_brand')}>
-            <select
+            <ConfiguratorSelect
               value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              data-testid="compatibility-brand-select"
-              className="w-full h-12 bg-transparent text-white font-mono text-sm focus:outline-none"
-            >
-              <option value="">{brandPlaceholder}</option>
-              {brands.map((b) => <option key={b.slug} value={b.slug}>{b.name}</option>)}
-            </select>
+              onValueChange={setBrand}
+              placeholder={brandPlaceholder}
+              options={brands.map((item) => ({ value: item.slug, label: item.name }))}
+              testId="compatibility-brand-select"
+            />
           </SelectCard>
           <SelectCard label={t('customize.select_model')}>
-            <select
+            <ConfiguratorSelect
               value={model}
-              onChange={(e) => setModel(e.target.value)}
+              onValueChange={setModel}
+              placeholder={modelPlaceholder}
+              options={models.map((item) => ({ value: item.name, label: item.name }))}
               disabled={!brand}
-              data-testid="compatibility-model-select"
-              className="w-full h-12 bg-transparent text-white font-mono text-sm focus:outline-none disabled:opacity-50"
-            >
-              <option value="">{modelPlaceholder}</option>
-              {models.map((m) => <option key={m.id} value={m.name}>{m.name}</option>)}
-            </select>
+              testId="compatibility-model-select"
+            />
           </SelectCard>
           <SelectCard label={t('customize.select_generation')}>
-            <select
+            <ConfiguratorSelect
               value={generation}
-              onChange={(e) => setGeneration(e.target.value)}
+              onValueChange={setGeneration}
+              placeholder={genPlaceholder}
+              options={(modelObj?.generations || []).map((item) => ({ value: item, label: item }))}
               disabled={!modelObj}
-              data-testid="compatibility-generation-select"
-              className="w-full h-12 bg-transparent text-white font-mono text-sm focus:outline-none disabled:opacity-50"
-            >
-              <option value="">{genPlaceholder}</option>
-              {modelObj?.generations?.map((g) => <option key={g} value={g}>{g}</option>)}
-            </select>
+              testId="compatibility-generation-select"
+            />
           </SelectCard>
         </div>
 
