@@ -55,7 +55,6 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
   const active = hotspots.find((item) => item.id === activeHotspot);
   const image = active?.image_url || generation?.stage_image_url;
   const alt = active?.image_alt || generation?.stage_image_alt || `${model || 'Véhicule'} ${generation?.name || ''}`;
-  const requiresRightsReview = generation?.image_rights_status === 'REQUIRES_MANUAL_REVIEW';
   const selectionComplete = Boolean(brand && model && generation);
   return <div className="mt-10 relative w-full overflow-hidden rounded-2xl border border-[#151A23] bg-[#0A0B0E]">
     <div className="relative aspect-[16/9] flex items-center justify-center md:aspect-[21/8]">
@@ -65,8 +64,6 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
       <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
       {selectionComplete && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
       {hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
-      {image && requiresRightsReview && <p className="absolute bottom-3 left-3 rounded-md border border-amber-300/30 bg-black/75 px-2 py-1 text-[10px] font-mono uppercase tracking-[0.1em] text-amber-100">Prévisualisation — droits à valider avant production</p>}
-      {image && generation?.image_attribution && <a href={generation.image_source_url || undefined} target="_blank" rel="noreferrer" className="absolute bottom-3 right-3 rounded-md bg-black/70 px-2 py-1 text-[10px] text-white/70 hover:text-white">{generation.image_attribution}</a>}
     </div>
     <div className="px-4 py-4 border-t border-[#151A23]">
       {!selectionComplete && <p className="text-sm text-ty-textMid flex items-center gap-2"><Car className="h-4 w-4" />Marque, modèle puis génération : aucune image générique ne sera substituée.</p>}
