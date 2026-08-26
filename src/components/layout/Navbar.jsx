@@ -43,7 +43,7 @@ function NavLinkItem({ to, label, testId }) {
       to={to}
       data-testid={testId}
       className={({ isActive }) =>
-        `relative text-[13px] font-medium transition-colors ${isActive ? 'text-white' : 'text-ty-textMid hover:text-white'}`
+        `relative whitespace-nowrap text-[13px] font-medium transition-colors ${isActive ? 'text-white' : 'text-ty-textMid hover:text-white'}`
       }
     >
       {({ isActive }) => (
@@ -60,7 +60,7 @@ function NavLinkItem({ to, label, testId }) {
 
 function NavbarLeft() {
   return (
-    <div className="flex items-center gap-8">
+    <div className="flex shrink-0 items-center gap-6 2xl:gap-8">
       <Logo size="md" />
       <div className="hidden md:flex items-center gap-1 font-mono text-[10px] tracking-[0.3em] uppercase text-[#F2C94C]/60">
         <span className="h-px w-4 bg-[#F2C94C]/60" />
@@ -72,7 +72,7 @@ function NavbarLeft() {
 
 function NavbarCenter({ items }) {
   return (
-    <nav className="hidden lg:flex items-center gap-6 xl:gap-10" data-testid="navbar-main-nav">
+    <nav className="hidden min-w-0 items-center justify-center gap-5 xl:flex 2xl:gap-8" data-testid="navbar-main-nav">
       {items.map((item) => (
         <NavLinkItem
           key={item.to}
@@ -87,7 +87,7 @@ function NavbarCenter({ items }) {
 
 function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }) {
   return (
-    <div className="flex items-center gap-5 lg:gap-6">
+    <div className="flex shrink-0 items-center gap-2 2xl:gap-3">
       <div className="hidden md:flex">
         <LanguageSwitcher />
       </div>
@@ -122,11 +122,11 @@ function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }
       <Link
         to="/shop"
         data-testid="navbar-shop-now-button"
-        className="hidden lg:inline-flex ty-btn-primary text-xs px-4 h-10 tracking-[0.18em] uppercase"
+        className="hidden xl:inline-flex ty-btn-primary text-xs px-4 h-10 tracking-[0.18em] uppercase"
       >
         {t('nav.shop_now')}
       </Link>
-      <IconButton testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className="lg:hidden">
+      <IconButton testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className="xl:hidden">
         <Menu className="h-[18px] w-[18px]" />
       </IconButton>
     </div>
@@ -166,7 +166,7 @@ export function Navbar() {
         className={`absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-[#E10600]/60 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
       />
 
-      <div className="ty-container flex items-center justify-between h-16 lg:h-20">
+      <div className="mx-auto grid h-16 w-full max-w-[1536px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:px-8 2xl:gap-10 2xl:px-10">
         <NavbarLeft />
         <NavbarCenter items={navItems} />
         <NavbarRight
