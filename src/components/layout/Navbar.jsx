@@ -6,6 +6,14 @@ import { Logo } from '@/components/shared/Logo';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { useApp } from '@/contexts/AppContext';
 
+function isDesktopNavigationDevice() {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return true;
+  const userAgent = navigator.userAgent || '';
+  const mobileOrTablet = /Android|iPad|iPhone|iPod|Tablet|Mobile/i.test(userAgent);
+  const ipadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  return !mobileOrTablet && !ipadDesktopMode;
+}
+
 function navbarStateClass(scrolled, isHome) {
   if (scrolled) {
     return 'bg-[rgba(10,11,14,0.78)] backdrop-blur-xl border-b border-[rgba(35,43,58,0.7)] shadow-[0_10px_30px_rgba(0,0,0,0.35)]';
@@ -66,9 +74,9 @@ function NavbarLeft() {
   );
 }
 
-function NavbarCenter({ items }) {
+function NavbarCenter({ items, desktopNavigation }) {
   return (
-    <nav className="hidden min-w-0 items-center justify-center gap-5 xl:flex 2xl:gap-8" data-testid="navbar-main-nav">
+    <nav className={`ty-desktop-nav min-w-0 items-center justify-center gap-5 2xl:gap-8 ${desktopNavigation ? 'flex' : 'hidden'}`} data-testid="navbar-main-nav">
       {items.map((item) => (
         <NavLinkItem
           key={item.to}
@@ -81,7 +89,7 @@ function NavbarCenter({ items }) {
   );
 }
 
-function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }) {
+function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, desktopNavigation, t }) {
   return (
     <div className="flex shrink-0 items-center gap-2 2xl:gap-3">
       <div className="hidden md:flex">
@@ -118,11 +126,11 @@ function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }
       <Link
         to="/shop"
         data-testid="navbar-shop-now-button"
-        className="hidden xl:inline-flex ty-btn-primary text-xs px-4 h-10 tracking-[0.18em] uppercase"
+        className={`ty-desktop-shop-button ty-btn-primary text-xs px-4 h-10 tracking-[0.18em] uppercase ${desktopNavigation ? 'inline-flex' : 'hidden'}`}
       >
         {t('nav.shop_now')}
       </Link>
-      <IconButton testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className="xl:hidden">
+      <IconButton testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className={desktopNavigation ? 'hidden' : 'inline-flex'}>
         <Menu className="h-[18px] w-[18px]" />
       </IconButton>
     </div>
@@ -131,6 +139,7 @@ function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, t }
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [desktopNavigation, setDesktopNavigation] = useState(isDesktopNavigationDevice);
   const { t } = useTranslation();
   const location = useLocation();
   const { cartCount, wishlistCount, setSearchOpen, setMobileMenuOpen } = useApp();
@@ -140,6 +149,12 @@ export function Navbar() {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateNavigationMode = () => setDesktopNavigation(isDesktopNavigationDevice());
+    window.addEventListener('resize', updateNavigationMode);
+    return () => window.removeEventListener('resize', updateNavigationMode);
   }, []);
 
   const isHome = location.pathname === '/';
@@ -162,14 +177,15 @@ export function Navbar() {
         className={`absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-[#E10600]/60 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
       />
 
-      <div className="mx-auto grid h-16 w-full max-w-[1536px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:px-8 2xl:gap-10 2xl:px-10">
+      <div className={`ty-navbar-layout mx-auto grid h-16 w-full max-w-[1536px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:px-8 2xl:gap-10 2xl:px-10 ${desktopNavigation ? 'ty-desktop-layout' : ''}`}>
         <NavbarLeft />
-        <NavbarCenter items={navItems} />
+        <NavbarCenter items={navItems} desktopNavigation={desktopNavigation} />
         <NavbarRight
           onOpenSearch={() => setSearchOpen(true)}
           onOpenMobile={() => setMobileMenuOpen(true)}
           cartCount={cartCount}
           wishlistCount={wishlistCount}
+          desktopNavigation={desktopNavigation}
           t={t}
         />
       </div>
