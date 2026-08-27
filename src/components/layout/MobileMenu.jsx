@@ -37,7 +37,7 @@ export function MobileMenu() {
     <div data-testid="mobile-menu-sheet" className="fixed inset-0 z-[90] bg-[#050608]/95 backdrop-blur-2xl animate-in fade-in duration-300">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E10600]/60 to-transparent" />
       <div className="ty-container flex items-center justify-between h-16">
-        <Logo size="md" />
+        <Logo size="md" accent={false} />
         <button
           onClick={() => setMobileMenuOpen(false)}
           data-testid="mobile-menu-close-button"

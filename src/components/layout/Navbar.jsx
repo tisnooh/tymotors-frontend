@@ -69,7 +69,7 @@ function NavLinkItem({ to, label, testId }) {
 function NavbarLeft() {
   return (
     <div className="flex shrink-0 items-center">
-      <Logo size="md" />
+      <Logo size="md" accent={false} />
     </div>
   );
 }
