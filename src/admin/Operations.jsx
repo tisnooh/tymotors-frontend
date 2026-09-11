@@ -1,0 +1,70 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import { adminApi, money, date, errorMessage } from './api';
+import { useData, PageTitle, Badge, Field, Select, StatusSelect, LoadState, Table, Pager, SearchBox, useFilters, DetailLink, Panel } from './ui';
+
+export function Returns() {
+  const f=useFilters(),state=useData('returns',f.params),[busy,setBusy]=useState(null);
+  async function update(r,changes) {
+    if(changes.restock && !window.confirm('Le produit a-t-il été reçu, inspecté et jugé revendable ? Cette action remet la quantité en stock une seule fois.')) return;
+    setBusy(r.id);try{await adminApi.patch(`returns/${r.id}`,changes);toast.success('Retour mis à jour');state.reload();}catch(e){toast.error(errorMessage(e));}finally{setBusy(null);}
+  }
+  return <><PageTitle title="Retours" description="Enregistrez une demande depuis le détail d’une commande. La remise en stock exige une inspection."/><Panel><div className="ad-toolbar"><StatusSelect label="Filtrer" value={f.status} onChange={e=>f.setStatus(e.target.value)} values={['','requested','review','accepted','received','refunded','rejected']}/><Link className="ad-btn" to="/admin/orders">Ouvrir une commande</Link></div><LoadState state={state}>{d=><><Table items={d.items} columns={[
+    {label:'Commande / client',render:r=><><DetailLink to={`/admin/orders/${r.order_id}`}>{r.orders?.order_number}</DetailLink><small>{r.orders?.customer_email}</small></>},
+    {label:'Produit',render:r=><>{r.order_items?.product_name}<small>Quantité : {r.quantity}</small></>},
+    {label:'Motif',render:r=>r.reason},{label:'Date',render:r=>date(r.created_at)},{label:'Valeur avant remise',render:r=>money(r.amount_cents)},
+    {label:'Statut',render:r=><StatusSelect label="État du retour" value={r.status} onChange={e=>update(r,{status:e.target.value})} disabled={busy===r.id} values={['requested','review','accepted','received','refunded','rejected']}/>},
+    {label:'Stock',render:r=>r.restocked_at?<span>Remis le {date(r.restocked_at)}</span>:<button className="ad-btn" disabled={busy===r.id||r.status!=='received'} onClick={()=>update(r,{restock:true})}>Remettre en stock</button>},
+  ]}/><Pager data={d} page={f.page} setPage={f.setPage}/></>}</LoadState></Panel><p className="ad-note">Le statut « Remboursé » exige un remboursement intégral confirmé par Stripe. L’allocation de remboursements partiels à plusieurs retours n’est pas gérée en V1.</p></>;
+}
+
+const newPromo={code:'',active:false,discount_type:'percent',value:10,starts_at:null,ends_at:null,minimum_amount_cents:0,max_uses:null,product_ids:[],category_ids:[]};
+function promoData(p){return Object.fromEntries(Object.keys(newPromo).map(k=>[k,p[k]]));}
+export function Promotions(){
+  const f=useFilters(),state=useData('promotions',f.params),[editing,setEditing]=useState(null),[busy,setBusy]=useState(false);
+  async function toggle(p){setBusy(true);try{await adminApi.put(`promotions/${p.id}`,{...promoData(p),active:!p.active});state.reload();toast.success('Promotion mise à jour');}catch(e){toast.error(errorMessage(e));}finally{setBusy(false);}}
+  async function copy(p){try{await navigator.clipboard.writeText(`${window.location.origin}/cart?promo=${encodeURIComponent(p.code)}`);toast.success('Lien promotionnel copié');}catch{toast.error('Copie indisponible : utilisez le lien affiché.');}}
+  return <><PageTitle title="Promotions" description="Remises calculées côté serveur sur les produits éligibles, puis appliquées au paiement Stripe."><button className="ad-btn ad-primary" onClick={()=>setEditing(newPromo)}>Créer un code</button></PageTitle><Panel><div className="ad-toolbar"><SearchBox value={f.q} onChange={f.setQ} placeholder="Code promotionnel…"/></div><LoadState state={state}>{d=><><Table items={d.items} columns={[
+    {label:'Code',render:p=><strong>{p.code}</strong>},{label:'Remise',render:p=>p.discount_type==='percent'?p.value+' %':money(p.value)},
+    {label:'Période',render:p=><>{date(p.starts_at)}<small>Fin : {date(p.ends_at)}</small></>},
+    {label:'Minimum',render:p=>money(p.minimum_amount_cents)},{label:'Limite',render:p=>p.max_uses??'Sans limite'},
+    {label:'État',render:p=><Badge value={p.active?'active':'draft'}/>},
+    {label:'Actions',render:p=><div className="ad-actions"><button className="ad-btn" onClick={()=>setEditing(p)}>Modifier</button><button className="ad-btn" disabled={busy} onClick={()=>toggle(p)}>{p.active?'Désactiver':'Activer'}</button><button className="ad-btn" onClick={()=>copy(p)}>Copier le lien</button><a className="ad-link" href={`/cart?promo=${encodeURIComponent(p.code)}`}>Lien panier</a></div>},
+  ]}/><Pager data={d} page={f.page} setPage={f.setPage}/></>}</LoadState></Panel>{editing&&<PromotionForm key={editing.id||'new'} initial={editing} close={()=>setEditing(null)} done={()=>{setEditing(null);state.reload();}}/>}<p className="ad-note">Partagez le lien panier pour appliquer le code à la prochaine commande. Un code n’est pas une synchronisation automatique de prix avec les marketplaces.</p></>;
+}
+
+function PromotionForm({initial,close,done}){
+  const [form,setForm]=useState(initial),[busy,setBusy]=useState(false),[search,setSearch]=useState('');
+  const products=useData('products',{q:search,limit:25}),options=useData('catalog-options');
+  const set=(k,v)=>setForm(p=>({...p,[k]:v}));
+  const localDate=value=>value?new Date(new Date(value).getTime()-new Date(value).getTimezoneOffset()*60000).toISOString().slice(0,16):'';
+  async function save(e){e.preventDefault();setBusy(true);try{const data=promoData(form);initial.id?await adminApi.put(`promotions/${initial.id}`,data):await adminApi.post('promotions',data);toast.success('Promotion enregistrée');done();}catch(e){toast.error(errorMessage(e));}finally{setBusy(false);}}
+  return <Panel title={initial.id?'Modifier la promotion':'Nouveau code'}><form onSubmit={save}><div className="ad-form-grid"><Field label="Code" value={form.code} pattern="[A-Z0-9_-]{3,40}" required onChange={e=>set('code',e.target.value.toUpperCase())}/><Select label="Type" value={form.discount_type} onChange={e=>set('discount_type',e.target.value)} options={[{value:'percent',label:'Pourcentage'},{value:'fixed',label:'Montant fixe'}]}/><Field label={form.discount_type==='percent'?'Remise (%)':'Remise (€)'} type="number" min={form.discount_type==='percent'?1:0.01} step={form.discount_type==='percent'?1:0.01} max={form.discount_type==='percent'?100:100000} required value={form.discount_type==='percent'?form.value:form.value/100} onChange={e=>set('value',Math.round(Number(e.target.value)*(form.discount_type==='percent'?1:100)))}/><Field label="Minimum de commande (€)" type="number" step="0.01" min="0" value={form.minimum_amount_cents/100} onChange={e=>set('minimum_amount_cents',Math.round(Number(e.target.value)*100))}/><Field label="Utilisations maximum" type="number" min="1" value={form.max_uses??''} onChange={e=>set('max_uses',e.target.value?Number(e.target.value):null)}/>{['starts_at','ends_at'].map((k,i)=><Field key={k} label={i?'Fin (heure locale)':'Début (heure locale)'} type="datetime-local" value={localDate(form[k])} onChange={e=>set(k,e.target.value?new Date(e.target.value).toISOString():null)}/>)}</div><label className="ad-check"><input type="checkbox" checked={form.active} onChange={e=>set('active',e.target.checked)}/>Activer le code</label>
+    <details><summary>Limiter à certains produits ou catégories</summary><p className="ad-note">Sans sélection : tout le catalogue. Sinon : les produits sélectionnés ou appartenant aux catégories sélectionnées.</p><LoadState state={options}>{d=><div className="ad-check-list">{d.categories.map(c=><label className="ad-check" key={c.id}><input type="checkbox" checked={form.category_ids.includes(c.id)} onChange={e=>set('category_ids',e.target.checked?[...form.category_ids,c.id]:form.category_ids.filter(x=>x!==c.id))}/>{c.name}</label>)}</div>}</LoadState><SearchBox value={search} onChange={setSearch} placeholder="Trouver un produit à inclure…"/><p className="ad-note">{form.product_ids.length} produit(s) sélectionné(s)</p><LoadState state={products}>{d=><div className="ad-check-list">{d.items.map(p=><label className="ad-check" key={p.id}><input type="checkbox" checked={form.product_ids.includes(p.id)} onChange={e=>set('product_ids',e.target.checked?[...form.product_ids,p.id]:form.product_ids.filter(x=>x!==p.id))}/>{p.name}</label>)}</div>}</LoadState></details>
+    <div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer</button><button className="ad-btn" type="button" onClick={close}>Annuler</button></div></form></Panel>;
+}
+
+export function Channels(){
+  const channels=useData('channels'),[channel,setChannel]=useState('leboncoin'),f=useFilters(),state=useData(`channels/${channel}`,f.params),[editing,setEditing]=useState(null);
+  return <><PageTitle title="Canaux de vente" description="Le site reflète le statut réel du catalogue. Leboncoin est un suivi manuel des annonces."/><LoadState state={channels}>{d=><div className="ad-tabs">{d.items.map(c=><button key={c.slug} className={`ad-btn ${channel===c.slug?'ad-primary':''}`} onClick={()=>{setChannel(c.slug);f.setPage(1);setEditing(null);}}>{c.name}</button>)}</div>}</LoadState><Panel><div className="ad-toolbar"><SearchBox value={f.q} onChange={f.setQ} placeholder="Produit ou SKU…"/></div><LoadState state={state}>{d=><><Table items={d.items} columns={[
+    {label:'Produit',render:p=><><strong>{p.name}</strong><small>{p.sku}</small></>},{label:'Publication',render:p=><Badge value={p.publication.status}/>},
+    {label:'Date de publication',render:p=>date(p.publication.published_at)},{label:'Annonce',render:p=>p.publication.listing_url?<a className="ad-link" href={p.publication.listing_url} target="_blank" rel="noreferrer">Voir l’annonce ↗</a>:'—'},
+    {label:'Action',render:p=>channel==='website'?<DetailLink to={`/admin/products/${p.id}`}>Gérer le produit</DetailLink>:<button className="ad-btn" onClick={()=>setEditing(p)}>Mettre à jour le suivi</button>},
+  ]}/><Pager data={d} page={f.page} setPage={f.setPage}/></>}</LoadState></Panel>{editing&&<ChannelForm key={editing.id} product={editing} channel={channel} done={()=>{setEditing(null);state.reload();}} close={()=>setEditing(null)}/>}</>;
+}
+function ChannelForm({product,channel,done,close}){
+  const [form,setForm]=useState({status:product.publication.status,listing_id:product.publication.listing_id||'',listing_url:product.publication.listing_url||'',notes:product.publication.notes||''}),[busy,setBusy]=useState(false);
+  async function submit(e){e.preventDefault();setBusy(true);try{await adminApi.put(`channels/${channel}/${product.id}`,{...form,listing_url:form.listing_url||null});toast.success('Suivi enregistré');done();}catch(e){toast.error(errorMessage(e));}finally{setBusy(false);}}
+  return <Panel title={product.name}><form onSubmit={submit}><StatusSelect value={form.status} onChange={e=>setForm({...form,status:e.target.value})} values={['unpublished','draft','to_publish','published','needs_update','error']}/><div className="ad-form-grid"><Field label="Identifiant annonce" value={form.listing_id} onChange={e=>setForm({...form,listing_id:e.target.value})}/><Field label="URL annonce HTTPS" type="url" pattern="https://.*" value={form.listing_url} onChange={e=>setForm({...form,listing_url:e.target.value})}/></div><Field label="Notes" value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/><div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer</button><button className="ad-btn" type="button" onClick={close}>Annuler</button></div></form></Panel>;
+}
+
+export function SettingsPage(){
+  const state=useData('settings'),[page,setPage]=useState(1),audit=useData('audit',{page,limit:25});
+  return <><PageTitle title="Paramètres" description="Réglages opérationnels et journal d’actions."/><LoadState state={state}>{d=><SettingsForm key={d.updated_at} initial={d} reload={()=>{state.reload();audit.reload();}}/>}</LoadState><Panel title="Journal d’actions"><LoadState state={audit}>{d=><><Table items={d.items} columns={[{label:'Date',render:r=>date(r.created_at)},{label:'Action',render:r=>r.action},{label:'Objet',render:r=>r.resource},{label:'Administrateur',render:r=>r.admin_user_id||'Système'},{label:'Modification',render:r=><details><summary>Voir les valeurs</summary><pre className="ad-json">{JSON.stringify(r.metadata,null,2)}</pre></details>}]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel></>;
+}
+function SettingsForm({initial,reload}){
+  const [form,setForm]=useState(initial),[busy,setBusy]=useState(false);
+  async function submit(e){e.preventDefault();setBusy(true);try{await adminApi.put('settings',{shop_name:form.shop_name,contact_email:form.contact_email||null,low_stock_threshold:Number(form.low_stock_threshold),currency:form.currency});toast.success('Paramètres enregistrés');window.dispatchEvent(new Event('ty-admin-settings'));reload();}catch(e){toast.error(errorMessage(e));}finally{setBusy(false);}}
+  return <Panel title="Boutique"><form onSubmit={submit}><div className="ad-form-grid"><Field label="Nom de boutique (espace de gestion)" value={form.shop_name} minLength={2} maxLength={100} required onChange={e=>setForm({...form,shop_name:e.target.value})}/><Field label="E-mail de contact opérationnel" type="email" value={form.contact_email||''} onChange={e=>setForm({...form,contact_email:e.target.value})}/><Field label="Seuil de stock faible par défaut" type="number" min="0" max="100000" required value={form.low_stock_threshold} onChange={e=>setForm({...form,low_stock_threshold:e.target.value})}/><Field label="Devise du catalogue et des indicateurs" value="EUR" disabled/></div><p className="ad-note">Le seuil s’applique aux produits sans seuil spécifique. L’identité graphique du site public reste inchangée. Le multi-devises n’est pas activé.</p><button className="ad-btn ad-primary" disabled={busy}>Enregistrer les paramètres</button></form></Panel>;
+}

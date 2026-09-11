@@ -48,7 +48,9 @@ export function AuthProvider({ children }) {
     if (error) throw error;
   }, []);
 
-  const signOut = useCallback(async () => { if (supabase) await supabase.auth.signOut(); }, []);
+  const signOut = useCallback(async () => {
+    if (supabase) { const { error } = await supabase.auth.signOut(); if (error) throw error; }
+  }, []);
   const value = useMemo(() => ({ session, user: session?.user || null, loading, configured: isSupabaseConfigured,
     signIn, signUp, signOut, resetPassword, updatePassword }),
     [session, loading, signIn, signUp, signOut, resetPassword, updatePassword]);

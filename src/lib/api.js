@@ -70,7 +70,10 @@ export const Contact = {
 };
 
 export const Checkout = {
-  create: () => api.post('/create-checkout-session').then((r) => r.data),
+  create: () => {
+    const promotion = new URLSearchParams(window.location.search).get('promo');
+    return api.post('/create-checkout-session', null, { params: promotion ? { promotion_code: promotion } : {} }).then((r) => r.data);
+  },
   get: (sessionId) => api.get(`/checkout-session/${encodeURIComponent(sessionId)}`).then((r) => r.data),
 };
 

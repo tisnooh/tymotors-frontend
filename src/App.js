@@ -1,7 +1,7 @@
 import React from 'react';
 import '@/App.css';
 import '@/lib/i18n';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AppProvider } from '@/contexts/AppContext';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -32,12 +32,12 @@ const BrandDetail = React.lazy(() => import('@/pages/BrandDetail'));
 const Customize = React.lazy(() => import('@/pages/Customize'));
 const Cart = React.lazy(() => import('@/pages/Cart'));
 const Wishlist = React.lazy(() => import('@/pages/Wishlist'));
-const AdminPanel = React.lazy(() => import('@/pages/AdminPanel'));
 const OrderSuccess = React.lazy(() => import('@/pages/OrderSuccess'));
 const NotFound = React.lazy(() => import('@/pages/NotFound'));
 const AuthPage = React.lazy(() => import('@/pages/AuthPage'));
 const ResetPassword = React.lazy(() => import('@/pages/ResetPassword'));
 const Account = React.lazy(() => import('@/pages/Account'));
+const AdminApp = React.lazy(() => import('@/admin/AdminApp'));
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
@@ -49,13 +49,12 @@ const TOASTER_STYLE = {
 const TOAST_OPTIONS = { style: TOASTER_STYLE };
 
 function Shell() {
-  const location = useLocation();
   const [ready, setReady] = React.useState(() => sessionStorage.getItem('ty_loader_seen') === '1');
   const handleDone = React.useCallback(() => {
     sessionStorage.setItem('ty_loader_seen', '1');
     setReady(true);
   }, []);
-  const showLoader = !ready && location.pathname !== '/admin';
+  const showLoader = !ready;
 
   return (
     <div className="App relative">
@@ -63,9 +62,6 @@ function Shell() {
       {showLoader && <Loader onDone={handleDone} />}
       <React.Suspense fallback={<div className="min-h-screen bg-[#050608]" aria-label="Chargement" />}>
         <Routes>
-        {/* Admin — sans Navbar/Footer */}
-        <Route path="/admin" element={<AdminPanel />} />
-
         {/* Routes publiques */}
         <Route path="*" element={
           <>
@@ -111,12 +107,17 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppProvider>
+        <React.Suspense fallback={<div className="min-h-screen bg-[#050608]" aria-label="Chargement" />}>
+        <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="*" element={<AppProvider>
           <SmoothScrollProvider>
             <Shell />
-            <Toaster theme="dark" position="bottom-right" toastOptions={TOAST_OPTIONS} />
           </SmoothScrollProvider>
-        </AppProvider>
+        </AppProvider>} />
+        </Routes>
+        </React.Suspense>
+        <Toaster theme="dark" position="bottom-right" toastOptions={TOAST_OPTIONS} />
       </AuthProvider>
     </BrowserRouter>
   );
