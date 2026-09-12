@@ -1,0 +1,20 @@
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .storytelling-section.storytelling-touch-active {
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  .storytelling-touch-active .storytelling-viewport {
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+  }
+
+  .storytelling-touch-active .storytelling-track {
+    overflow-x: visible;
+    scroll-snap-type: none;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+}
