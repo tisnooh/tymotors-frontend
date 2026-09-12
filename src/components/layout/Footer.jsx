@@ -90,6 +90,7 @@ function BrandsColumn() {
 function NewsletterColumn() {
   const { t, i18n } = useTranslation();
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = useCallback(async (e) => {
@@ -97,8 +98,8 @@ function NewsletterColumn() {
     if (!email) return;
     try {
       setSubmitting(true);
-      await Newsletter.signup(email, i18n.language?.startsWith('fr') ? 'fr' : 'en');
-      toast.success(i18n.language?.startsWith('fr') ? 'Merci pour votre inscription.' : 'Thanks for subscribing.');
+      await Newsletter.signup(email, i18n.language?.startsWith('fr') ? 'fr' : 'en', website);
+      toast.success(i18n.language?.startsWith('fr') ? 'Merci. Vérifiez votre boîte mail pour confirmer votre inscription.' : 'Thanks. Check your inbox to confirm your subscription.');
       setEmail('');
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -107,13 +108,14 @@ function NewsletterColumn() {
     } finally {
       setSubmitting(false);
     }
-  }, [email, i18n.language]);
+  }, [email, website, i18n.language]);
 
   return (
     <div className="md:col-span-4">
       <h4 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-4">{t('footer.newsletter_title')}</h4>
       <p className="text-sm text-ty-textMid mb-4">{t('footer.newsletter_sub')}</p>
       <form data-testid="newsletter-form" onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-3">
+        <input aria-hidden="true" tabIndex="-1" autoComplete="off" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} className="absolute h-px w-px opacity-0 pointer-events-none" />
         <input
           type="email"
           required

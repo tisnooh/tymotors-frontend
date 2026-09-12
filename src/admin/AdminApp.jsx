@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Package, Boxes, Users, RotateCcw, TicketPercent, Radio, Settings, LogOut, Menu, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Package, Boxes, Users, RotateCcw, TicketPercent, Radio, Settings, LogOut, Menu, ShieldCheck, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
@@ -9,12 +9,13 @@ import { Loading, Field, useData } from './ui';
 import { Dashboard, Orders, OrderDetail, Customers, CustomerDetail } from './Commerce';
 import { Products, ProductEditor, Inventory } from './Products';
 import { Returns, Promotions, Channels, SettingsPage } from './Operations';
+import EmailCenter from './EmailCenter';
 import './admin.css';
 
 const navigation = [
   ['', 'Dashboard', LayoutDashboard], ['orders', 'Commandes', ShoppingBag], ['products', 'Produits', Package],
   ['inventory', 'Stocks', Boxes], ['customers', 'Clients', Users], ['returns', 'Retours', RotateCcw],
-  ['promotions', 'Promotions', TicketPercent], ['channels', 'Canaux de vente', Radio], ['settings', 'Paramètres', Settings],
+  ['promotions', 'Promotions', TicketPercent], ['emails', 'Emails & newsletter', Mail], ['channels', 'Canaux de vente', Radio], ['settings', 'Paramètres', Settings],
 ];
 
 function ShopIdentity() {
@@ -74,7 +75,7 @@ export default function AdminApp() {
     <Route index element={<Dashboard/>}/><Route path="orders" element={<Orders/>}/><Route path="orders/:id" element={<OrderDetail/>}/>
     <Route path="products" element={<Products/>}/><Route path="products/new" element={<ProductEditor/>}/><Route path="products/:id" element={<ProductEditor/>}/>
     <Route path="inventory" element={<Inventory/>}/><Route path="customers" element={<Customers/>}/><Route path="customers/detail" element={<CustomerDetail/>}/>
-    <Route path="returns" element={<Returns/>}/><Route path="promotions" element={<Promotions/>}/><Route path="channels" element={<Channels/>}/><Route path="settings" element={<SettingsPage/>}/>
+    <Route path="returns" element={<Returns/>}/><Route path="promotions" element={<Promotions/>}/><Route path="emails" element={<EmailCenter/>}/><Route path="channels" element={<Channels/>}/><Route path="settings" element={<SettingsPage/>}/>
     <Route path="*" element={<div className="ad-empty"><h1>Page introuvable</h1><Link to="/admin">Retour au dashboard</Link></div>}/>
   </Routes></main></div></AccessGate></div>;
 }

@@ -30,16 +30,10 @@ export function AuthProvider({ children }) {
     if (!supabase) throw new Error('Supabase Auth non configuré');
     const { data, error } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/account` },
+      options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/confirm` },
     });
     if (error) throw error;
     return data;
-  }, []);
-
-  const resetPassword = useCallback(async (email) => {
-    if (!supabase) throw new Error('Supabase Auth non configuré');
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/reset` });
-    if (error) throw error;
   }, []);
 
   const updatePassword = useCallback(async (password) => {
@@ -48,12 +42,21 @@ export function AuthProvider({ children }) {
     if (error) throw error;
   }, []);
 
+  const updateEmail = useCallback(async (email) => {
+    if (!supabase) throw new Error('Supabase Auth non configuré');
+    const { data, error } = await supabase.auth.updateUser({ email }, {
+      emailRedirectTo: `${window.location.origin}/auth/confirm`,
+    });
+    if (error) throw error;
+    return data;
+  }, []);
+
   const signOut = useCallback(async () => {
     if (supabase) { const { error } = await supabase.auth.signOut(); if (error) throw error; }
   }, []);
   const value = useMemo(() => ({ session, user: session?.user || null, loading, configured: isSupabaseConfigured,
-    signIn, signUp, signOut, resetPassword, updatePassword }),
-    [session, loading, signIn, signUp, signOut, resetPassword, updatePassword]);
+    signIn, signUp, signOut, updatePassword, updateEmail }),
+    [session, loading, signIn, signUp, signOut, updatePassword, updateEmail]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
