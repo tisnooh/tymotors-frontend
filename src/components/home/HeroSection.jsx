@@ -50,7 +50,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section data-testid="hero-section" className="relative min-h-0 md:min-h-[100svh] w-full overflow-hidden bg-[#050608]">
+    <section data-testid="hero-section" className="relative min-h-[100svh] w-full overflow-hidden bg-[#050608]">
       {/* BG image */}
       <div ref={imgRef} className="absolute inset-0">
         <img src={HERO_IMG} alt="" className="h-full w-full object-cover" />
@@ -66,8 +66,8 @@ export function HeroSection() {
       <div className="absolute top-24 left-0 h-px w-24 bg-[#F2C94C]/50" />
       <div className="absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
 
-      <div className="relative ty-container pt-24 pb-10 md:pt-32 md:pb-20 min-h-0 md:min-h-[100svh] flex flex-col justify-start md:justify-center">
-        <p ref={eyebrowRef} className="font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-4 md:mb-8">
+      <div className="relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
+        <p ref={eyebrowRef} className="font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
           <span className="h-px w-10 bg-[#F2C94C]" data-testid="hero-eyebrow"/>
           {t('hero.eyebrow')}
         </p>
@@ -84,11 +84,11 @@ export function HeroSection() {
           </span>
         </h1>
 
-        <p ref={subRef} className="mt-6 md:mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
+        <p ref={subRef} className="mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
           {t('hero.sub')}
         </p>
 
-        <div ref={ctaRef} className="mt-6 md:mt-10 flex flex-wrap items-center gap-4">
+        <div ref={ctaRef} className="mt-10 flex flex-wrap items-center gap-4">
           <Link to="/shop" data-testid="hero-primary-cta-button" className="ty-btn-primary h-12 px-6 text-sm tracking-[0.18em] uppercase">
             {t('hero.cta_primary')}
             <ArrowRight className="h-4 w-4 ml-1" />
@@ -96,7 +96,7 @@ export function HeroSection() {
         </div>
 
         {/* Telemetry strip */}
-        <div ref={telemetryRef} data-testid="hero-spec-strip" className="mt-8 md:mt-24 grid grid-cols-3 max-w-2xl gap-4">
+        <div ref={telemetryRef} data-testid="hero-spec-strip" className="mt-16 md:mt-24 grid grid-cols-3 max-w-2xl gap-4">
           {Object.entries(t('hero.telemetry', { returnObjects: true })).map(([k, v]) => (
             <div key={k} className="relative pl-3 border-l border-[#F2C94C]/30">
               <span className="absolute -left-px top-0 h-2 w-px bg-[#F2C94C]" />
