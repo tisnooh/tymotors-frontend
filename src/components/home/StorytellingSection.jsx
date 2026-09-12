@@ -19,24 +19,67 @@ export function StorytellingSection() {
   const { t } = useTranslation();
   const beats = t('story.beats', { returnObjects: true });
   const sectionRef = useRef(null);
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
-    if (!section) return undefined;
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!section || !viewport || !track) return undefined;
 
-    const phoneQuery = window.matchMedia('(max-width: 767px)');
-    const updateLayout = () => {
-      section.classList.toggle('storytelling-touch-active', phoneQuery.matches && Boolean(ScrollTrigger.isTouch));
-    };
+    const cards = Array.from(track.querySelectorAll('.storytelling-card'));
+    const media = gsap.matchMedia();
+    const context = gsap.context(() => {
+      media.add({
+        phone: '(max-width: 767px)',
+        reduceMotion: '(prefers-reduced-motion: reduce)',
+      }, ({ conditions }) => {
+        const { phone, reduceMotion } = conditions;
+        if (!phone || !ScrollTrigger.isTouch) return undefined;
 
-    updateLayout();
-    phoneQuery.addEventListener('change', updateLayout);
+        section.classList.add('storytelling-touch-layout');
+
+        if (reduceMotion || cards.length < 2) {
+          return () => section.classList.remove('storytelling-touch-layout');
+        }
+
+        section.classList.add('storytelling-touch-active');
+        gsap.set(cards, { zIndex: (index) => index + 1 });
+        gsap.set(cards.slice(1), { yPercent: 100 });
+
+        const timeline = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: viewport,
+            start: 'top top',
+            end: () => `+=${Math.max(1, viewport.clientHeight * (cards.length - 1))}`,
+            pin: viewport,
+            pinSpacing: true,
+            scrub: 0.35,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        cards.slice(1).forEach((card, index) => {
+          timeline.to(card, { yPercent: 0, duration: 1 }, index);
+        });
+
+        return () => {
+          timeline.scrollTrigger?.kill();
+          timeline.kill();
+          gsap.set(cards, { clearProps: 'transform,z-index' });
+          section.classList.remove('storytelling-touch-active', 'storytelling-touch-layout');
+        };
+      });
+    }, section);
 
     return () => {
-      phoneQuery.removeEventListener('change', updateLayout);
-      section.classList.remove('storytelling-touch-active');
+      media.revert();
+      context.revert();
     };
-  }, []);
+  }, [beats.length]);
 
   return (
     <section ref={sectionRef} data-testid="scroll-story-section" className="storytelling-section bg-[#050608] py-16 md:py-24">
@@ -48,8 +91,8 @@ export function StorytellingSection() {
         <p className="mt-3 max-w-2xl text-sm text-ty-textMid">Découvrez chaque transformation au fil de votre parcours.</p>
       </div>
 
-      <div className="storytelling-viewport">
-        <div className="storytelling-track mt-8 flex gap-4 overflow-x-auto px-[max(1.25rem,calc((100vw-80rem)/2))] pb-5 snap-x snap-mandatory [scrollbar-width:thin] [scrollbar-color:#E10600_#151A23]">
+      <div ref={viewportRef} className="storytelling-viewport">
+        <div ref={trackRef} className="storytelling-track mt-8 flex gap-4 overflow-x-auto px-[max(1.25rem,calc((100vw-80rem)/2))] pb-5 snap-x snap-mandatory [scrollbar-width:thin] [scrollbar-color:#E10600_#151A23]">
           {beats.map((beat, index) => (
             <article key={beat.title} className="storytelling-card relative shrink-0 w-[82vw] sm:w-[55vw] lg:w-[31rem] aspect-[4/3] overflow-hidden rounded-2xl border border-[#232B3A] snap-start">
               <img src={BEAT_IMAGES[index]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
