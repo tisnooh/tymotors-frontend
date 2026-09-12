@@ -91,7 +91,7 @@ function NavbarCenter({ items, desktopNavigation }) {
 
 function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, desktopNavigation, t }) {
   return (
-    <div className="flex shrink-0 items-center gap-2 2xl:gap-3">
+    <div className={`flex shrink-0 items-center gap-2 2xl:gap-3 ${desktopNavigation ? '' : 'ml-auto'}`}>
       <div className="hidden md:flex">
         <LanguageSwitcher />
       </div>
@@ -177,7 +177,7 @@ export function Navbar() {
         className={`absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-[#E10600]/60 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}
       />
 
-      <div className={`ty-navbar-layout mx-auto grid h-16 w-full max-w-[1536px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-6 px-4 sm:px-6 lg:h-20 lg:px-8 2xl:gap-10 2xl:px-10 ${desktopNavigation ? 'ty-desktop-layout' : ''}`}>
+      <div className={`ty-navbar-layout mx-auto h-16 w-full max-w-[1536px] items-center px-4 sm:px-6 lg:h-20 lg:px-8 2xl:px-10 ${desktopNavigation ? 'grid grid-cols-[auto_minmax(0,1fr)_auto] gap-6 2xl:gap-10 ty-desktop-layout' : 'flex'}`}>
         <NavbarLeft />
         <NavbarCenter items={navItems} desktopNavigation={desktopNavigation} />
         <NavbarRight
