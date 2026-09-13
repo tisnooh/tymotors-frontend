@@ -5,6 +5,7 @@ import { Heart, ShoppingBag } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { toast } from 'sonner';
+import { responsiveImageProps } from '@/lib/image';
 
 const RED_BADGES = new Set(['New', 'Best Seller']);
 
@@ -55,17 +56,19 @@ function ProductImages({ img, imgHover, alt }) {
     <>
       {img && (
         <img
-          src={img}
+          {...responsiveImageProps(img, [320, 480, 720], '(max-width: 1023px) 50vw, 25vw')}
           alt={alt}
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.05] group-hover:opacity-0"
         />
       )}
       {imgHover && (
         <img
-          src={imgHover}
+          {...responsiveImageProps(imgHover, [320, 480, 720], '(max-width: 1023px) 50vw, 25vw')}
           alt={alt}
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover transition-all duration-700 scale-[1.05] opacity-0 group-hover:opacity-100 group-hover:scale-100"
         />
       )}
@@ -79,7 +82,7 @@ export function ProductCard({ product, index = 0 }) {
   const inWishlist = isInWishlist(product.id);
 
   const img = product.images?.[0];
-  const imgHover = product.images?.[1] || product.images?.[0];
+  const imgHover = product.images?.[1];
 
   const onAdd = useCallback(
     async (e) => {

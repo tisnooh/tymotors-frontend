@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
+import { responsiveImageProps } from '@/lib/image';
 
 const CARDS = [
   { id: 'inspiration-1', src: 'https://images.unsplash.com/photo-1639928197975-719885038475?auto=format&fit=crop&w=1200&q=80' },
@@ -15,7 +16,7 @@ function CommunityCard({ card, delay }) {
   return (
     <Reveal delay={delay}>
       <div data-testid="community-card" className="group relative block aspect-square rounded-xl overflow-hidden border border-[#151A23] hover:border-[#2E394D] transition-colors bg-[#0A0B0E] ty-card-image">
-        <img src={card.src} alt="Inspiration automobile TYMotors" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:opacity-100" />
+        <img {...responsiveImageProps(card.src, [240, 400, 640], '(max-width: 767px) 50vw, 17vw', 70)} alt="Inspiration automobile TYMotors" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:opacity-100" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
       </div>
     </Reveal>

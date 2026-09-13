@@ -39,9 +39,9 @@ export function Loader({ onDone }) {
       const t0 = setTimeout(() => onDone?.(), 50);
       return () => clearTimeout(t0);
     }
-    const t1 = setTimeout(() => setPhase(1), 160);
-    const t2 = setTimeout(() => setPhase(2), 420);
-    const t3 = setTimeout(() => onDone?.(), 540);
+    const t1 = setTimeout(() => setPhase(1), 80);
+    const t2 = setTimeout(() => setPhase(2), 180);
+    const t3 = setTimeout(() => onDone?.(), 260);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);

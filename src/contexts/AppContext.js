@@ -8,7 +8,7 @@ const DEFAULT_CART = { items: [], subtotal: 0, currency: 'EUR' };
 const DEFAULT_WISHLIST = { items: [] };
 
 export function AppProvider({ children }) {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [cart, setCart] = useState(DEFAULT_CART);
   const [wishlist, setWishlist] = useState(DEFAULT_WISHLIST);
   const [cartOpen, setCartOpen] = useState(false);
@@ -49,10 +49,11 @@ export function AppProvider({ children }) {
   }, [user]);
 
   useEffect(() => {
+    if (authLoading) return;
     if (user) Cart.claim().then(setCart).catch(() => refreshCart());
     else refreshCart();
     refreshWishlist();
-  }, [user, refreshCart, refreshWishlist]);
+  }, [user, authLoading, refreshCart, refreshWishlist]);
 
   const addToCart = useCallback(async (productId, quantity = 1, selectedVehicle = null) => {
     const data = await Cart.add(productId, quantity, selectedVehicle);

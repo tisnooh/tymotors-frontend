@@ -1,10 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { responsiveImageProps } from '@/lib/image';
 import './StorytellingSection.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const BEAT_IMAGES = [
   'https://images.unsplash.com/photo-1606577924006-27d39b132ae2?auto=format&fit=crop&w=1200&q=80',
@@ -33,91 +30,113 @@ export function StorytellingSection() {
     const cards = Array.from(track.querySelectorAll('.storytelling-card'));
     const images = cards.map((card) => card.querySelector('img'));
     const contents = cards.map((card) => card.querySelector('.storytelling-card-content'));
-    const media = gsap.matchMedia();
-    const context = gsap.context(() => {
-      media.add({
-        phone: '(max-width: 767px)',
-        reduceMotion: '(prefers-reduced-motion: reduce)',
-      }, ({ conditions }) => {
-        const { phone, reduceMotion } = conditions;
-        if (!phone || reduceMotion || !ScrollTrigger.isTouch || cards.length < 2) return undefined;
+    const shouldAnimate = window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches;
+    if (!shouldAnimate || !('IntersectionObserver' in window)) return undefined;
 
-        section.classList.add('storytelling-touch-active');
-        gsap.set(cards, { zIndex: (index) => index + 1 });
-        gsap.set(cards.slice(1), { yPercent: 100 });
-        gsap.set(images, { scale: 1.035, transformOrigin: '50% 50%' });
-        gsap.set(images[0], { scale: 1 });
-        gsap.set(contents.slice(1), { autoAlpha: 0, y: 28 });
+    let disposed = false;
+    let media;
+    let context;
+    const initialize = async () => {
+      const [gsapModule, triggerModule] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
+      if (disposed) return;
+      const gsap = gsapModule.default;
+      const { ScrollTrigger } = triggerModule;
+      gsap.registerPlugin(ScrollTrigger);
+      media = gsap.matchMedia();
+      context = gsap.context(() => {
+        media.add({
+          phone: '(max-width: 767px)',
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        }, ({ conditions }) => {
+          const { phone, reduceMotion } = conditions;
+          if (!phone || reduceMotion || !ScrollTrigger.isTouch || cards.length < 2) return undefined;
 
-        const timeline = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: viewport,
-            start: 'top top',
-            end: () => `+=${Math.max(1, viewport.clientHeight * 0.92 * (cards.length - 1))}`,
-            pin: viewport,
-            pinSpacing: true,
-            scrub: 0.55,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onUpdate: ({ progress }) => {
-              const current = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
-              if (currentBeatRef.current) {
-                currentBeatRef.current.textContent = String(current + 1).padStart(2, '0');
-              }
-              if (progressRef.current) {
-                progressRef.current.style.transform = `scaleX(${progress})`;
-              }
+          section.classList.add('storytelling-touch-active');
+          gsap.set(cards, { zIndex: (index) => index + 1 });
+          gsap.set(cards.slice(1), { yPercent: 100 });
+          gsap.set(images, { scale: 1.035, transformOrigin: '50% 50%' });
+          gsap.set(images[0], { scale: 1 });
+          gsap.set(contents.slice(1), { autoAlpha: 0, y: 28 });
+
+          const timeline = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+              trigger: viewport,
+              start: 'top top',
+              end: () => `+=${Math.max(1, viewport.clientHeight * 0.92 * (cards.length - 1))}`,
+              pin: viewport,
+              pinSpacing: true,
+              scrub: 0.55,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onUpdate: ({ progress }) => {
+                const current = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
+                if (currentBeatRef.current) {
+                  currentBeatRef.current.textContent = String(current + 1).padStart(2, '0');
+                }
+                if (progressRef.current) {
+                  progressRef.current.style.transform = `scaleX(${progress})`;
+                }
+              },
             },
-          },
-        });
-
-        cards.slice(1).forEach((card, index) => {
-          const previousImage = images[index];
-          const currentImage = images[index + 1];
-          const previousContent = contents[index];
-          const currentContent = contents[index + 1];
-
-          timeline
-            .to(previousImage, { scale: 1.075, duration: 1 }, index)
-            .to(previousContent, { autoAlpha: 0, y: -20, duration: 0.26 }, index)
-            .to(card, { yPercent: 0, duration: 1, ease: 'power1.inOut' }, index)
-            .to(currentImage, { scale: 1, duration: 1, ease: 'power1.out' }, index)
-            .to(currentContent, { autoAlpha: 1, y: 0, duration: 0.34, ease: 'power1.out' }, index + 0.58);
-        });
-
-        let refreshFrame = 0;
-        let disposed = false;
-        const requestRefresh = () => {
-          if (disposed) return;
-          window.cancelAnimationFrame(refreshFrame);
-          refreshFrame = window.requestAnimationFrame(() => {
-            if (!disposed) ScrollTrigger.refresh();
           });
-        };
 
-        const pendingImages = images.filter((image) => image && !image.complete);
-        pendingImages.forEach((image) => image.addEventListener('load', requestRefresh, { once: true }));
-        document.fonts?.ready.then(requestRefresh);
+          cards.slice(1).forEach((card, index) => {
+            const previousImage = images[index];
+            const currentImage = images[index + 1];
+            const previousContent = contents[index];
+            const currentContent = contents[index + 1];
 
-        return () => {
-          disposed = true;
-          window.cancelAnimationFrame(refreshFrame);
-          pendingImages.forEach((image) => image.removeEventListener('load', requestRefresh));
-          timeline.scrollTrigger?.kill();
-          timeline.kill();
-          gsap.set(cards, { clearProps: 'transform,z-index,opacity,visibility' });
-          gsap.set(images, { clearProps: 'transform' });
-          gsap.set(contents, { clearProps: 'transform,opacity,visibility' });
-          if (progressRef.current) progressRef.current.style.removeProperty('transform');
-          section.classList.remove('storytelling-touch-active');
-        };
-      });
-    }, section);
+            timeline
+              .to(previousImage, { scale: 1.075, duration: 1 }, index)
+              .to(previousContent, { autoAlpha: 0, y: -20, duration: 0.26 }, index)
+              .to(card, { yPercent: 0, duration: 1, ease: 'power1.inOut' }, index)
+              .to(currentImage, { scale: 1, duration: 1, ease: 'power1.out' }, index)
+              .to(currentContent, { autoAlpha: 1, y: 0, duration: 0.34, ease: 'power1.out' }, index + 0.58);
+          });
+
+          let refreshFrame = 0;
+          let animationDisposed = false;
+          const requestRefresh = () => {
+            if (animationDisposed) return;
+            window.cancelAnimationFrame(refreshFrame);
+            refreshFrame = window.requestAnimationFrame(() => {
+              if (!animationDisposed) ScrollTrigger.refresh();
+            });
+          };
+
+          const pendingImages = images.filter((image) => image && !image.complete);
+          pendingImages.forEach((image) => image.addEventListener('load', requestRefresh, { once: true }));
+          document.fonts?.ready.then(requestRefresh);
+
+          return () => {
+            animationDisposed = true;
+            window.cancelAnimationFrame(refreshFrame);
+            pendingImages.forEach((image) => image.removeEventListener('load', requestRefresh));
+            timeline.scrollTrigger?.kill();
+            timeline.kill();
+            gsap.set(cards, { clearProps: 'transform,z-index,opacity,visibility' });
+            gsap.set(images, { clearProps: 'transform' });
+            gsap.set(contents, { clearProps: 'transform,opacity,visibility' });
+            if (progressRef.current) progressRef.current.style.removeProperty('transform');
+            section.classList.remove('storytelling-touch-active');
+          };
+        });
+      }, section);
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      initialize().catch(() => { /* Horizontal scrolling remains available as a fallback. */ });
+    }, { rootMargin: '600px 0px' });
+    observer.observe(section);
 
     return () => {
-      media.revert();
-      context.revert();
+      disposed = true;
+      observer.disconnect();
+      media?.revert();
+      context?.revert();
     };
   }, [beats.length]);
 
@@ -136,10 +155,10 @@ export function StorytellingSection() {
           {beats.map((beat, index) => (
             <article key={beat.title} className="storytelling-card relative shrink-0 w-[82vw] sm:w-[55vw] lg:w-[31rem] aspect-[4/3] overflow-hidden rounded-2xl border border-[#232B3A] snap-start">
               <img
-                src={BEAT_IMAGES[index]}
+                {...responsiveImageProps(BEAT_IMAGES[index], [480, 640, 900], '(max-width: 767px) 100vw, 31rem', 72)}
                 alt=""
-                loading={index === 0 ? 'eager' : 'lazy'}
-                fetchPriority={index === 0 ? 'high' : 'auto'}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div className="storytelling-card-shade absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/45 to-transparent" />

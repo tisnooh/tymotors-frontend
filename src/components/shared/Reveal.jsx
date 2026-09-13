@@ -1,8 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Wrap children to trigger fade/translate reveal on scroll.
 export function Reveal({ children, delay = 0, y = 24, className = '', as: Tag = 'div' }) {
@@ -10,35 +6,33 @@ export function Reveal({ children, delay = 0, y = 24, className = '', as: Tag = 
   const [animatedIn, setAnimatedIn] = useState(false);
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const el = ref.current;
-    if (!el) return;
-    if (reduced) { setAnimatedIn(true); return; }
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { autoAlpha: 0, y, filter: 'blur(6px)' },
-        {
-          autoAlpha: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.9,
-          delay,
-          ease: 'power3.out',
-          onStart: () => setAnimatedIn(true),
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-        }
-      );
-    }, el);
-
-    // Fallback: ensure visible after 2s even if GSAP failed
-    const timer = setTimeout(() => setAnimatedIn(true), 2000);
-    return () => { clearTimeout(timer); ctx.revert(); };
-  }, [delay, y]);
+    if (!el) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      setAnimatedIn(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setAnimatedIn(true);
+      observer.disconnect();
+    }, { rootMargin: '0px 0px -12% 0px' });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <Tag ref={ref} className={className} style={animatedIn ? undefined : { visibility: 'hidden' }}>
+    <Tag
+      ref={ref}
+      className={className}
+      style={{
+        opacity: animatedIn ? 1 : 0,
+        transform: animatedIn ? 'translate3d(0,0,0)' : `translate3d(0,${y}px,0)`,
+        filter: animatedIn ? 'blur(0)' : 'blur(6px)',
+        transition: 'opacity 0.7s ease, transform 0.9s cubic-bezier(0.2,0.6,0.2,1), filter 0.7s ease',
+        transitionDelay: animatedIn ? `${delay}s` : '0s',
+      }}
+    >
       {children}
     </Tag>
   );

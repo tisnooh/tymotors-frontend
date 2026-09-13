@@ -12,17 +12,6 @@ import { MobileMenu } from '@/components/layout/MobileMenu';
 import { SearchOverlay } from '@/components/layout/SearchOverlay';
 import { Loader } from '@/components/layout/Loader';
 import { SeoManager } from '@/components/layout/SeoManager';
-import {
-  ContactPage,
-  ShippingPage,
-  ReturnsPage,
-  FAQPage,
-  TrackPage,
-  PrivacyPage,
-  TermsPage,
-  CookiesPage,
-} from '@/pages/SupportPages';
-
 const Home = React.lazy(() => import('@/pages/Home'));
 const Shop = React.lazy(() => import('@/pages/Shop'));
 const CategoryPage = React.lazy(() => import('@/pages/CategoryPage'));
@@ -40,6 +29,15 @@ const AuthConfirm = React.lazy(() => import('@/pages/AuthConfirm'));
 const NewsletterAction = React.lazy(() => import('@/pages/NewsletterAction'));
 const Account = React.lazy(() => import('@/pages/Account'));
 const AdminApp = React.lazy(() => import('@/admin/AdminApp'));
+const supportPage = (name) => React.lazy(() => import('@/pages/SupportPages').then((module) => ({ default: module[name] })));
+const ContactPage = supportPage('ContactPage');
+const ShippingPage = supportPage('ShippingPage');
+const ReturnsPage = supportPage('ReturnsPage');
+const FAQPage = supportPage('FAQPage');
+const TrackPage = supportPage('TrackPage');
+const PrivacyPage = supportPage('PrivacyPage');
+const TermsPage = supportPage('TermsPage');
+const CookiesPage = supportPage('CookiesPage');
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',

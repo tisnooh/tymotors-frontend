@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { getAccessToken } from '@/lib/supabase';
+import { getCachedAccessToken } from '@/lib/authSession';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend-staging.onrender.com';
 const API = `${BACKEND_URL}/api`;
 
 // Get/generate persistent session id
@@ -19,9 +19,9 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use((config) => {
   config.headers['X-Session-Id'] = getSessionId();
-  const token = await getAccessToken();
+  const token = getCachedAccessToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
