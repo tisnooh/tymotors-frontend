@@ -37,8 +37,8 @@ export const Categories = {
 };
 
 export const Products = {
-  list: (params = {}) => api.get('/products', { params }).then((r) => r.data),
-  get: (slug) => api.get(`/products/${slug}`).then((r) => r.data),
+  list: (params = {}) => api.get('/products', { params: { preview: true, ...params } }).then((r) => r.data),
+  get: (slug) => api.get(`/products/${slug}`, { params: { preview: true } }).then((r) => r.data),
   checkCompatibility: (slug, vehicle) => api.post(`/products/${slug}/compatibility`, vehicle).then((r) => r.data),
 };
 
