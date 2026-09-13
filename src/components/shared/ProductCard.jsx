@@ -19,7 +19,7 @@ function ProductBadges({ badges }) {
   );
 }
 
-function WishlistButton({ active, onClick, label }) {
+function WishlistButton({ active, onClick, label, disabled = false }) {
   const base = 'absolute top-3 right-3 h-9 w-9 rounded-full border border-[#232B3A] backdrop-blur flex items-center justify-center transition-all';
   const activeCls = 'bg-[#E10600] border-[#E10600] text-white';
   const idleCls = 'bg-black/50 text-ty-textMid hover:text-white hover:border-[#2E394D]';
@@ -30,20 +30,22 @@ function WishlistButton({ active, onClick, label }) {
       data-testid="product-card-wishlist-button"
       aria-label={label}
       aria-pressed={active}
-      className={`${base} ${active ? activeCls : idleCls}`}
+      disabled={disabled}
+      className={`${base} ${active ? activeCls : idleCls} disabled:cursor-not-allowed disabled:opacity-40`}
     >
       <Heart className={`h-4 w-4 ${active ? 'fill-white' : ''}`} />
     </button>
   );
 }
 
-function QuickAddButton({ onClick, label }) {
+function QuickAddButton({ onClick, label, disabled = false }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       data-testid="product-card-add-to-cart-button"
-      className="absolute bottom-3 right-3 h-10 px-3 rounded-xl bg-[#E10600] hover:bg-[#FF1A12] text-white flex items-center gap-2 text-xs font-medium tracking-wide uppercase opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all"
+      className="absolute bottom-3 right-3 h-10 px-3 rounded-xl bg-[#E10600] hover:bg-[#FF1A12] text-white flex items-center gap-2 text-xs font-medium tracking-wide uppercase opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all disabled:bg-[#232B3A] disabled:text-ty-textMid disabled:cursor-not-allowed"
     >
       <ShoppingBag className="h-4 w-4" /> {label}
     </button>
@@ -77,6 +79,7 @@ export function ProductCard({ product, index = 0 }) {
   const { t, i18n } = useTranslation();
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const inWishlist = isInWishlist(product.id);
+  const isPreview = product.status !== 'active';
 
   const img = product.images?.[0];
   const imgHover = product.images?.[1] || product.images?.[0];
@@ -85,6 +88,10 @@ export function ProductCard({ product, index = 0 }) {
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if (isPreview) {
+        toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
+        return;
+      }
       if (product.compatibilities?.length) {
         toast.info(i18n.language?.startsWith('fr') ? 'Ouvrez la fiche pour vérifier votre véhicule.' : 'Open the product page to verify your vehicle.');
         return;
@@ -98,13 +105,14 @@ export function ProductCard({ product, index = 0 }) {
         toast.error(i18n.language?.startsWith('fr') ? 'Erreur lors de l\u2019ajout' : 'Could not add to cart');
       }
     },
-    [addToCart, product.compatibilities?.length, product.id, i18n.language]
+    [addToCart, isPreview, product.compatibilities?.length, product.id, i18n.language]
   );
 
   const onWish = useCallback(
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if (isPreview) return;
       try {
         await toggleWishlist(product.id);
       } catch (err) {
@@ -113,7 +121,7 @@ export function ProductCard({ product, index = 0 }) {
         toast.error(i18n.language?.startsWith('fr') ? 'Erreur favoris' : 'Wishlist error');
       }
     },
-    [toggleWishlist, product.id, i18n.language]
+    [toggleWishlist, isPreview, product.id, i18n.language]
   );
 
   return (
@@ -127,8 +135,8 @@ export function ProductCard({ product, index = 0 }) {
         <ProductImages img={img} imgHover={imgHover} alt={product.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-80 pointer-events-none" />
         <ProductBadges badges={product.badges} />
-        <WishlistButton active={inWishlist} onClick={onWish} label={t('product.wishlist')} />
-        <QuickAddButton onClick={onAdd} label={t('product.add_to_cart')} />
+        <WishlistButton active={inWishlist} onClick={onWish} label={t('product.wishlist')} disabled={isPreview} />
+        <QuickAddButton onClick={onAdd} label={isPreview ? (i18n.language?.startsWith('fr') ? 'Bientôt' : 'Coming soon') : t('product.add_to_cart')} disabled={isPreview} />
         <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F2C94C]/40 to-transparent" />
       </div>
 
@@ -169,8 +177,8 @@ export function ProductCard({ product, index = 0 }) {
               </span>
             )}
           </div>
-          <span className={`font-mono text-[10px] uppercase ${product.stock > 0 ? 'text-emerald-300' : 'text-red-300'}`}>
-            {product.stock > 0 ? 'Disponible' : 'Indisponible'}
+          <span className={`font-mono text-[10px] uppercase ${!isPreview && product.stock > 0 ? 'text-emerald-300' : 'text-[#F2C94C]'}`}>
+            {isPreview ? 'Bientôt disponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
           </span>
         </div>
       </div>
