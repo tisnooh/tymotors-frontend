@@ -8,7 +8,7 @@ const BEAT_IMAGES = [
   'https://images.unsplash.com/photo-1773709766452-8f96b950bf8f?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1639444100617-810c1df608a8?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1767729659508-0d29dadd2254?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1760818078878-6948eb2fc2cf?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1747595558629-6a73f97b62d6?auto=format&fit=crop&w=1200&q=80',
 ];
 
