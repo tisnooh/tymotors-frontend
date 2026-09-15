@@ -7,12 +7,12 @@ import './StorytellingSection.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const BEAT_IMAGES = [
-  'https://images.unsplash.com/photo-1606577924006-27d39b132ae2?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1658055467065-073f0e1d0601?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1719780711623-6a55225017c5?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1760688964691-7de6fe3fff63?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1773709766452-8f96b950bf8f?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1639444100617-810c1df608a8?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1767729659508-0d29dadd2254?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1639928845095-b2c86c3cde80?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1747595558629-6a73f97b62d6?auto=format&fit=crop&w=1200&q=80',
 ];
 
 export function StorytellingSection() {
