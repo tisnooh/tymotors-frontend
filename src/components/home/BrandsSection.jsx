@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowUpRight } from 'lucide-react';
 import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
+import { responsiveImageProps } from '@/lib/image';
 
 export function BrandsSection() {
   const { t } = useTranslation();
@@ -37,9 +38,10 @@ export function BrandsSection() {
                 className="group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
                 <img
-                  src={b.image}
+                  {...responsiveImageProps(b.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw')}
                   alt={b.name}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-[1.05] transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />

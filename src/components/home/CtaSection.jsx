@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
+import { responsiveImageProps } from '@/lib/image';
+
+const CTA_IMAGE = 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2000&q=85';
 
 export function CtaSection() {
   const { t } = useTranslation();
@@ -12,8 +15,10 @@ export function CtaSection() {
         <Reveal>
           <div className="relative rounded-3xl overflow-hidden border border-[#232B3A] bg-[#0A0B0E]">
             <img
-              src="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2000&q=85"
+              {...responsiveImageProps(CTA_IMAGE, [640, 960, 1400], '(max-width: 1280px) 100vw, 1280px', 72)}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-cover opacity-45"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/85 to-transparent" />

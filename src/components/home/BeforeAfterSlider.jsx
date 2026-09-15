@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
+import { responsiveImageProps } from '@/lib/image';
 
 const BEFORE_IMG = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2000&q=85';
 const AFTER_IMG = 'https://images.unsplash.com/photo-1621776887753-fe3c3239555a?auto=format&fit=crop&w=2000&q=85';
@@ -19,6 +20,8 @@ export function BeforeAfterSlider() {
   const containerRef = useRef(null);
   const [pos, setPos] = useState(50);
   const draggingRef = useRef(false);
+  const beforeImage = responsiveImageProps(BEFORE_IMG, [640, 960, 1440], '(max-width: 1280px) 100vw, 1280px', 74);
+  const afterImage = responsiveImageProps(AFTER_IMG, [640, 960, 1440], '(max-width: 1280px) 100vw, 1280px', 74);
 
   const handleMove = useCallback((clientX) => {
     const el = containerRef.current;
@@ -80,11 +83,11 @@ export function BeforeAfterSlider() {
               if (e.key === 'ArrowRight') setPos((p) => Math.min(100, p + 5));
             }}
           >
-            <img src={AFTER_IMG} alt="After" className="absolute inset-0 h-full w-full object-cover" />
+            <img {...afterImage} alt="After" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute top-4 right-4 ty-chip ty-chip-red font-mono">{t('before_after.after')}</div>
 
             <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-              <img src={BEFORE_IMG} alt="Before" className="absolute inset-0 h-full w-full object-cover" />
+              <img {...beforeImage} alt="Before" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute top-4 left-4 ty-chip font-mono">{t('before_after.before')}</div>
             </div>
 

@@ -41,6 +41,8 @@ export function OrderDetail() {
 function OrderContent({ order: o, reload }) {
   const [status, setStatus] = useState(o.fulfillment_status);
   const [tracking, setTracking] = useState(o.tracking_number || '');
+  const [carrier, setCarrier] = useState(o.carrier || '');
+  const [trackingUrl, setTrackingUrl] = useState(o.tracking_url || '');
   const [busy, setBusy] = useState(false);
   const [returnItem, setReturnItem] = useState(o.items[0]?.id || '');
   const [quantity, setQuantity] = useState(1);
@@ -49,7 +51,7 @@ function OrderContent({ order: o, reload }) {
     e.preventDefault();
     if (status === 'cancelled' && !window.confirm('Annuler cette commande ? Un paiement reçu doit être remboursé séparément dans Stripe. Le stock ne sera pas remis automatiquement.')) return;
     setBusy(true);
-    try { await adminApi.put(`orders/${o.id}`, { fulfillment_status: status, tracking_number: tracking, expected_updated_at: o.updated_at }); toast.success('Commande mise à jour'); reload(); }
+    try { await adminApi.put(`orders/${o.id}`, { fulfillment_status: status, tracking_number: tracking, carrier: carrier || null, tracking_url: trackingUrl || null, expected_updated_at: o.updated_at }); toast.success('Commande mise à jour'); reload(); }
     catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); }
   }
   async function createReturn(e) {
@@ -62,9 +64,10 @@ function OrderContent({ order: o, reload }) {
     <div className="ad-grid-2"><Panel title="Articles"><Table items={o.items} columns={[{ label: 'Produit', render: r => <><strong>{r.product_name}</strong><small>{r.sku}</small></> }, { label: 'Qté', render: r => r.quantity }, { label: 'Prix unitaire', render: r => money(r.unit_amount_cents) }, { label: 'Total', render: r => money(r.quantity * r.unit_amount_cents) }]}/>
       <dl className="ad-totals">{[['Sous-total', o.subtotal_cents], ['Réduction', -(o.discount_amount_cents || 0)], ['Livraison', o.shipping_amount_cents], ['Taxes', o.tax_amount_cents], ['Total', o.total_cents], ['Remboursements confirmés', o.refunded_amount_cents || 0]].map(([k,v]) => <div key={k}><dt>{k}</dt><dd>{money(v)}</dd></div>)}</dl></Panel>
       <Panel title="Client & livraison"><h3>{o.customer_name || 'Client invité'}</h3><p>{o.customer_email || 'E-mail non renseigné'}</p><div className="ad-grid-2"><div><h3>Livraison</h3><address>{address(o.shipping_address)}</address></div><div><h3>Facturation</h3><address>{address(o.billing_address)}</address></div></div><p className="ad-note">Canal : {o.sales_channel === 'website' ? 'Site TYMotors' : o.sales_channel} · Prestataire : {o.stripe_session_id ? 'Stripe Checkout' : 'Non renseigné'}</p>{o.requires_compatibility_review && <p className="ad-alert">Compatibilité du véhicule à vérifier avant expédition.</p>}</Panel></div>
-    <div className="ad-grid-2"><Panel title="Traitement de la commande"><form onSubmit={save}><StatusSelect value={status} onChange={e => setStatus(e.target.value)} values={['unfulfilled','processing','requires_review','shipped','delivered','cancelled']}/><Field label="Numéro de suivi" value={tracking} onChange={e => setTracking(e.target.value)} maxLength={200}/><button className="ad-btn ad-primary" disabled={busy}>Enregistrer</button></form>
+    <div className="ad-grid-2"><Panel title="Traitement de la commande"><form onSubmit={save}><StatusSelect value={status} onChange={e => setStatus(e.target.value)} values={['unfulfilled','processing','requires_review','shipped','delivered','cancelled']}/><Field label="Transporteur" value={carrier} onChange={e => setCarrier(e.target.value)} maxLength={100}/><Field label="Numéro de suivi" value={tracking} onChange={e => setTracking(e.target.value)} maxLength={200}/><Field label="Lien de suivi" type="url" value={trackingUrl} onChange={e => setTrackingUrl(e.target.value)} placeholder="https://…" maxLength={1000}/><button className="ad-btn ad-primary" disabled={busy}>Enregistrer</button></form>
       <p className="ad-note">L’annulation ne déclenche aucun remboursement ni remise en stock.</p>{o.stripe_dashboard_url && <a className="ad-btn" href={o.stripe_dashboard_url} target="_blank" rel="noreferrer">Paiement et remboursement dans Stripe <ArrowUpRight size={15}/></a>}<p className="ad-note">Les remboursements sont effectués dans Stripe et confirmés ici par son webhook. Aucun remboursement simulé.</p></Panel>
       <Panel title="Ouvrir un retour">{o.paid_at ? <form onSubmit={createReturn}><Field label="Article"><select value={returnItem} onChange={e => setReturnItem(e.target.value)} required>{o.items.map(i => <option key={i.id} value={i.id}>{i.product_name}</option>)}</select></Field><Field label="Quantité" type="number" min="1" max={o.items.find(i => i.id === returnItem)?.quantity || 1} value={quantity} onChange={e => setQuantity(e.target.value)} required/><Field label="Motif" value={reason} minLength={3} maxLength={1000} onChange={e => setReason(e.target.value)} required/><button className="ad-btn" disabled={busy}>Enregistrer la demande</button></form> : <p className="ad-note">Disponible après un paiement confirmé.</p>}<div className="ad-stack">{o.returns.map(r => <p key={r.id}>{r.reason} · <Badge value={r.status}/></p>)}</div></Panel></div>
+    <Panel title="Emails de la commande"><Table items={o.emails || []} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Type', render: r => r.email_type }, { label: 'Destinataire', render: r => r.recipient }, { label: 'Statut', render: r => <Badge value={r.status}/> }, { label: 'Erreur', render: r => r.error_message || '—' }]}/></Panel>
     <Panel title="Historique"><Table items={o.history} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Action', render: r => r.action }, { label: 'Auteur', render: r => r.admin_user_id || 'Stripe / système' }, { label: 'Détails', render: r => <pre className="ad-json">{JSON.stringify(r.metadata, null, 2)}</pre> }]}/></Panel>
   </>;
 }

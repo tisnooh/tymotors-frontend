@@ -1,7 +1,7 @@
 import React from 'react';
 import '@/App.css';
 import '@/lib/i18n';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AppProvider } from '@/contexts/AppContext';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -12,17 +12,6 @@ import { MobileMenu } from '@/components/layout/MobileMenu';
 import { SearchOverlay } from '@/components/layout/SearchOverlay';
 import { Loader } from '@/components/layout/Loader';
 import { SeoManager } from '@/components/layout/SeoManager';
-import {
-  ContactPage,
-  ShippingPage,
-  ReturnsPage,
-  FAQPage,
-  TrackPage,
-  PrivacyPage,
-  TermsPage,
-  CookiesPage,
-} from '@/pages/SupportPages';
-
 const Home = React.lazy(() => import('@/pages/Home'));
 const Shop = React.lazy(() => import('@/pages/Shop'));
 const CategoryPage = React.lazy(() => import('@/pages/CategoryPage'));
@@ -36,8 +25,19 @@ const OrderSuccess = React.lazy(() => import('@/pages/OrderSuccess'));
 const NotFound = React.lazy(() => import('@/pages/NotFound'));
 const AuthPage = React.lazy(() => import('@/pages/AuthPage'));
 const ResetPassword = React.lazy(() => import('@/pages/ResetPassword'));
+const AuthConfirm = React.lazy(() => import('@/pages/AuthConfirm'));
+const NewsletterAction = React.lazy(() => import('@/pages/NewsletterAction'));
 const Account = React.lazy(() => import('@/pages/Account'));
 const AdminApp = React.lazy(() => import('@/admin/AdminApp'));
+const supportPage = (name) => React.lazy(() => import('@/pages/SupportPages').then((module) => ({ default: module[name] })));
+const ContactPage = supportPage('ContactPage');
+const ShippingPage = supportPage('ShippingPage');
+const ReturnsPage = supportPage('ReturnsPage');
+const FAQPage = supportPage('FAQPage');
+const TrackPage = supportPage('TrackPage');
+const PrivacyPage = supportPage('PrivacyPage');
+const TermsPage = supportPage('TermsPage');
+const CookiesPage = supportPage('CookiesPage');
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
@@ -80,8 +80,14 @@ function Shell() {
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/forgot-password" element={<Navigate to="/auth?mode=forgot" replace />} />
               <Route path="/auth/reset" element={<ResetPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/auth/confirm" element={<AuthConfirm />} />
+              <Route path="/newsletter/confirm" element={<NewsletterAction action="confirm" />} />
+              <Route path="/newsletter/unsubscribe" element={<NewsletterAction action="unsubscribe" />} />
               <Route path="/account" element={<Account />} />
+              <Route path="/account/orders/:orderId" element={<Account />} />
               {/* Support */}
               <Route path="/support/contact" element={<ContactPage />} />
               <Route path="/support/shipping" element={<ShippingPage />} />

@@ -31,4 +31,5 @@ export const labels = {
   active: 'Actif', draft: 'Brouillon', archived: 'Archivé', low: 'Stock faible', out: 'Rupture', available: 'En stock',
   requested: 'Demande reçue', review: 'À valider', accepted: 'Accepté', received: 'Produit reçu', rejected: 'Refusé',
   unpublished: 'Non publié', published: 'Publié', to_publish: 'À publier', needs_update: 'À mettre à jour', error: 'Erreur',
+  subscribed: 'Abonné', queued: 'En attente', sent: 'Envoyé',
 };

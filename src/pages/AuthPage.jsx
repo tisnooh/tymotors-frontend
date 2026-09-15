@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { AuthEmail } from '@/lib/api';
 
 const inputClass = 'h-12 w-full rounded-xl border border-[#232B3A] bg-[#0F1115] px-4 text-white placeholder:text-ty-textLow focus:border-[#E10600] focus:outline-none';
 
 export default function AuthPage() {
-  const { user, configured, signIn, signUp, resetPassword } = useAuth();
+  const { user, configured, signIn, signUp } = useAuth();
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const mode = params.get('mode') || 'login';
@@ -25,7 +26,7 @@ export default function AuthPage() {
         if (result.session) navigate('/account');
         else setMessage('Compte créé. Confirme ton adresse depuis l’e-mail envoyé par TYMotors.');
       } else if (mode === 'forgot') {
-        await resetPassword(form.email);
+        await AuthEmail.forgot(form.email);
         setMessage('Si cette adresse existe, un lien de réinitialisation vient d’être envoyé.');
       } else {
         await signIn(form.email, form.password);
@@ -40,7 +41,7 @@ export default function AuthPage() {
   return (
     <main className="pt-32 pb-24 min-h-[75vh]">
       <div className="ty-container max-w-lg">
-        <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#F2C94C]">// Espace client //</p>
+        <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-[#F2C94C]">{'// Espace client //'}</p>
         <h1 className="ty-display text-white text-4xl md:text-5xl mt-3">{title}</h1>
         <p className="text-ty-textMid mt-3">Retrouve tes commandes, favoris, adresses et véhicules enregistrés.</p>
         {!configured && <div className="mt-6 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-amber-100 flex gap-3"><AlertTriangle className="h-5 w-5 shrink-0" />Auth staging non configurée sur cette Preview.</div>}

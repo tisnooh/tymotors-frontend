@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { getAccessToken } from '@/lib/supabase';
+import { getCachedAccessToken } from '@/lib/authSession';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend.onrender.com';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend-staging.onrender.com';
 const API = `${BACKEND_URL}/api`;
 
 // Get/generate persistent session id
@@ -19,9 +19,9 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use(async (config) => {
+api.interceptors.request.use((config) => {
   config.headers['X-Session-Id'] = getSessionId();
-  const token = await getAccessToken();
+  const token = getCachedAccessToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -62,7 +62,15 @@ export const Wishlist = {
 };
 
 export const Newsletter = {
-  signup: (email, locale = 'en') => api.post('/newsletter', { email, locale }).then((r) => r.data),
+  signup: (email, locale = 'en', website = '') => api.post('/newsletter', { email, locale, website, consent_source: 'footer' }).then((r) => r.data),
+  confirm: (token) => api.get('/newsletter/confirm', { params: { token } }).then((r) => r.data),
+  unsubscribe: (token) => api.get('/newsletter/unsubscribe', { params: { token } }).then((r) => r.data),
+};
+
+export const AuthEmail = {
+  forgot: (email) => api.post('/auth/forgot-password', { email }).then((r) => r.data),
+  resend: (email) => api.post('/auth/resend-confirmation', { email }).then((r) => r.data),
+  welcome: (first_name = null) => api.post('/auth/welcome', { first_name }).then((r) => r.data),
 };
 
 export const Contact = {
@@ -81,4 +89,6 @@ export const Account = {
   get: () => api.get('/me').then((r) => r.data),
   update: (payload) => api.patch('/me', payload).then((r) => r.data),
   orders: () => api.get('/me/orders').then((r) => r.data),
+  emailPreferences: () => api.get('/me/email-preferences').then((r) => r.data),
+  updateEmailPreferences: (newsletter) => api.patch('/me/email-preferences', { newsletter }).then((r) => r.data),
 };

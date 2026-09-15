@@ -10,6 +10,25 @@
     color: #FF1A12;
 }
 
+[data-testid="page-home"] > section:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+}
+
+@keyframes tyHeroRise {
+    from { transform: translate3d(0, 14px, 0); }
+    to { transform: translate3d(0, 0, 0); }
+}
+.ty-hero-rise { animation: tyHeroRise 0.7s cubic-bezier(0.2, 0.6, 0.2, 1) both; }
+.ty-hero-rise-delay-1 { animation-delay: 0.06s; }
+.ty-hero-rise-delay-2 { animation-delay: 0.12s; }
+.ty-hero-rise-delay-3 { animation-delay: 0.18s; }
+.ty-hero-rise-delay-4 { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .ty-hero-rise { animation: none; }
+}
+
 /* Hide default focus outline; we use rings */
 *:focus {
     outline: none;
