@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
 import { responsiveImageProps } from '@/lib/image';
 
-const CTA_IMAGE = 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=2000&q=85';
+const CTA_IMAGE = 'https://images.unsplash.com/photo-1749434482234-6c0bf1da333c?auto=format&fit=crop&w=2000&q=84';
 
 export function CtaSection() {
   const { t } = useTranslation();

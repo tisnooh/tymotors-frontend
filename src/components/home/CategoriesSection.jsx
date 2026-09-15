@@ -12,6 +12,13 @@ const HOME_CATEGORY_SLOTS = [
   { slug: 'technology', sourceSlugs: ['technology', 'multimedia-technology'], labelKey: 'nav.technology' },
 ];
 
+const HOME_CATEGORY_IMAGES = {
+  performance: 'https://images.unsplash.com/photo-1551217996-e364390be8f8?auto=format&fit=crop&w=1600&q=82',
+  interior: 'https://images.unsplash.com/photo-1687675430493-71fda5e097d2?auto=format&fit=crop&w=1600&q=82',
+  technology: 'https://images.unsplash.com/photo-1773962359689-2397bf5eb9c3?auto=format&fit=crop&w=1600&q=82',
+};
+
+
 export function CategoriesSection() {
   const { t } = useTranslation();
   const [items, setItems] = useState([]);
@@ -22,7 +29,7 @@ export function CategoriesSection() {
 
   const homeItems = HOME_CATEGORY_SLOTS.map((slot) => {
     const source = items.find((item) => slot.sourceSlugs.includes(item.slug));
-    return source ? { ...source, slug: slot.slug, name: t(slot.labelKey) } : null;
+    return source ? { ...source, slug: slot.slug, name: t(slot.labelKey), image: HOME_CATEGORY_IMAGES[slot.slug] || source.image } : null;
   }).filter(Boolean);
 
   return (

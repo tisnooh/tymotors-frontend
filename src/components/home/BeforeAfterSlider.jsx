@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
 import { responsiveImageProps } from '@/lib/image';
 
-const BEFORE_IMG = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=2000&q=85';
-const AFTER_IMG = 'https://images.unsplash.com/photo-1621776887753-fe3c3239555a?auto=format&fit=crop&w=2000&q=85';
+const BEFORE_IMG = 'https://www.vehiclesizes.com/img/63317-nissan-gt-r-front-angle-black-sports-coupe-led-headlights-alloy-wheels.jpg';
+const AFTER_IMG = 'https://cdn.motor1.com/images/mgl/K67nq/s1/2019-nissan-gt-r-special-edition-jdm.jpg';
 const TICK_KEYS = Array.from({ length: 12 }, (_, i) => `tick-${i}`);
 
 function TelemetryTicks() {
