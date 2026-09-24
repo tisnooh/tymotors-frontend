@@ -1,4 +1,38 @@
 @media (max-width: 767px) {
+  .storytelling-section.storytelling-mobile-layout {
+    padding-bottom: 0;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  .storytelling-mobile-layout .storytelling-viewport {
+    overflow: visible;
+  }
+
+  .storytelling-mobile-layout .storytelling-track {
+    display: block;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .storytelling-mobile-layout .storytelling-card {
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    aspect-ratio: auto;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    scroll-snap-align: none;
+  }
+
+  .storytelling-mobile-layout .storytelling-card-content {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
   .storytelling-section.storytelling-touch-active {
     padding-top: 0;
     padding-bottom: 0;
