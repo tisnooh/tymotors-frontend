@@ -30,8 +30,20 @@ export function StorytellingSection() {
     const cards = Array.from(track.querySelectorAll('.storytelling-card'));
     const images = cards.map((card) => card.querySelector('img'));
     const contents = cards.map((card) => card.querySelector('.storytelling-card-content'));
+    const phoneMedia = window.matchMedia('(max-width: 767px)');
+    const syncMobileLayout = () => {
+      section.classList.toggle('storytelling-mobile-layout', phoneMedia.matches);
+    };
+    syncMobileLayout();
+    phoneMedia.addEventListener('change', syncMobileLayout);
+
     const shouldAnimate = window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches;
-    if (!shouldAnimate || !('IntersectionObserver' in window)) return undefined;
+    if (!shouldAnimate || !('IntersectionObserver' in window)) {
+      return () => {
+        phoneMedia.removeEventListener('change', syncMobileLayout);
+        section.classList.remove('storytelling-mobile-layout');
+      };
+    }
 
     let disposed = false;
     let media;
@@ -137,6 +149,8 @@ export function StorytellingSection() {
       observer.disconnect();
       media?.revert();
       context?.revert();
+      phoneMedia.removeEventListener('change', syncMobileLayout);
+      section.classList.remove('storytelling-mobile-layout');
     };
   }, [beats.length]);
 
