@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
 import { responsiveImageProps } from '@/lib/image';
 
-const BEFORE_IMG = 'https://images.unsplash.com/photo-1616591938203-9b5630a01006?auto=format&fit=crop&w=2000&q=85';
-const AFTER_IMG = 'https://images.unsplash.com/photo-1760520830355-e6be53e41c2f?auto=format&fit=crop&w=2000&q=85';
+const BEFORE_IMG = 'https://images.unsplash.com/photo-1757910555708-5d26fa0fc2fd?auto=format&fit=crop&w=2000&q=85';
+const AFTER_IMG = 'https://images.unsplash.com/photo-1749393900058-41e1a6a60eef?auto=format&fit=crop&w=2000&q=85';
 const TICK_KEYS = Array.from({ length: 12 }, (_, i) => `tick-${i}`);
 
 function TelemetryTicks() {
