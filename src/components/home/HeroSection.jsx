@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { responsiveImageProps } from '@/lib/image';
 
-const HERO_IMG = 'https://images.unsplash.com/photo-1748028265605-5ff6ddb0322f?auto=format&fit=crop&w=2000&q=85';
+const HERO_IMG = 'https://images.unsplash.com/photo-1747229521023-5f89d2749fa3?auto=format&fit=crop&w=2000&q=85';
 
 export function HeroSection() {
   const { t } = useTranslation();
