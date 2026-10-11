@@ -47,6 +47,12 @@ function OrderContent({ order: o, reload }) {
   const [returnItem, setReturnItem] = useState(o.items[0]?.id || '');
   const [quantity, setQuantity] = useState(1);
   const [reason, setReason] = useState('');
+  const supplier = o.supplier_order;
+  const [supplierStatus, setSupplierStatus] = useState(supplier?.status || 'pending_validation');
+  const [alibabaOrderId, setAlibabaOrderId] = useState(supplier?.alibaba_order_id || '');
+  const [agentOrderId, setAgentOrderId] = useState(supplier?.agent_order_id || '');
+  const [agentConnection, setAgentConnection] = useState(supplier?.agent_connection_status || 'not_connected');
+  const [supplierNotes, setSupplierNotes] = useState(supplier?.notes || '');
   async function save(e) {
     e.preventDefault();
     if (status === 'cancelled' && !window.confirm('Annuler cette commande ? Un paiement reçu doit être remboursé séparément dans Stripe. Le stock ne sera pas remis automatiquement.')) return;
@@ -59,6 +65,17 @@ function OrderContent({ order: o, reload }) {
     try { await adminApi.post('returns', { order_item_id: returnItem, quantity: Number(quantity), reason }); toast.success('Retour enregistré'); reload(); }
     catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); }
   }
+  async function saveSupplier(e) {
+    e.preventDefault(); setBusy(true);
+    try {
+      await adminApi.put(`orders/${o.id}/supplier`, {
+        status: supplierStatus, alibaba_order_id: alibabaOrderId || null, agent_order_id: agentOrderId || null,
+        agent_provider: supplier?.agent_provider || 'CJdropshipping', agent_connection_status: agentConnection,
+        notes: supplierNotes || null, expected_updated_at: supplier.updated_at,
+      });
+      toast.success('Traitement fournisseur mis à jour'); reload();
+    } catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); }
+  }
   const address = a => a && Object.values(a).some(Boolean) ? [a.line1, a.line2, [a.postal_code, a.city].filter(Boolean).join(' '), a.state, a.country].filter(Boolean).map((v, i) => <div key={i}>{v}</div>) : 'Non renseignée';
   return <><PageTitle title={o.order_number} description={date(o.created_at)}><Badge value={o.payment_status}/><Badge value={o.fulfillment_status}/></PageTitle>
     <div className="ad-grid-2"><Panel title="Articles"><Table items={o.items} columns={[{ label: 'Produit', render: r => <><strong>{r.product_name}</strong><small>{r.sku}</small></> }, { label: 'Qté', render: r => r.quantity }, { label: 'Prix unitaire', render: r => money(r.unit_amount_cents) }, { label: 'Total', render: r => money(r.quantity * r.unit_amount_cents) }]}/>
@@ -67,6 +84,11 @@ function OrderContent({ order: o, reload }) {
     <div className="ad-grid-2"><Panel title="Traitement de la commande"><form onSubmit={save}><StatusSelect value={status} onChange={e => setStatus(e.target.value)} values={['unfulfilled','processing','requires_review','shipped','delivered','cancelled']}/><Field label="Transporteur" value={carrier} onChange={e => setCarrier(e.target.value)} maxLength={100}/><Field label="Numéro de suivi" value={tracking} onChange={e => setTracking(e.target.value)} maxLength={200}/><Field label="Lien de suivi" type="url" value={trackingUrl} onChange={e => setTrackingUrl(e.target.value)} placeholder="https://…" maxLength={1000}/><button className="ad-btn ad-primary" disabled={busy}>Enregistrer</button></form>
       <p className="ad-note">L’annulation ne déclenche aucun remboursement ni remise en stock.</p>{o.stripe_dashboard_url && <a className="ad-btn" href={o.stripe_dashboard_url} target="_blank" rel="noreferrer">Paiement et remboursement dans Stripe <ArrowUpRight size={15}/></a>}<p className="ad-note">Les remboursements sont effectués dans Stripe et confirmés ici par son webhook. Aucun remboursement simulé.</p></Panel>
       <Panel title="Ouvrir un retour">{o.paid_at ? <form onSubmit={createReturn}><Field label="Article"><select value={returnItem} onChange={e => setReturnItem(e.target.value)} required>{o.items.map(i => <option key={i.id} value={i.id}>{i.product_name}</option>)}</select></Field><Field label="Quantité" type="number" min="1" max={o.items.find(i => i.id === returnItem)?.quantity || 1} value={quantity} onChange={e => setQuantity(e.target.value)} required/><Field label="Motif" value={reason} minLength={3} maxLength={1000} onChange={e => setReason(e.target.value)} required/><button className="ad-btn" disabled={busy}>Enregistrer la demande</button></form> : <p className="ad-note">Disponible après un paiement confirmé.</p>}<div className="ad-stack">{o.returns.map(r => <p key={r.id}>{r.reason} · <Badge value={r.status}/></p>)}</div></Panel></div>
+    {supplier ? <Panel title="Commande fournisseur · validation manuelle"><p className="ad-note">Aucun achat n’est déclenché automatiquement. Vérifiez chaque référence, validez ici, puis effectuez et payez la commande dans Alibaba.</p>
+      <Table items={supplier.items || []} columns={[{ label: 'Article', render: r => <><strong>{r.product_name}</strong><small>{r.sku} · Qté {r.quantity}</small></> }, { label: 'Fournisseur', render: r => r.supplier_name || 'Non renseigné' }, { label: 'Lien Alibaba exact', render: r => r.exact_source_url ? <a className="ad-btn" href={r.exact_source_url} target="_blank" rel="noreferrer">Ouvrir <ArrowUpRight size={14}/></a> : <span className="ad-alert">Lien exact manquant</span> }]}/>
+      <form className="ad-form-grid" onSubmit={saveSupplier}><StatusSelect label="Étape fournisseur" value={supplierStatus} onChange={e => setSupplierStatus(e.target.value)} values={['pending_validation','approved','ordered','received_by_agent','quality_control','ready_to_ship','requires_attention','cancelled']}/><StatusSelect label="Connexion agent" value={agentConnection} onChange={e => setAgentConnection(e.target.value)} values={['not_connected','onboarding','connected']}/><Field label="Numéro de commande Alibaba" value={alibabaOrderId} onChange={e => setAlibabaOrderId(e.target.value)} maxLength={200}/><Field label="Référence agent / entrepôt" value={agentOrderId} onChange={e => setAgentOrderId(e.target.value)} maxLength={200}/><Field label="Notes internes"><textarea value={supplierNotes} onChange={e => setSupplierNotes(e.target.value)} maxLength={2000}/></Field><div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer l’étape</button><a className="ad-btn" href="https://cjdropship.com/fulfillment-service/" target="_blank" rel="noreferrer">Configurer CJdropshipping <ArrowUpRight size={14}/></a></div></form>
+    </Panel> : o.payment_status === 'paid' ? <Panel title="Commande fournisseur"><p className="ad-alert">Le dossier fournisseur n’a pas encore été créé. Rechargez après la migration Supabase.</p></Panel> : null}
+    <Panel title="Suivi visible par le client"><Table items={o.tracking_events || []} columns={[{ label: 'Date', render: r => date(r.occurred_at) }, { label: 'Étape', render: r => r.title }, { label: 'Description', render: r => r.description || '—' }, { label: 'Visible', render: r => r.is_customer_visible ? 'Oui' : 'Interne' }]}/></Panel>
     <Panel title="Emails de la commande"><Table items={o.emails || []} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Type', render: r => r.email_type }, { label: 'Destinataire', render: r => r.recipient }, { label: 'Statut', render: r => <Badge value={r.status}/> }, { label: 'Erreur', render: r => r.error_message || '—' }]}/></Panel>
     <Panel title="Historique"><Table items={o.history} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Action', render: r => r.action }, { label: 'Auteur', render: r => r.admin_user_id || 'Stripe / système' }, { label: 'Détails', render: r => <pre className="ad-json">{JSON.stringify(r.metadata, null, 2)}</pre> }]}/></Panel>
   </>;
