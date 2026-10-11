@@ -32,4 +32,7 @@ export const labels = {
   requested: 'Demande reçue', review: 'À valider', accepted: 'Accepté', received: 'Produit reçu', rejected: 'Refusé',
   unpublished: 'Non publié', published: 'Publié', to_publish: 'À publier', needs_update: 'À mettre à jour', error: 'Erreur',
   subscribed: 'Abonné', queued: 'En attente', sent: 'Envoyé',
+  pending_validation: 'À valider', approved: 'Validée', ordered: 'Commandée chez Alibaba',
+  received_by_agent: 'Reçue par l’agent', quality_control: 'Contrôle qualité', ready_to_ship: 'Prête à expédier',
+  requires_attention: 'Action requise', not_connected: 'Non connecté', onboarding: 'Configuration en cours', connected: 'Connecté',
 };

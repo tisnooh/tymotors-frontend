@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Package, RotateCcw, HelpCircle, Truck, Shield, FileText, Cookie } from 'lucide-react';
-import { Contact } from '@/lib/api';
+import { Contact, Tracking } from '@/lib/api';
 
 const CONTACT_DETAILS = [
   { icon: Mail, label: 'Email', value: process.env.REACT_APP_SUPPORT_EMAIL },
@@ -256,11 +256,17 @@ export function FAQPage() {
 
 export function TrackPage() {
   const [orderNum, setOrderNum] = useState('');
-  const [searched, setSearched] = useState(false);
+  const [email, setEmail] = useState('');
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  function handleSearch(e) {
+  async function handleSearch(e) {
     e.preventDefault();
-    setSearched(true);
+    setLoading(true); setError(''); setResult(null);
+    try { setResult(await Tracking.lookup(orderNum, email)); }
+    catch { setError('Commande introuvable. Vérifiez le numéro et l’adresse e-mail utilisés lors de l’achat.'); }
+    finally { setLoading(false); }
   }
 
   return (
@@ -278,18 +284,24 @@ export function TrackPage() {
               className="w-full h-11 px-4 rounded-xl bg-[#0F1115] border border-[#232B3A] text-sm text-white placeholder:text-ty-textLow focus:border-[#E10600] focus:outline-none transition-colors"
             />
           </div>
-          <button type="submit" className="ty-btn-primary w-full h-12 uppercase tracking-[0.18em] text-xs">
-            Rechercher
+          <div>
+            <label className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#F2C94C]/80 block mb-1.5">Adresse e-mail de la commande</label>
+            <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="votre@email.com" className="w-full h-11 px-4 rounded-xl bg-[#0F1115] border border-[#232B3A] text-sm text-white placeholder:text-ty-textLow focus:border-[#E10600] focus:outline-none transition-colors" />
+          </div>
+          <button type="submit" disabled={loading} className="ty-btn-primary w-full h-12 uppercase tracking-[0.18em] text-xs disabled:opacity-50">
+            {loading ? 'Recherche…' : 'Rechercher'}
           </button>
         </form>
 
-        {searched && (
+        {error && (
           <div className="mt-8 p-6 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] text-center">
             <Package className="h-8 w-8 text-ty-textMid mx-auto mb-3" />
             <p className="text-white font-bold mb-2">Commande introuvable</p>
-            <p className="text-ty-textMid text-sm">Vérifiez votre numéro de commande ou <Link to="/support/contact" className="text-[#E10600] hover:underline">contactez-nous</Link>.</p>
+            <p className="text-ty-textMid text-sm">{error} Vous pouvez aussi <Link to="/support/contact" className="text-[#E10600] hover:underline">contacter le support</Link>.</p>
           </div>
         )}
+
+        {result && <div className="mt-8 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-mono text-xs text-[#F2C94C]">{result.order_number}</p><h2 className="mt-2 text-xl font-bold text-white">Suivi de votre commande</h2></div><span className="rounded-full border border-[#303744] px-3 py-1 text-xs text-white">{result.fulfillment_status}</span></div><div className="mt-6">{(result.tracking_events || []).map((event, index) => <div key={event.id} className="relative grid grid-cols-[20px_1fr] gap-3 pb-6 last:pb-0"><div><span className={`block h-3 w-3 rounded-full ${index === result.tracking_events.length - 1 ? 'bg-[#E10600]' : 'bg-[#F2C94C]'}`}/>{index < result.tracking_events.length - 1 && <span className="ml-[5px] mt-1 block h-[calc(100%-8px)] w-px bg-[#232B3A]"/>}</div><div><p className="font-semibold text-white">{event.title}</p>{event.description && <p className="mt-1 text-sm text-ty-textMid">{event.description}</p>}<time className="mt-1 block font-mono text-[10px] text-ty-textLow">{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(event.occurred_at))}</time></div></div>)}</div>{result.tracking_url && <a href={result.tracking_url} target="_blank" rel="noreferrer" className="ty-btn-primary mt-6 w-full">SUIVRE CHEZ LE TRANSPORTEUR</a>}</div>}
 
         <div className="mt-10 p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
           <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#F2C94C] mb-3">Vous avez reçu un email de suivi ?</p>

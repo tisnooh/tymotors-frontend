@@ -92,3 +92,7 @@ export const Account = {
   emailPreferences: () => api.get('/me/email-preferences').then((r) => r.data),
   updateEmailPreferences: (newsletter) => api.patch('/me/email-preferences', { newsletter }).then((r) => r.data),
 };
+
+export const Tracking = {
+  lookup: (order_number, email) => api.post('/order-tracking', { order_number: order_number.trim().toUpperCase(), email: email.trim() }).then((r) => r.data),
+};
