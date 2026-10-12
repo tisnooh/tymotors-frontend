@@ -1,5 +1,6 @@
 import { supplierMessage } from './Suppliers';
 jest.mock('@/lib/api', () => ({ api: {} }));
+jest.mock('react-router-dom', () => ({ Link: () => null }), { virtual: true });
 test('supplier templates include linked references and no authorization to buy', () => {
   const supplier = { name: 'Supplier', url: 'https://www.alibaba.com/fixture', product_ids: ['1'] };
   const products = [{ id: '1', name: 'Part', sku: 'SKU' }, { id: '2', name: 'Other', sku: 'OTHER' }];

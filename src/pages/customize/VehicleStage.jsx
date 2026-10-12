@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Car, Sparkles } from 'lucide-react';
+import LoadedImage from '@/components/shared/LoadedImage';
 
 const BRAND_PRESENTATION = {
   bmw: { name: 'BMW', icon: 'https://cdn.simpleicons.org/bmw/FFFFFF' },
@@ -51,6 +52,7 @@ function Hotspot({ hotspot, onClick, isActive }) {
 }
 
 export function VehicleStage({ brand, model, generation, onHotspotClick, activeHotspot }) {
+  const [loadedImage, setLoadedImage] = useState(null);
   const hotspots = generation?.hotspots || [];
   const active = hotspots.find((item) => item.id === activeHotspot);
   const image = active?.image_url || generation?.stage_image_url;
@@ -60,10 +62,10 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
     <div className="relative aspect-[16/9] flex items-center justify-center md:aspect-[21/8]">
       {!image && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,6,0,0.13),transparent_38%),linear-gradient(135deg,#0A0B0E_0%,#10131A_50%,#08090C_100%)]" />}
       {!image && <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_center,black,transparent_75%)]" />}
-      {image ? <img src={image} alt={alt} className="absolute inset-0 h-full w-full object-cover opacity-75" /> : <BrandWaitingState brand={brand} model={model} selectionComplete={selectionComplete} />}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
+      {image ? <LoadedImage src={image} alt={alt} className="absolute inset-0 h-full w-full opacity-75" onStatus={status => setLoadedImage(status === 'loaded' ? image : null)}/> : <BrandWaitingState brand={brand} model={model} selectionComplete={selectionComplete} />}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent pointer-events-none" />
       {selectionComplete && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
-      {hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
+      {loadedImage === image && image && hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
     </div>
     <div className="px-4 py-4 border-t border-[#151A23]">
       {!selectionComplete && <p className="text-sm text-ty-textMid flex items-center gap-2"><Car className="h-4 w-4" />Marque, modèle puis génération : aucune image générique ne sera substituée.</p>}

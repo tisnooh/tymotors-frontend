@@ -1,0 +1,20 @@
+import React, { act } from 'react';
+import { createRoot } from 'react-dom/client';
+import LoadedImage from './LoadedImage';
+global.IS_REACT_ACT_ENVIRONMENT = true;
+let root, host;
+beforeEach(() => { host = document.createElement('div'); root = createRoot(host); });
+afterEach(() => { act(() => root.unmount()); });
+test('loading, failure, retry and changing selection are independent', () => {
+  act(() => root.render(<LoadedImage src="/first.jpg" alt="First"/>));
+  expect(host.textContent).toContain('Chargement');
+  act(() => host.querySelector('img').dispatchEvent(new Event('error')));
+  expect(host.textContent).toContain('ne peut pas être chargée');
+  act(() => host.querySelector('button').click());
+  expect(host.textContent).toContain('Chargement');
+  act(() => host.querySelector('img').dispatchEvent(new Event('load')));
+  expect(host.textContent).not.toContain('Chargement');
+  act(() => root.render(<LoadedImage src="/next.jpg" alt="Next"/>));
+  expect(host.querySelector('img').getAttribute('src')).toBe('/next.jpg');
+  expect(host.textContent).toContain('Chargement');
+});

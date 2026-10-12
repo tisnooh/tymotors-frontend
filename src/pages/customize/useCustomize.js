@@ -20,10 +20,12 @@ export function useCompatibility(brandSlug) {
   const [models, setModels] = useState([]);
   useEffect(() => {
     if (!brandSlug) { setModels([]); return undefined; }
+    setModels([]);
     let cancelled = false;
     Compatibility.list(brandSlug)
       .then((data) => { if (!cancelled) setModels(data); })
       .catch((e) => {
+        if (!cancelled) setModels([]);
         console.warn('[TYMotors] compatibility load failed:', e?.message || e);
       });
     return () => { cancelled = true; };
