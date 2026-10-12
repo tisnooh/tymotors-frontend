@@ -96,3 +96,5 @@ export const Account = {
 export const Tracking = {
   lookup: (order_number, email) => api.post('/order-tracking', { order_number: order_number.trim().toUpperCase(), email: email.trim() }).then((r) => r.data),
 };
+export const SiteConfig = { get: () => api.get('/site-config').then(r => r.data) };
+export const Withdrawals = { send: payload => api.post('/withdrawals', payload).then(r => r.data) };

@@ -171,38 +171,7 @@ export function ShippingPage() {
 
 // ─── RETOURS ─────────────────────────────────────────────────────────────────
 
-export function ReturnsPage() {
-  return (
-    <PageLayout eyebrow="SUPPORT" title="Retours" subtitle="30 jours pour changer d'avis, sans questions.">
-      <Section title="Politique de retour">
-        <p>Vous disposez de 30 jours à compter de la réception de votre commande pour retourner un article, sous réserve qu'il soit dans son état d'origine, non installé et dans son emballage d'origine.</p>
-      </Section>
-      <Section title="Comment effectuer un retour">
-        <div className="space-y-4 mt-4">
-          {[
-            { step: '01', title: 'Contactez-nous', desc: "Utilisez le formulaire de contact avec votre numéro de commande et la raison du retour." },
-            { step: '02', title: 'Emballez l\'article', desc: "Remballez l'article soigneusement dans son emballage d'origine avec tous les accessoires." },
-            { step: '03', title: 'Expédiez', desc: "Déposez le colis chez le transporteur de votre choix. Conservez le justificatif d'envoi." },
-            { step: '04', title: 'Remboursement', desc: "Une fois l'article reçu et vérifié, le remboursement est effectué sous 5-7 jours ouvrés." },
-          ].map(({ step, title, desc }) => (
-            <div key={step} className="flex gap-4 p-4 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
-              <span className="font-mono text-[#E10600] text-lg font-bold shrink-0">{step}</span>
-              <div>
-                <p className="text-white font-bold text-sm">{title}</p>
-                <p className="text-ty-textMid text-sm mt-1">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-      <Section title="Articles non retournables">
-        <p>• Articles installés ou montés sur un véhicule</p>
-        <p>• Articles endommagés par une mauvaise installation</p>
-        <p>• Articles commandés sur mesure ou personnalisés</p>
-      </Section>
-    </PageLayout>
-  );
-}
+export { WithdrawalPage as ReturnsPage } from './LegalPages';
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 
@@ -210,7 +179,7 @@ const FAQ_ITEMS = [
   { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Utilisez notre configurateur de compatibilité sur la page Personnaliser. Sélectionnez votre marque, modèle et génération pour voir tous les produits compatibles." },
   { q: "Quels sont les délais de livraison ?", a: "Le délai dépend du produit, de sa disponibilité et de la destination. Il doit être confirmé avant la commande. Nous n'annonçons pas de livraison express ni d'expédition le jour même sans confirmation du prestataire." },
   { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
-  { q: "Puis-je retourner un article ?", a: "Oui, vous avez 30 jours pour retourner un article non installé dans son état d'origine. Utilisez le formulaire de contact pour initier un retour." },
+  { q: "Puis-je retourner un article ?", a: "Pour les biens éligibles, vous disposez d’un droit de rétractation de 14 jours après réception. Consultez la page Retours et son formulaire ; les garanties légales restent applicables." },
   { q: "Les produits sont-ils garantis ?", a: "Tous nos produits bénéficient d'une garantie de 2 ans contre les défauts de fabrication. La garantie ne couvre pas les dommages liés à une mauvaise installation." },
   { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
   { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
@@ -332,140 +301,5 @@ export function TrackPage() {
 
 // ─── CONFIDENTIALITÉ ──────────────────────────────────────────────────────────
 
-export function PrivacyPage() {
-  return (
-    <PageLayout eyebrow="LÉGAL" title="Confidentialité" subtitle="Comment nous protégeons vos données personnelles.">
-      <Section title="Collecte des données">
-        <p>TYMotors collecte uniquement les données nécessaires au traitement de vos commandes et à l'amélioration de votre expérience : nom, email, adresse de livraison et informations de paiement (traitées par Stripe, sans stockage de vos données bancaires chez nous).</p>
-      </Section>
-      <Section title="Utilisation des données">
-        <p>Vos données sont utilisées pour :</p>
-        <p>• Traiter et livrer vos commandes</p>
-        <p>• Vous envoyer les confirmations et mises à jour de commandes</p>
-        <p>• Vous envoyer notre newsletter si vous y avez consenti</p>
-        <p>• Améliorer nos services et notre site</p>
-      </Section>
-      <Section title="Partage des données">
-        <p>TYMotors ne vend jamais vos données personnelles. Elles peuvent être partagées avec le transporteur retenu pour votre commande et avec Stripe uniquement dans le cadre du traitement de votre achat.</p>
-      </Section>
-      <Section title="Vos droits">
-        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits, utilisez notre <Link to="/support/contact" className="text-[#E10600] hover:underline">formulaire de contact</Link>.</p>
-      </Section>
-      <Section title="Cookies">
-        <p>Nous utilisons des cookies essentiels au fonctionnement du site et des cookies analytiques pour améliorer votre expérience. Vous pouvez gérer vos préférences depuis notre <Link to="/legal/cookies" className="text-[#E10600] hover:underline">politique de cookies</Link>.</p>
-      </Section>
-      <p className="text-ty-textLow text-xs mt-8">Dernière mise à jour : Juin 2026</p>
-    </PageLayout>
-  );
-}
-
-// ─── CONDITIONS ───────────────────────────────────────────────────────────────
-
-export function TermsPage() {
-  return (
-    <PageLayout eyebrow="LÉGAL" title="Conditions générales" subtitle="Conditions d'utilisation et de vente TYMotors.">
-      <Section title="1. Objet">
-        <p>Les présentes conditions générales régissent l'utilisation du site TYMotors et les achats effectués sur celui-ci. En utilisant ce site, vous acceptez ces conditions dans leur intégralité.</p>
-      </Section>
-      <Section title="2. Produits et prix">
-        <p>TYMotors se réserve le droit de modifier ses prix à tout moment. Les prix affichés sont en euros TTC. Les commandes sont facturées au prix en vigueur au moment de la validation.</p>
-      </Section>
-      <Section title="3. Commandes">
-        <p>Toute commande validée constitue un contrat de vente entre TYMotors et l'acheteur. TYMotors se réserve le droit d'annuler une commande en cas de stock insuffisant, d'erreur de prix manifeste ou de fraude suspectée.</p>
-      </Section>
-      <Section title="4. Paiement">
-        <p>Les paiements sont traités sur la page sécurisée de Stripe. Les moyens de paiement effectivement disponibles sont affichés par Stripe au moment du règlement.</p>
-      </Section>
-      <Section title="5. Garantie">
-        <p>Tous les produits TYMotors bénéficient d'une garantie légale de 2 ans conformément à la directive européenne sur la vente de biens. La garantie couvre les défauts de fabrication mais pas les dommages liés à une installation incorrecte.</p>
-      </Section>
-      <Section title="6. Responsabilité">
-        <p>TYMotors ne saurait être tenu responsable des dommages indirects liés à l'utilisation de ses produits. L'installation de pièces automobiles peut nécessiter l'intervention d'un professionnel qualifié.</p>
-      </Section>
-      <Section title="7. Droit applicable">
-        <p>Les présentes conditions sont régies par le droit français. Tout litige sera soumis à la compétence des tribunaux de Paris.</p>
-      </Section>
-      <p className="text-ty-textLow text-xs mt-8">Dernière mise à jour : Juin 2026</p>
-    </PageLayout>
-  );
-}
-
-// ─── COOKIES ─────────────────────────────────────────────────────────────────
-
-export function CookiesPage() {
-  const [prefs, setPrefs] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('ty_cookie_preferences')) || { essential: true, analytics: false, marketing: false };
-    } catch (error) {
-      return { essential: true, analytics: false, marketing: false };
-    }
-  });
-  const [saved, setSaved] = useState(false);
-
-  function savePreferences() {
-    localStorage.setItem('ty_cookie_preferences', JSON.stringify(prefs));
-    setSaved(true);
-  }
-
-  return (
-    <PageLayout eyebrow="LÉGAL" title="Cookies" subtitle="Gestion de vos préférences de cookies.">
-      <Section title="Qu'est-ce qu'un cookie ?">
-        <p>Un cookie est un petit fichier texte déposé sur votre appareil lors de votre visite sur notre site. Il nous permet de mémoriser vos préférences et d'améliorer votre expérience.</p>
-      </Section>
-
-      <Section title="Gérer vos préférences">
-        <div className="space-y-4 mt-4">
-          {[
-            { key: 'essential', label: 'Cookies essentiels', desc: 'Nécessaires au fonctionnement du site. Ne peuvent pas être désactivés.', locked: true },
-            { key: 'analytics', label: 'Cookies analytiques', desc: 'Nous aident à comprendre comment vous utilisez le site (pages visitées, temps passé).', locked: false },
-            { key: 'marketing', label: 'Cookies marketing', desc: 'Permettent de vous proposer des publicités personnalisées sur d\'autres sites.', locked: false },
-          ].map(({ key, label, desc, locked }) => (
-            <div key={key} className="flex items-start gap-4 p-4 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
-              <div className="flex-1">
-                <p className="text-white font-medium text-sm">{label}</p>
-                <p className="text-ty-textMid text-sm mt-1">{desc}</p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={prefs[key]}
-                aria-label={label}
-                disabled={locked}
-                onClick={() => !locked && setPrefs(p => ({ ...p, [key]: !p[key] }))}
-                style={{
-                  position: 'relative',
-                  width: 44,
-                  height: 24,
-                  borderRadius: 12,
-                  border: 'none',
-                  background: prefs[key] ? '#E10600' : '#232B3A',
-                  cursor: locked ? 'not-allowed' : 'pointer',
-                  opacity: locked ? 0.6 : 1,
-                  flexShrink: 0,
-                  marginTop: 2,
-                  transition: 'background 0.2s',
-                }}
-              >
-                <span style={{
-                  position: 'absolute',
-                  top: 2,
-                  left: prefs[key] ? 22 : 2,
-                  width: 20,
-                  height: 20,
-                  borderRadius: '50%',
-                  background: '#fff',
-                  transition: 'left 0.2s',
-                }} />
-              </button>
-            </div>
-          ))}
-        </div>
-        <button type="button" onClick={savePreferences} className="ty-btn-primary mt-6 h-11 px-8 text-xs uppercase tracking-[0.18em]">
-          Enregistrer mes préférences
-        </button>
-        {saved && <p role="status" className="text-emerald-300 text-sm mt-3">Préférences enregistrées sur cet appareil.</p>}
-      </Section>
-      <p className="text-ty-textLow text-xs mt-8">Dernière mise à jour : Juin 2026</p>
-    </PageLayout>
-  );
-}
+export { PrivacyPage, TermsPage } from './LegalPages';
+export { default as CookiesPage } from './CookiePolicy';

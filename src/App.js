@@ -33,11 +33,13 @@ const AdminApp = React.lazy(() => import('@/admin/AdminApp'));
 const supportPage = (name) => React.lazy(() => import('@/pages/SupportPages').then((module) => ({ default: module[name] })));
 const ContactPage = supportPage('ContactPage');
 const ShippingPage = supportPage('ShippingPage');
-const ReturnsPage = supportPage('ReturnsPage');
+const legalPage = name => React.lazy(() => import('@/pages/LegalPages').then(module => ({ default: module[name] })));
+const ReturnsPage = legalPage('WithdrawalPage');
 const FAQPage = supportPage('FAQPage');
 const TrackPage = supportPage('TrackPage');
-const PrivacyPage = supportPage('PrivacyPage');
-const TermsPage = supportPage('TermsPage');
+const PrivacyPage = legalPage('PrivacyPage');
+const TermsPage = legalPage('TermsPage');
+const MentionsPage = legalPage('MentionsPage');
 const CookiesPage = React.lazy(() => import('@/pages/CookiePolicy'));
 
 const TOASTER_STYLE = {
@@ -99,6 +101,8 @@ function Shell() {
               <Route path="/legal/privacy" element={<PrivacyPage />} />
               <Route path="/legal/terms" element={<TermsPage />} />
               <Route path="/legal/cookies" element={<CookiesPage />} />
+              <Route path="/legal/mentions" element={<MentionsPage />} />
+              <Route path="/legal/withdrawal" element={<ReturnsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />

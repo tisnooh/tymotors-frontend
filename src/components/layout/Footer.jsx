@@ -155,6 +155,8 @@ function LegalBar() {
       <div>{t('footer.copyright')}</div>
       <div className="flex flex-wrap justify-center items-center gap-5">
         <Link to="/legal/privacy" className="hover:text-ty-textMid transition-colors">{t('footer.links.privacy')}</Link>
+        <Link to="/legal/mentions" className="hover:text-ty-textMid transition-colors">Mentions légales</Link>
+        <Link to="/legal/withdrawal" className="hover:text-ty-textMid transition-colors">Rétractation</Link>
         <Link to="/legal/terms" className="hover:text-ty-textMid transition-colors">{t('footer.links.terms')}</Link>
         <Link to="/legal/cookies" className="hover:text-ty-textMid transition-colors">{t('footer.links.cookies')}</Link>
         <button onClick={openConsent} className="hover:text-ty-textMid transition-colors">Gérer mes cookies</button>

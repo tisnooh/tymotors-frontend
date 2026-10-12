@@ -38,6 +38,13 @@ export function OrderDetail() {
 }
 
 function OrderContent({ order: o, reload }) {
+  async function exportSummary() {
+    try {
+      const document = await adminApi.get(`orders/${o.id}/document`);
+      const url = URL.createObjectURL(new Blob([JSON.stringify(document, null, 2)], { type: 'application/json' }));
+      const link = window.document.createElement('a'); link.href = url; link.download = `${o.order_number}-recapitulatif.json`; link.click(); URL.revokeObjectURL(url);
+    } catch (error) { toast.error(errorMessage(error)); }
+  }
   const [status, setStatus] = useState(o.fulfillment_status);
   const [tracking, setTracking] = useState(o.tracking_number || '');
   const [carrier, setCarrier] = useState(o.carrier || '');
@@ -93,7 +100,7 @@ function OrderContent({ order: o, reload }) {
     && !['shipped', 'delivered', 'cancelled'].includes(o.fulfillment_status)
     && (supplier.items || []).some(item => !item.exact_source_url?.trim());
   const address = a => a && Object.values(a).some(Boolean) ? [a.line1, a.line2, [a.postal_code, a.city].filter(Boolean).join(' '), a.state, a.country].filter(Boolean).map((v, i) => <div key={i}>{v}</div>) : 'Non renseignée';
-  return <><PageTitle title={o.order_number} description={date(o.created_at)}><Badge value={o.payment_status}/><Badge value={o.fulfillment_status}/></PageTitle>
+  return <><PageTitle title={o.order_number} description={date(o.created_at)}><Badge value={o.payment_status}/><Badge value={o.fulfillment_status}/><button className="ad-btn" onClick={exportSummary}>Exporter le récapitulatif (non facture)</button></PageTitle>
     <div className="ad-grid-2"><Panel title="Articles"><Table items={o.items} columns={[{ label: 'Produit', render: r => <><strong>{r.product_name}</strong><small>{r.sku}</small></> }, { label: 'Qté', render: r => r.quantity }, { label: 'Prix unitaire', render: r => money(r.unit_amount_cents) }, { label: 'Total', render: r => money(r.quantity * r.unit_amount_cents) }]}/>
       <dl className="ad-totals">{[['Sous-total', o.subtotal_cents], ['Réduction', -(o.discount_amount_cents || 0)], ['Livraison', o.shipping_amount_cents], ['Taxes', o.tax_amount_cents], ['Total', o.total_cents], ['Remboursements confirmés', o.refunded_amount_cents || 0]].map(([k,v]) => <div key={k}><dt>{k}</dt><dd>{money(v)}</dd></div>)}</dl></Panel>
       <Panel title="Client & livraison"><h3>{o.customer_name || 'Client invité'}</h3><p>{o.customer_email || 'E-mail non renseigné'}</p><p>{o.customer_phone || 'Téléphone non renseigné'}</p><div className="ad-grid-2"><div><h3>Livraison</h3><address>{address(o.shipping_address)}</address></div><div><h3>Facturation</h3><address>{address(o.billing_address)}</address></div></div><p className="ad-note">Canal : {o.sales_channel === 'website' ? 'Site TYMotors' : o.sales_channel} · Prestataire : {o.stripe_session_id ? 'Stripe Checkout' : 'Non renseigné'}</p>{o.requires_compatibility_review && <p className="ad-alert">Compatibilité du véhicule à vérifier avant expédition.</p>}</Panel></div>
