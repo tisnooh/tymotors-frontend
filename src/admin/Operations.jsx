@@ -16,7 +16,17 @@ export function Returns() {
     {label:'Motif',render:r=>r.reason},{label:'Date',render:r=>date(r.created_at)},{label:'Valeur avant remise',render:r=>money(r.amount_cents)},
     {label:'Statut',render:r=><StatusSelect label="État du retour" value={r.status} onChange={e=>update(r,{status:e.target.value})} disabled={busy===r.id} values={['requested','review','accepted','received','refunded','rejected']}/>},
     {label:'Stock',render:r=>r.restocked_at?<span>Remis le {date(r.restocked_at)}</span>:<button className="ad-btn" disabled={busy===r.id||r.status!=='received'} onClick={()=>update(r,{restock:true})}>Remettre en stock</button>},
-  ]}/><Pager data={d} page={f.page} setPage={f.setPage}/></>}</LoadState></Panel><p className="ad-note">Le statut « Remboursé » exige un remboursement intégral confirmé par Stripe. L’allocation de remboursements partiels à plusieurs retours n’est pas gérée en V1.</p></>;
+  ]}/><Pager data={d} page={f.page} setPage={f.setPage}/></>}</LoadState></Panel><WithdrawalRequests/><p className="ad-note">Le statut « Remboursé » exige un remboursement intégral confirmé par Stripe. L’allocation de remboursements partiels à plusieurs retours n’est pas gérée en V1.</p></>;
+}
+
+function WithdrawalRequests() {
+  const [page,setPage]=useState(1), state=useData('withdrawal-requests',{page}), [busy,setBusy]=useState(null);
+  async function update(r,status) { setBusy(r.id); try { await adminApi.patch(`withdrawal-requests/${r.id}`,{status,expected_status:r.status}); state.reload(); toast.success('Demande mise à jour'); } catch(e) { toast.error(errorMessage(e)); } finally { setBusy(null); } }
+  return <Panel title="Rétractations envoyées par les clients"><p className="ad-note">La clôture marque uniquement le traitement de la demande. Elle ne rembourse pas le paiement et ne remet pas de stock. Ouvrez la commande pour organiser le retour et le remboursement.</p><LoadState state={state}>{d=><><Table items={d.items} columns={[
+    {label:'Reçue le',render:r=>date(r.created_at)}, {label:'Client',render:r=><>{r.name}<small>{r.email}</small></>},
+    {label:'Demande',render:r=><details><summary>{r.subject}</summary><pre className="ad-json">{r.message}</pre></details>},
+    {label:'Traitement',render:r=><Select label="Traitement de la rétractation" value={r.status} options={[{value:'new',label:'Reçue'},{value:'in_progress',label:'En traitement'},{value:'closed',label:'Clôturée'}]} disabled={busy===r.id} onChange={e=>update(r,e.target.value)}/>},
+  ]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel>;
 }
 
 const newPromo={code:'',active:false,discount_type:'percent',value:10,starts_at:null,ends_at:null,minimum_amount_cents:0,max_uses:null,product_ids:[],category_ids:[]};

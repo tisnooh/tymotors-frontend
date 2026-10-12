@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MentionsPage, WithdrawalPage } from './LegalPages';
+import { MentionsPage, WithdrawalPage, TermsPage } from './LegalPages';
 import { SiteConfig, Withdrawals } from '@/lib/api';
 jest.mock('@/lib/api', () => ({ SiteConfig: { get: jest.fn() }, Withdrawals: { send: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
@@ -17,4 +17,14 @@ test('withdrawal requires an explicit decision before submission', async () => {
   expect(host.querySelector('button[type="submit"]') || host.querySelector('form button')).toBeTruthy();
   expect(host.querySelector('form button').disabled).toBe(true);
   expect(Withdrawals.send).not.toHaveBeenCalled();
+});
+
+test('payment mode wording follows server configuration without changing the code', async () => {
+  await act(async () => root.render(<TermsPage/>));
+  expect(host.textContent).toContain('Actuellement Stripe fonctionne en test.');
+  await act(async () => root.unmount()); root=createRoot(host);
+  SiteConfig.get.mockResolvedValue({ legal:{},legal_ready:true,stripe_mode:'live' });
+  await act(async () => root.render(<TermsPage/>));
+  expect(host.textContent).not.toContain('Actuellement Stripe fonctionne en test.');
+  expect(host.textContent).toContain('Les achats fournisseurs restent soumis à une validation humaine.');
 });

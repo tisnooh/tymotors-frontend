@@ -86,7 +86,7 @@ export function ContactPage() {
                 <Mail className="h-6 w-6 text-green-400" />
               </div>
               <h3 className="text-white font-bold text-lg mb-2">Message envoyé !</h3>
-              <p className="text-ty-textMid text-sm">Nous vous répondrons sous 24h.</p>
+              <p className="text-ty-textMid text-sm">Votre demande est enregistrée. Nous vous répondrons dès que possible.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -180,7 +180,7 @@ const FAQ_ITEMS = [
   { q: "Quels sont les délais de livraison ?", a: "Le délai dépend du produit, de sa disponibilité et de la destination. Il doit être confirmé avant la commande. Nous n'annonçons pas de livraison express ni d'expédition le jour même sans confirmation du prestataire." },
   { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
   { q: "Puis-je retourner un article ?", a: "Pour les biens éligibles, vous disposez d’un droit de rétractation de 14 jours après réception. Consultez la page Retours et son formulaire ; les garanties légales restent applicables." },
-  { q: "Les produits sont-ils garantis ?", a: "Tous nos produits bénéficient d'une garantie de 2 ans contre les défauts de fabrication. La garantie ne couvre pas les dommages liés à une mauvaise installation." },
+  { q: "Les produits sont-ils garantis ?", a: "Les garanties légales restent applicables. Pour un bien neuf, la conformité s'exerce pendant deux ans à compter de sa délivrance ; une éventuelle garantie commerciale est précisée sur la fiche. Consultez nos conditions de vente." },
   { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
   { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
   { q: "Acceptez-vous les paiements en plusieurs fois ?", a: "Les moyens de paiement disponibles sont affichés par Stripe au moment du règlement. Un paiement fractionné n'est disponible que s'il est proposé pour votre achat, selon les conditions et frais indiqués sur cette page." },
@@ -212,7 +212,7 @@ export function FAQPage() {
       <div className="mt-12 p-6 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] text-center">
         <HelpCircle className="h-8 w-8 text-[#F2C94C] mx-auto mb-3" />
         <p className="text-white font-bold mb-2">Vous n'avez pas trouvé votre réponse ?</p>
-        <p className="text-ty-textMid text-sm mb-4">Notre équipe est disponible du lundi au vendredi, 9h-18h.</p>
+        <p className="text-ty-textMid text-sm mb-4">Envoyez votre demande depuis notre formulaire de contact.</p>
         <Link to="/support/contact" className="ty-btn-primary text-xs uppercase tracking-[0.18em] px-6 h-10 inline-flex items-center">
           Contacter le support
         </Link>
