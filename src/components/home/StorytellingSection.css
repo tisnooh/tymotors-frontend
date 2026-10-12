@@ -1,4 +1,15 @@
 @media (max-width: 767px) {
+  /* Paint containment would make the pinned scene move with this section. */
+  [data-testid="page-home"] > .storytelling-section.storytelling-mobile-layout {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
+  }
+
+  /* Only the viewport clips the slides; its spacer must not clip the pin. */
+  .storytelling-touch-active > .pin-spacer {
+    overflow: visible !important;
+  }
+
   .storytelling-section.storytelling-mobile-layout {
     padding-bottom: 0;
     overflow-x: hidden;
