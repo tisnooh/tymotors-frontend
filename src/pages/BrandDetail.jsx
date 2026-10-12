@@ -12,20 +12,31 @@ export default function BrandDetail() {
   const [brand, setBrand] = useState(null);
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [productsError, setProductsError] = useState(false);
 
   useEffect(() => {
     setCategory('');
-    Brands.get(slug).then(setBrand).catch(() => setBrand(null));
+    setBrand(null); setLoading(true); setError('');
+    let current = true;
+    Brands.get(slug).then((data) => { if (current) setBrand(data); })
+      .catch((e) => { if (current) setError(e.response?.status === 404 ? 'Marque introuvable' : 'Marque temporairement indisponible'); })
+      .finally(() => { if (current) setLoading(false); });
+    return () => { current = false; };
   }, [slug]);
 
   useEffect(() => {
     const args = { brand: slug, limit: 100 };
     if (category) args.category = category;
-    Products.list(args).then((d) => setProducts(d.items || []));
+    let current = true; setProducts([]); setProductsError(false);
+    Products.list(args).then((d) => { if (current) setProducts(d.items || []); })
+      .catch(() => { if (current) setProductsError(true); });
+    return () => { current = false; };
   }, [slug, category]);
 
   if (!brand) {
-    return <main data-testid="page-brand-detail" className="pt-28 ty-container"><p className="text-ty-textMid">{t('common.loading')}</p></main>;
+    return <main data-testid="page-brand-detail" className="pt-28 pb-24 ty-container">{loading ? <p className="text-ty-textMid">{t('common.loading')}</p> : <><h1 className="ty-display text-white text-3xl">{error || 'Marque introuvable'}</h1><Link className="ty-btn-line mt-6" to="/brands">Retour aux marques</Link></>}</main>;
   }
 
   return (
@@ -62,7 +73,7 @@ export default function BrandDetail() {
           ))}
         </div>
 
-        {products.length === 0 ? (
+        {productsError ? <p role="alert" className="text-ty-textMid">Les produits sont temporairement indisponibles.</p> : products.length === 0 ? (
           <div className="py-20 text-center text-ty-textMid">No products available.</div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">

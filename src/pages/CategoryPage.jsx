@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Categories, Products } from '@/lib/api';
 import { ProductCard } from '@/components/shared/ProductCard';
@@ -52,29 +52,31 @@ export default function CategoryPage() {
   const [products, setProducts] = useState([]);
   const [activeSub, setActiveSub] = useState('');
   const [loading, setLoading] = useState(true);
+  const [categoryLoading, setCategoryLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [productsError, setProductsError] = useState(false);
 
   useEffect(() => {
     setActiveSub('');
+    setCat(null); setError(''); setCategoryLoading(true);
+    let current = true;
     Categories.get(slug)
-      .then(setCat)
+      .then((data) => { if (current) setCat(data); })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.warn('[TYMotors] category load failed:', e?.message || e);
-        setCat(null);
-      });
+        if (current) setError(e.response?.status === 404 ? 'Catégorie introuvable' : 'Catégorie temporairement indisponible');
+      }).finally(() => { if (current) setCategoryLoading(false); });
+    return () => { current = false; };
   }, [slug]);
 
   useEffect(() => {
     setLoading(true);
+    setProducts([]); setProductsError(false);
     const args = { category: slug, limit: 100 };
     if (activeSub) args.subcategory = activeSub;
     let cancelled = false;
     Products.list(args)
       .then((d) => { if (!cancelled) setProducts(d.items || []); })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.warn('[TYMotors] category products failed:', e?.message || e);
-      })
+      .catch(() => { if (!cancelled) setProductsError(true); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [slug, activeSub]);
@@ -82,7 +84,7 @@ export default function CategoryPage() {
   if (!cat) {
     return (
       <main data-testid="page-category" className="pt-28 pb-24">
-        <div className="ty-container"><p className="text-ty-textMid">{t('common.loading')}</p></div>
+        <div className="ty-container">{categoryLoading ? <p className="text-ty-textMid">{t('common.loading')}</p> : <><h1 className="ty-display text-white text-3xl">{error || 'Catégorie introuvable'}</h1><Link className="ty-btn-line mt-6" to="/shop">Retour à la boutique</Link></>}</div>
       </main>
     );
   }
@@ -111,7 +113,7 @@ export default function CategoryPage() {
             <SubChip key={s} active={activeSub === s} onClick={() => setActiveSub(s)}>{s}</SubChip>
           ))}
         </div>
-        <ProductsBody loading={loading} products={products} />
+        {productsError ? <p role="alert" className="text-ty-textMid">Les produits sont temporairement indisponibles. Réessayez dans quelques instants.</p> : <ProductsBody loading={loading} products={products} />}
       </div>
     </main>
   );

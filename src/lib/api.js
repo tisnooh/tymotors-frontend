@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getCachedAccessToken } from '@/lib/authSession';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://tymotors-backend-staging.onrender.com';
+const BACKEND_URL = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000').replace(/\/$/, '');
 const API = `${BACKEND_URL}/api`;
 
 // Get/generate persistent session id

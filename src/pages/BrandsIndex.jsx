@@ -8,9 +8,12 @@ import { Reveal } from '@/components/shared/Reveal';
 export default function BrandsIndex() {
   const { t } = useTranslation();
   const [brands, setBrands] = useState([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    Brands.list().then(setBrands);
+    let current = true;
+    Brands.list().then((data) => { if (current) setBrands(data); }).catch(() => { if (current) setError(true); });
+    return () => { current = false; };
   }, []);
 
   return (
@@ -24,6 +27,7 @@ export default function BrandsIndex() {
           <p className="mt-4 text-ty-textMid">{t('brands.sub')}</p>
         </Reveal>
 
+        {error && <p role="alert" className="text-ty-textMid mb-6">Les marques sont temporairement indisponibles. Réessayez dans quelques instants.</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {brands.map((b, idx) => (
             <Reveal key={b.slug} delay={(idx % 6) * 0.05}>

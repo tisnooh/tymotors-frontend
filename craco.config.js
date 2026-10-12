@@ -39,6 +39,13 @@ let webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
+      // Optional serial minification for memory-constrained local/CI hosts.
+      // Production output and application behavior stay unchanged.
+      if (process.env.BUILD_SERIAL === 'true') {
+        (webpackConfig.optimization.minimizer || []).forEach((plugin) => {
+          if (plugin?.options && 'parallel' in plugin.options) plugin.options.parallel = false;
+        });
+      }
 
       // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {

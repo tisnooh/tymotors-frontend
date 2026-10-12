@@ -30,3 +30,4 @@ node_modules/
 build/
 .admin-test-build/
 .qa-build/
+.browser-test-build/
