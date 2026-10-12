@@ -16,6 +16,7 @@ function getSessionId() {
 
 export const api = axios.create({
   baseURL: API,
+  timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -68,6 +69,7 @@ export const Newsletter = {
 };
 
 export const AuthEmail = {
+  login: (email, password) => api.post('/auth/login', { email, password }).then(r => r.data),
   forgot: (email) => api.post('/auth/forgot-password', { email }).then((r) => r.data),
   resend: (email) => api.post('/auth/resend-confirmation', { email }).then((r) => r.data),
   welcome: (first_name = null) => api.post('/auth/welcome', { first_name }).then((r) => r.data),

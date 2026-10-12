@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { isSupabaseConfigured, loadSupabase } from '@/lib/supabaseLoader';
 import { setCachedAccessToken } from '@/lib/authSession';
+import { AuthEmail } from '@/lib/api';
 
 const AuthContext = createContext(null);
 
@@ -51,7 +52,10 @@ export function AuthProvider({ children }) {
 
   const signIn = useCallback(async (email, password) => {
     const auth = await authClient();
-    const { data, error } = await auth.signInWithPassword({ email, password });
+    let tokens;
+    try { tokens = await AuthEmail.login(email, password); }
+    catch (error) { throw new Error(error.response?.data?.detail || 'Connexion indisponible. Réessayez plus tard.'); }
+    const { data, error } = await auth.setSession(tokens);
     if (error) throw error;
     return data;
   }, []);
