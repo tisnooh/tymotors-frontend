@@ -8,7 +8,8 @@ webpack({
   output:{path:path.join(base,'.admin-test-build'),filename:'fixture.js'},
   resolve:{extensions:['.js','.jsx'],alias:{
     '@/contexts/AuthContext':path.join(__dirname,'browser-auth.jsx'),
-    '@/lib/supabase':path.join(__dirname,'browser-supabase.js'),'@':path.join(base,'src')}},
+    '@/lib/supabase':path.join(__dirname,'browser-supabase.js'),
+    '@/lib/authSession':path.join(__dirname,'browser-supabase.js'),'@':path.join(base,'src')}},
   module:{rules:[
     {test:/\.jsx?$/,exclude:/node_modules/,use:{loader:tooling.resolve('babel-loader'),options:{presets:[tooling.resolve('babel-preset-react-app')]}}},
     {test:/\.css$/,use:[tooling.resolve('style-loader'),tooling.resolve('css-loader'),{loader:tooling.resolve('postcss-loader'),options:{postcssOptions:{plugins:[require('tailwindcss')(path.join(base,'tailwind.config.js')),require('autoprefixer')]}}}]},

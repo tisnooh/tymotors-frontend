@@ -51,8 +51,10 @@ function OrderContent({ order: o, reload }) {
   const [supplierStatus, setSupplierStatus] = useState(supplier?.status || 'pending_validation');
   const [alibabaOrderId, setAlibabaOrderId] = useState(supplier?.alibaba_order_id || '');
   const [agentOrderId, setAgentOrderId] = useState(supplier?.agent_order_id || '');
+  const [agentProvider, setAgentProvider] = useState(supplier?.agent_provider || 'HyperSKU');
   const [agentConnection, setAgentConnection] = useState(supplier?.agent_connection_status || 'not_connected');
   const [supplierNotes, setSupplierNotes] = useState(supplier?.notes || '');
+  const [confirmRefresh, setConfirmRefresh] = useState(false);
   async function save(e) {
     e.preventDefault();
     if (status === 'cancelled' && !window.confirm('Annuler cette commande ? Un paiement reçu doit être remboursé séparément dans Stripe. Le stock ne sera pas remis automatiquement.')) return;
@@ -70,12 +72,27 @@ function OrderContent({ order: o, reload }) {
     try {
       await adminApi.put(`orders/${o.id}/supplier`, {
         status: supplierStatus, alibaba_order_id: alibabaOrderId || null, agent_order_id: agentOrderId || null,
-        agent_provider: supplier?.agent_provider || 'CJdropshipping', agent_connection_status: agentConnection,
+        agent_provider: agentProvider.trim(), agent_connection_status: agentConnection,
         notes: supplierNotes || null, expected_updated_at: supplier.updated_at,
       });
       toast.success('Traitement fournisseur mis à jour'); reload();
     } catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); }
   }
+  async function refreshSupplierLinks() {
+    setBusy(true);
+    try {
+      const result = await adminApi.post(`orders/${o.id}/supplier/refresh-links`, { expected_updated_at: supplier.updated_at });
+      toast.success(result.refreshed ? `${result.refreshed} lien(s) récupéré(s)` : 'Aucun nouveau lien disponible : complétez les fiches produits');
+      reload();
+    } catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); setConfirmRefresh(false); }
+  }
+  const agentDashboard = agentProvider.trim().toLowerCase() === 'hypersku' ? 'https://app.hypersku.com/dashboard'
+    : agentProvider.trim().toLowerCase() === 'cjdropshipping' ? 'https://cjdropship.com/fulfillment-service/' : null;
+  const canRefreshLinks = supplier && ['pending_validation', 'requires_attention'].includes(supplier.status)
+    && !supplier.approved_at && !supplier.ordered_at && !supplier.alibaba_order_id && !supplier.agent_order_id
+    && o.payment_status === 'paid' && !['cancelled', 'refunded'].includes(o.status)
+    && !['shipped', 'delivered', 'cancelled'].includes(o.fulfillment_status)
+    && (supplier.items || []).some(item => !item.exact_source_url?.trim());
   const address = a => a && Object.values(a).some(Boolean) ? [a.line1, a.line2, [a.postal_code, a.city].filter(Boolean).join(' '), a.state, a.country].filter(Boolean).map((v, i) => <div key={i}>{v}</div>) : 'Non renseignée';
   return <><PageTitle title={o.order_number} description={date(o.created_at)}><Badge value={o.payment_status}/><Badge value={o.fulfillment_status}/></PageTitle>
     <div className="ad-grid-2"><Panel title="Articles"><Table items={o.items} columns={[{ label: 'Produit', render: r => <><strong>{r.product_name}</strong><small>{r.sku}</small></> }, { label: 'Qté', render: r => r.quantity }, { label: 'Prix unitaire', render: r => money(r.unit_amount_cents) }, { label: 'Total', render: r => money(r.quantity * r.unit_amount_cents) }]}/>
@@ -86,7 +103,9 @@ function OrderContent({ order: o, reload }) {
       <Panel title="Ouvrir un retour">{o.paid_at ? <form onSubmit={createReturn}><Field label="Article"><select value={returnItem} onChange={e => setReturnItem(e.target.value)} required>{o.items.map(i => <option key={i.id} value={i.id}>{i.product_name}</option>)}</select></Field><Field label="Quantité" type="number" min="1" max={o.items.find(i => i.id === returnItem)?.quantity || 1} value={quantity} onChange={e => setQuantity(e.target.value)} required/><Field label="Motif" value={reason} minLength={3} maxLength={1000} onChange={e => setReason(e.target.value)} required/><button className="ad-btn" disabled={busy}>Enregistrer la demande</button></form> : <p className="ad-note">Disponible après un paiement confirmé.</p>}<div className="ad-stack">{o.returns.map(r => <p key={r.id}>{r.reason} · <Badge value={r.status}/></p>)}</div></Panel></div>
     {supplier ? <Panel title="Commande fournisseur · validation manuelle"><p className="ad-note">Aucun achat n’est déclenché automatiquement. Vérifiez chaque référence, validez ici, puis effectuez et payez la commande dans Alibaba.</p>
       <Table items={supplier.items || []} columns={[{ label: 'Article', render: r => <><strong>{r.product_name}</strong><small>{r.sku} · Qté {r.quantity}</small></> }, { label: 'Fournisseur', render: r => r.supplier_name || 'Non renseigné' }, { label: 'Lien Alibaba exact', render: r => r.exact_source_url ? <a className="ad-btn" href={r.exact_source_url} target="_blank" rel="noreferrer">Ouvrir <ArrowUpRight size={14}/></a> : <span className="ad-alert">Lien exact manquant</span> }]}/>
-      <form className="ad-form-grid" onSubmit={saveSupplier}><StatusSelect label="Étape fournisseur" value={supplierStatus} onChange={e => setSupplierStatus(e.target.value)} values={['pending_validation','approved','ordered','received_by_agent','quality_control','ready_to_ship','requires_attention','cancelled']}/><StatusSelect label="Connexion agent" value={agentConnection} onChange={e => setAgentConnection(e.target.value)} values={['not_connected','onboarding','connected']}/><Field label="Numéro de commande Alibaba" value={alibabaOrderId} onChange={e => setAlibabaOrderId(e.target.value)} maxLength={200}/><Field label="Référence agent / entrepôt" value={agentOrderId} onChange={e => setAgentOrderId(e.target.value)} maxLength={200}/><Field label="Notes internes"><textarea value={supplierNotes} onChange={e => setSupplierNotes(e.target.value)} maxLength={2000}/></Field><div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer l’étape</button><a className="ad-btn" href="https://cjdropship.com/fulfillment-service/" target="_blank" rel="noreferrer">Configurer CJdropshipping <ArrowUpRight size={14}/></a></div></form>
+      {canRefreshLinks && <div>{confirmRefresh ? <div role="group" aria-label="Confirmation de récupération des liens"><p className="ad-note">Seuls les liens exacts manquants seront récupérés. Les liens et coûts existants restent inchangés. Les modifications non enregistrées de cette page seront perdues. Aucun achat ni validation ne sera déclenché.</p><button className="ad-btn" disabled={busy} onClick={refreshSupplierLinks}>Confirmer la récupération des liens</button> <button className="ad-btn" disabled={busy} onClick={() => setConfirmRefresh(false)}>Annuler la récupération</button></div> : <p><button className="ad-btn" disabled={busy} onClick={() => setConfirmRefresh(true)}>Récupérer les liens manquants des fiches produits</button></p>}</div>}
+      <form className="ad-form-grid" onSubmit={saveSupplier}><StatusSelect label="Étape fournisseur" value={supplierStatus} onChange={e => setSupplierStatus(e.target.value)} values={['pending_validation','approved','ordered','received_by_agent','quality_control','ready_to_ship','requires_attention','cancelled']}/><Field label="Prestataire logistique" value={agentProvider} onChange={e => setAgentProvider(e.target.value)} minLength={2} maxLength={100} required placeholder="HyperSKU, CJdropshipping…"/><StatusSelect label="Connexion agent" value={agentConnection} onChange={e => setAgentConnection(e.target.value)} values={['not_connected','onboarding','connected']}/><Field label="Numéro de commande Alibaba" value={alibabaOrderId} onChange={e => setAlibabaOrderId(e.target.value)} maxLength={200}/><Field label="Référence agent / entrepôt" value={agentOrderId} onChange={e => setAgentOrderId(e.target.value)} maxLength={200}/><Field label="Notes internes"><textarea value={supplierNotes} onChange={e => setSupplierNotes(e.target.value)} maxLength={2000}/></Field><div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer l’étape</button>{agentDashboard && <a className="ad-btn" href={agentDashboard} target="_blank" rel="noreferrer">Ouvrir {agentProvider.trim()} <ArrowUpRight size={14}/></a>}</div></form>
+      <p className="ad-note">Le prestataire et l’état de connexion sont renseignés manuellement : ouvrir son espace ne connecte pas automatiquement TYMotors à son API.</p>
     </Panel> : o.payment_status === 'paid' ? <Panel title="Commande fournisseur"><p className="ad-alert">Le dossier fournisseur n’a pas encore été créé. Rechargez après la migration Supabase.</p></Panel> : null}
     <Panel title="Suivi visible par le client"><Table items={o.tracking_events || []} columns={[{ label: 'Date', render: r => date(r.occurred_at) }, { label: 'Étape', render: r => r.title }, { label: 'Description', render: r => r.description || '—' }, { label: 'Visible', render: r => r.is_customer_visible ? 'Oui' : 'Interne' }]}/></Panel>
     <Panel title="Emails de la commande"><Table items={o.emails || []} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Type', render: r => r.email_type }, { label: 'Destinataire', render: r => r.recipient }, { label: 'Statut', render: r => <Badge value={r.status}/> }, { label: 'Erreur', render: r => r.error_message || '—' }]}/></Panel>
