@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/shared/Logo';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { Newsletter } from '@/lib/api';
+import { openConsent } from '@/lib/consent';
 import { toast } from 'sonner';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 
@@ -152,10 +153,11 @@ function LegalBar() {
   return (
     <div className="ty-container mt-14 pt-6 border-t border-[#151A23] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-ty-textLow">
       <div>{t('footer.copyright')}</div>
-      <div className="flex items-center gap-5">
+      <div className="flex flex-wrap justify-center items-center gap-5">
         <Link to="/legal/privacy" className="hover:text-ty-textMid transition-colors">{t('footer.links.privacy')}</Link>
         <Link to="/legal/terms" className="hover:text-ty-textMid transition-colors">{t('footer.links.terms')}</Link>
         <Link to="/legal/cookies" className="hover:text-ty-textMid transition-colors">{t('footer.links.cookies')}</Link>
+        <button onClick={openConsent} className="hover:text-ty-textMid transition-colors">Gérer mes cookies</button>
       </div>
     </div>
   );

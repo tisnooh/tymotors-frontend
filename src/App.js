@@ -12,6 +12,7 @@ import { MobileMenu } from '@/components/layout/MobileMenu';
 import { SearchOverlay } from '@/components/layout/SearchOverlay';
 import { Loader } from '@/components/layout/Loader';
 import { SeoManager } from '@/components/layout/SeoManager';
+import CookieConsent from '@/components/layout/CookieConsent';
 const Home = React.lazy(() => import('@/pages/Home'));
 const Shop = React.lazy(() => import('@/pages/Shop'));
 const CategoryPage = React.lazy(() => import('@/pages/CategoryPage'));
@@ -37,7 +38,7 @@ const FAQPage = supportPage('FAQPage');
 const TrackPage = supportPage('TrackPage');
 const PrivacyPage = supportPage('PrivacyPage');
 const TermsPage = supportPage('TermsPage');
-const CookiesPage = supportPage('CookiesPage');
+const CookiesPage = React.lazy(() => import('@/pages/CookiePolicy'));
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
@@ -101,6 +102,7 @@ function Shell() {
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
+            <CookieConsent />
           </>
         } />
         </Routes>
