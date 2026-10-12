@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const SITE_URL = (process.env.REACT_APP_SITE_URL || 'https://tymotors.vercel.app').replace(/\/$/, '');
+const SITE_URL = (process.env.REACT_APP_SITE_URL || window.location.origin).replace(/\/$/, '');
 const IS_PRODUCTION = process.env.REACT_APP_SITE_MODE === 'production';
 
 const ROUTES = {
@@ -13,6 +13,19 @@ const ROUTES = {
   '/support/shipping': ['Livraison | TYMotors', 'Informations sur les modes, frais et délais de livraison TYMotors.'],
   '/support/returns': ['Retours et remboursements | TYMotors', 'Consultez les conditions de retour et de remboursement TYMotors.'],
   '/support/faq': ['Questions fréquentes | TYMotors', 'Réponses aux questions fréquentes sur les produits, la compatibilité, les commandes et la livraison.'],
+  '/support/track': ['Suivi de commande | TYMotors', 'Retrouvez le statut et le suivi de votre commande avec sa référence et son adresse e-mail.'],
+  '/cart': ['Votre panier | TYMotors', 'Consultez les produits sélectionnés pour votre véhicule.'],
+  '/wishlist': ['Vos favoris | TYMotors', 'Retrouvez votre sélection personnelle.'],
+  '/account': ['Votre compte | TYMotors', 'Gérez votre compte et vos commandes.'],
+  '/auth': ['Connexion | TYMotors', 'Connectez-vous à votre compte TYMotors.'],
+  '/auth/reset': ['Nouveau mot de passe | TYMotors', 'Réinitialisez votre mot de passe de façon sécurisée.'],
+  '/auth/confirm': ['Confirmation de compte | TYMotors', 'Confirmez votre compte TYMotors.'],
+  '/reset-password': ['Nouveau mot de passe | TYMotors', 'Réinitialisez votre mot de passe de façon sécurisée.'],
+  '/order-success': ['Confirmation de commande | TYMotors', 'Consultez la confirmation de votre commande.'],
+  '/newsletter/confirm': ['Confirmation d’inscription | TYMotors', 'Confirmez vos préférences de newsletter.'],
+  '/newsletter/unsubscribe': ['Préférences email | TYMotors', 'Gérez votre inscription à la newsletter.'],
+  '/legal/mentions': ['Mentions légales | TYMotors', 'Consultez les informations légales de TYMotors.'],
+  '/legal/withdrawal': ['Droit de rétractation | TYMotors', 'Consultez les modalités et le formulaire de rétractation.'],
   '/legal/privacy': ['Politique de confidentialité | TYMotors', 'Découvrez comment TYMotors traite et protège vos données personnelles.'],
   '/legal/terms': ['Conditions générales de vente | TYMotors', 'Consultez les conditions générales de vente et d’utilisation de TYMotors.'],
   '/legal/cookies': ['Gestion des cookies | TYMotors', 'Consultez et gérez vos préférences de cookies sur TYMotors.'],
@@ -33,8 +46,10 @@ export function SeoManager() {
 
   useEffect(() => {
     if (pathname.startsWith('/product/')) return;
-    const isPrivatePage = ['/cart', '/wishlist', '/order-success', '/account', '/auth'].some((path) => pathname.startsWith(path));
+    const isPrivatePage = ['/cart', '/wishlist', '/order-success', '/account', '/auth', '/admin', '/support/track', '/reset-password', '/newsletter'].some((path) => pathname.startsWith(path));
     let seo = ROUTES[pathname];
+    if (pathname.startsWith('/admin')) seo = ['Administration | TYMotors', 'Accès réservé aux administrateurs.'];
+    if (pathname.startsWith('/account/')) seo = ROUTES['/account'];
     if (!seo && pathname.startsWith('/category/')) seo = ['Pièces automobiles par catégorie | TYMotors', 'Explorez les pièces automobiles TYMotors classées par usage et catégorie.'];
     if (!seo && pathname.startsWith('/brands/')) seo = ['Pièces compatibles par marque | TYMotors', 'Découvrez les pièces TYMotors sélectionnées pour votre marque automobile.'];
     if (!seo) seo = ['Page introuvable | TYMotors', 'La page demandée est introuvable.'];
