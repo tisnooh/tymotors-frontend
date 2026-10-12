@@ -8,6 +8,7 @@ import { formatPrice } from '@/lib/format';
 import { Heart, ShoppingBag, Truck, ShieldCheck, BadgeCheck, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
+import LoadedImage from '@/components/shared/LoadedImage';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -23,8 +24,8 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
   return (
     <div>
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#0F1115] border border-[#151A23]">
-        <img src={images?.[activeImg]} alt={name} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60" />
+        <LoadedImage src={images?.[activeImg]} alt={`${name} — photo ${activeImg + 1}`} className="absolute inset-0 h-full w-full"/>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60 pointer-events-none" />
         <div className="absolute top-4 left-4 flex flex-wrap gap-1.5">
           {badges?.map((b) => <span key={b} className={`ty-chip ${redBadges.has(b) ? 'ty-chip-red' : ''}`}>{b}</span>)}
         </div>
@@ -41,7 +42,7 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
               onClick={() => setActiveImg(i)}
               className={`relative aspect-square overflow-hidden rounded-xl border transition-colors ${activeImg === i ? 'border-[#E10600]' : 'border-[#232B3A] hover:border-[#2E394D]'}`}
             >
-              <img src={img} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              <LoadedImage src={img} alt="" className="h-full w-full" loading="lazy" retry={false}/>
             </button>
           ))}
         </div>
@@ -150,6 +151,8 @@ export default function ProductDetail() {
   const { t, i18n } = useTranslation();
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [related, setRelated] = useState([]);
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
@@ -158,6 +161,10 @@ export default function ProductDetail() {
   const [compatibilityStatus, setCompatibilityStatus] = useState(null);
 
   useEffect(() => {
+    setProduct(null);
+    setRelated([]);
+    setLoading(true);
+    setLoadError(null);
     setActiveImg(0);
     setQty(1);
     setSelectedVehicle(null);
@@ -170,13 +177,11 @@ export default function ProductDetail() {
         return Products.list({ category: p.category_slug, limit: 4 }).then((d) => {
           if (cancelled) return;
           setRelated((d.items || []).filter((x) => x.id !== p.id).slice(0, 4));
-        });
+        }).catch(() => { if (!cancelled) setRelated([]); });
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.warn('[TYMotors] product load failed:', e?.message || e);
-        if (!cancelled) setProduct(null);
-      });
+        if (!cancelled) setLoadError(e?.response?.status === 404 ? 'Ce produit est introuvable.' : 'Cette fiche ne peut pas être chargée pour le moment.');
+      }).finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [slug]);
 
@@ -252,8 +257,6 @@ export default function ProductDetail() {
       await addToCart(product.id, qty, selectedVehicle);
       toast.success(i18n.language?.startsWith('fr') ? 'Ajout\u00e9 au panier' : 'Added to cart');
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('[TYMotors] add to cart failed:', err?.message || err);
       toast.error(i18n.language?.startsWith('fr') ? 'Erreur lors de l\u2019ajout' : 'Could not add to cart');
     } finally {
       setBusy(false);
@@ -278,7 +281,7 @@ export default function ProductDetail() {
   }, [addToCart, i18n.language, navigate, product, qty, selectedVehicle]);
 
   if (!product) {
-    return <main data-testid="page-product" className="pt-28 pb-24 ty-container"><p className="text-ty-textMid">{t('product.loading')}</p></main>;
+    return <main data-testid="page-product" className="pt-28 pb-24 ty-container min-h-[60vh]"><p role={loadError ? 'alert' : 'status'} className="text-ty-textMid">{loading ? t('product.loading') : loadError || 'Produit indisponible.'}</p>{!loading && <Link to="/shop" className="ty-btn-line inline-flex mt-6">Retour au catalogue</Link>}</main>;
   }
 
   const inWishlist = isInWishlist(product.id);
