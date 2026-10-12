@@ -10,11 +10,13 @@ import { Dashboard, Orders, OrderDetail, Customers, CustomerDetail } from './Com
 import { Products, ProductEditor, Inventory } from './Products';
 import { Returns, Promotions, Channels, SettingsPage } from './Operations';
 import EmailCenter from './EmailCenter';
+import Suppliers from './Suppliers';
 import './admin.css';
 
 const navigation = [
   ['', 'Dashboard', LayoutDashboard], ['orders', 'Commandes', ShoppingBag], ['products', 'Produits', Package],
   ['inventory', 'Stocks', Boxes], ['customers', 'Clients', Users], ['returns', 'Retours', RotateCcw],
+  ['suppliers', 'Fournisseurs', Package],
   ['promotions', 'Promotions', TicketPercent], ['emails', 'Emails & newsletter', Mail], ['channels', 'Canaux de vente', Radio], ['settings', 'Paramètres', Settings],
 ];
 
@@ -75,6 +77,7 @@ export default function AdminApp() {
     <Route index element={<Dashboard/>}/><Route path="orders" element={<Orders/>}/><Route path="orders/:id" element={<OrderDetail/>}/>
     <Route path="products" element={<Products/>}/><Route path="products/new" element={<ProductEditor/>}/><Route path="products/:id" element={<ProductEditor/>}/>
     <Route path="inventory" element={<Inventory/>}/><Route path="customers" element={<Customers/>}/><Route path="customers/detail" element={<CustomerDetail/>}/>
+    <Route path="suppliers" element={<Suppliers/>}/>
     <Route path="returns" element={<Returns/>}/><Route path="promotions" element={<Promotions/>}/><Route path="emails" element={<EmailCenter/>}/><Route path="channels" element={<Channels/>}/><Route path="settings" element={<SettingsPage/>}/>
     <Route path="*" element={<div className="ad-empty"><h1>Page introuvable</h1><Link to="/admin">Retour au dashboard</Link></div>}/>
   </Routes></main></div></AccessGate></div>;
