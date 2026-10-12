@@ -56,6 +56,16 @@ test('an unmatched order keeps a generic lookup error', async () => {
   expect(container.textContent).toContain('Commande introuvable');
 });
 
+test('tracking displays the carrier and tracking number even without a URL', async () => {
+  Tracking.lookup.mockResolvedValue({ order_number: 'TY-TEST', fulfillment_status: 'shipped',
+    carrier: 'Transporteur test', tracking_number: 'TRACK-123',
+    tracking_events: [{ id: 'event', title: 'Expédiée', occurred_at: 'invalid-date' }] });
+  await searchTracking();
+  expect(container.textContent).toContain('Transporteur test');
+  expect(container.textContent).toContain('TRACK-123');
+  expect(container.querySelector('time')).toBeNull();
+});
+
 test('shipping copy does not promise unconfirmed same-day dispatch', async () => {
   await act(async () => root.render(<ShippingPage />));
   expect(container.textContent).toContain('confirmés avant la commande');
