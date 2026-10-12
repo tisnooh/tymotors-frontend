@@ -142,7 +142,7 @@ export function ShippingPage() {
       <Section title="Délais">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {[
-            { zone: 'Livraison UE suivie', délai: 'Délai confirmé après expédition', prix: '15 €' },
+            { zone: 'Livraison UE suivie', délai: 'Délai propre à chaque produit', prix: '15 €' },
             { zone: 'Commande dès 350 €', délai: 'Même niveau de suivi', prix: 'Livraison offerte' },
           ].map(({ zone, délai, prix }) => (
             <div key={zone} className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
@@ -159,8 +159,8 @@ export function ShippingPage() {
       <Section title="Informations importantes">
         <p>• La livraison gratuite est automatiquement appliquée pour toute commande supérieure à 350€.</p>
         <p>• Un numéro de suivi vous sera envoyé par email dès l'expédition de votre colis.</p>
-        <p>• Les commandes passées avant 14h sont expédiées le jour même (jours ouvrés).</p>
-        <p>• TYMotors n'est pas responsable des retards causés par les douanes pour les livraisons hors UE.</p>
+        <p>• La disponibilité, le temps de préparation et le délai de livraison doivent être confirmés avant la commande.</p>
+        <p>• Les modalités douanières restent à confirmer avec le prestataire avant l'ouverture aux ventes.</p>
       </Section>
       <Section title="Transporteurs">
         <p>Le transporteur et le numéro de suivi sont communiqués lors de l’expédition de la commande.</p>
@@ -208,13 +208,13 @@ export function ReturnsPage() {
 
 const FAQ_ITEMS = [
   { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Utilisez notre configurateur de compatibilité sur la page Personnaliser. Sélectionnez votre marque, modèle et génération pour voir tous les produits compatibles." },
-  { q: "Quels sont les délais de livraison ?", a: "En France : 2-3 jours ouvrés. En Europe : 3-5 jours ouvrés. Livraison express disponible en 24-48h. Les commandes passées avant 14h sont expédiées le jour même." },
+  { q: "Quels sont les délais de livraison ?", a: "Le délai dépend du produit, de sa disponibilité et de la destination. Il doit être confirmé avant la commande. Nous n'annonçons pas de livraison express ni d'expédition le jour même sans confirmation du prestataire." },
   { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
   { q: "Puis-je retourner un article ?", a: "Oui, vous avez 30 jours pour retourner un article non installé dans son état d'origine. Utilisez le formulaire de contact pour initier un retour." },
   { q: "Les produits sont-ils garantis ?", a: "Tous nos produits bénéficient d'une garantie de 2 ans contre les défauts de fabrication. La garantie ne couvre pas les dommages liés à une mauvaise installation." },
   { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
   { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
-  { q: "Acceptez-vous les paiements en plusieurs fois ?", a: "Oui, nous proposons le paiement en 3 ou 4 fois sans frais via Stripe pour les commandes supérieures à 150€." },
+  { q: "Acceptez-vous les paiements en plusieurs fois ?", a: "Les moyens de paiement disponibles sont affichés par Stripe au moment du règlement. Un paiement fractionné n'est disponible que s'il est proposé pour votre achat, selon les conditions et frais indiqués sur cette page." },
 ];
 
 function FAQItem({ question, answer }) {
@@ -254,6 +254,15 @@ export function FAQPage() {
 
 // ─── SUIVI DE COMMANDE ────────────────────────────────────────────────────────
 
+const FULFILLMENT_LABELS = {
+  unfulfilled: 'Commande reçue',
+  requires_review: 'Vérification en cours',
+  processing: 'En préparation',
+  shipped: 'Expédiée',
+  delivered: 'Livrée',
+  cancelled: 'Annulée',
+};
+
 export function TrackPage() {
   const [orderNum, setOrderNum] = useState('');
   const [email, setEmail] = useState('');
@@ -265,7 +274,11 @@ export function TrackPage() {
     e.preventDefault();
     setLoading(true); setError(''); setResult(null);
     try { setResult(await Tracking.lookup(orderNum, email)); }
-    catch { setError('Commande introuvable. Vérifiez le numéro et l’adresse e-mail utilisés lors de l’achat.'); }
+    catch (requestError) {
+      setError(requestError.response?.status === 404
+        ? 'Commande introuvable. Vérifiez le numéro et l’adresse e-mail utilisés lors de l’achat.'
+        : 'Le suivi est temporairement indisponible. Veuillez réessayer dans quelques instants.');
+    }
     finally { setLoading(false); }
   }
 
@@ -296,12 +309,12 @@ export function TrackPage() {
         {error && (
           <div className="mt-8 p-6 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] text-center">
             <Package className="h-8 w-8 text-ty-textMid mx-auto mb-3" />
-            <p className="text-white font-bold mb-2">Commande introuvable</p>
+            <p className="text-white font-bold mb-2">{error.startsWith('Commande introuvable') ? 'Commande introuvable' : 'Suivi indisponible'}</p>
             <p className="text-ty-textMid text-sm">{error} Vous pouvez aussi <Link to="/support/contact" className="text-[#E10600] hover:underline">contacter le support</Link>.</p>
           </div>
         )}
 
-        {result && <div className="mt-8 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-mono text-xs text-[#F2C94C]">{result.order_number}</p><h2 className="mt-2 text-xl font-bold text-white">Suivi de votre commande</h2></div><span className="rounded-full border border-[#303744] px-3 py-1 text-xs text-white">{result.fulfillment_status}</span></div><div className="mt-6">{(result.tracking_events || []).map((event, index) => <div key={event.id} className="relative grid grid-cols-[20px_1fr] gap-3 pb-6 last:pb-0"><div><span className={`block h-3 w-3 rounded-full ${index === result.tracking_events.length - 1 ? 'bg-[#E10600]' : 'bg-[#F2C94C]'}`}/>{index < result.tracking_events.length - 1 && <span className="ml-[5px] mt-1 block h-[calc(100%-8px)] w-px bg-[#232B3A]"/>}</div><div><p className="font-semibold text-white">{event.title}</p>{event.description && <p className="mt-1 text-sm text-ty-textMid">{event.description}</p>}<time className="mt-1 block font-mono text-[10px] text-ty-textLow">{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(event.occurred_at))}</time></div></div>)}</div>{result.tracking_url && <a href={result.tracking_url} target="_blank" rel="noreferrer" className="ty-btn-primary mt-6 w-full">SUIVRE CHEZ LE TRANSPORTEUR</a>}</div>}
+        {result && <div className="mt-8 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-mono text-xs text-[#F2C94C]">{result.order_number}</p><h2 className="mt-2 text-xl font-bold text-white">Suivi de votre commande</h2></div><span className="rounded-full border border-[#303744] px-3 py-1 text-xs text-white">{FULFILLMENT_LABELS[result.fulfillment_status] || 'Suivi en cours'}</span></div><div className="mt-6">{(result.tracking_events || []).map((event, index) => <div key={event.id} className="relative grid grid-cols-[20px_1fr] gap-3 pb-6 last:pb-0"><div><span className={`block h-3 w-3 rounded-full ${index === result.tracking_events.length - 1 ? 'bg-[#E10600]' : 'bg-[#F2C94C]'}`}/>{index < result.tracking_events.length - 1 && <span className="ml-[5px] mt-1 block h-[calc(100%-8px)] w-px bg-[#232B3A]"/>}</div><div><p className="font-semibold text-white">{event.title}</p>{event.description && <p className="mt-1 text-sm text-ty-textMid">{event.description}</p>}<time className="mt-1 block font-mono text-[10px] text-ty-textLow">{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(event.occurred_at))}</time></div></div>)}</div>{result.tracking_url && <a href={result.tracking_url} target="_blank" rel="noreferrer" className="ty-btn-primary mt-6 w-full">SUIVRE CHEZ LE TRANSPORTEUR</a>}</div>}
 
         <div className="mt-10 p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
           <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#F2C94C] mb-3">Vous avez reçu un email de suivi ?</p>
