@@ -18,6 +18,9 @@ jobs:
           node-version: '22'
           cache: yarn
       - run: yarn install --frozen-lockfile
+      - run: yarn test --watchAll=false --runInBand
+        env:
+          CI: true
       - run: yarn build
         env:
           CI: true

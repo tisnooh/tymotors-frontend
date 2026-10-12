@@ -5,10 +5,12 @@ const BACKEND_URL = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000
 const API = `${BACKEND_URL}/api`;
 
 // Get/generate persistent session id
-function getSessionId() {
+export function getSessionId() {
   let sid = localStorage.getItem('ty_session_id');
-  if (!sid) {
-    sid = (crypto.randomUUID && crypto.randomUUID()) || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  if (!sid || !/^[A-Za-z0-9_-]{16,128}$/.test(sid)) {
+    // No predictable Date/Math.random fallback for guest cart capabilities.
+    sid = crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(24)),
+      value => value.toString(16).padStart(2, '0')).join('');
     localStorage.setItem('ty_session_id', sid);
   }
   return sid;
