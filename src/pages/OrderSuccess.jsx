@@ -17,12 +17,20 @@ export default function OrderSuccess() {
       setError(true);
       return;
     }
-    Checkout.get(sessionId)
-      .then((data) => {
+    let stopped = false;
+    let timer;
+    let attempts = 0;
+    const check = async () => {
+      try {
+        const data = await Checkout.get(sessionId);
+        if (stopped) return;
         setOrder(data);
         if (data.paid) refreshCart();
-      })
-      .catch(() => setError(true));
+        else if (++attempts < 15 && !['failed', 'refunded'].includes(data.payment_status)) timer = setTimeout(check, 2000);
+      } catch { if (!stopped) setError(true); }
+    };
+    check();
+    return () => { stopped = true; clearTimeout(timer); };
   }, [refreshCart, sessionId]);
 
   if (error) {
@@ -53,6 +61,8 @@ export default function OrderSuccess() {
           <div className="flex justify-between py-3 text-base"><dt className="text-white">Total</dt><dd className="text-white font-mono">{formatPrice(order.total, order.currency, 'fr')}</dd></div>
         </dl>
         <p className="text-ty-textLow text-xs mt-5 break-all">Référence : {order.order_reference}</p>
+        {!order.paid && <p className="text-ty-textMid text-sm mt-3">La validation attend la notification sécurisée de Stripe. Ne payez pas une seconde fois. Retrouvez ensuite votre commande dans le suivi.</p>}
+        <Link to="/support/track" className="text-white underline inline-block mt-4">Suivre ma commande</Link>
         <div className="mt-8 flex flex-wrap gap-3"><Link to="/shop" className="ty-btn-primary">Continuer mes achats</Link><Link to="/support/contact" className="ty-btn-secondary">Besoin d’aide ?</Link></div>
       </div>
     </main>
