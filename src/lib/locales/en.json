@@ -67,14 +67,30 @@
     "eyebrow": "SIGNATURE COLLECTION",
     "title": "Featured Parts.",
     "sub": "Hand-picked upgrades from the TYMotors editor cut.",
-    "view_all": "View all products"
+    "view_all": "View all products",
+    "catalogue_sub": "Explore the TYMotors parts catalogue and find your next upgrade.",
+    "scroll_hint": "Scroll to discover more parts.",
+    "previous": "View previous products",
+    "next": "View next products",
+    "loading": "Loading products…",
+    "error": "Products could not be loaded right now. Try again or open the catalogue.",
+    "retry": "Try again",
+    "empty": "There are no products to display right now. Explore our parts in the catalogue."
   },
   "before_after": {
     "eyebrow": "TRANSFORMATIONS",
     "title": "Stock to spectacular.",
-    "sub": "Drag to reveal what a complete TYMotors build delivers.",
+    "sub": "Drag to compare the same car, stock and tuned, from the front.",
     "before": "Before",
-    "after": "After"
+    "after": "After",
+    "slider_label": "Compare the stock vehicle with its styling upgrades",
+    "slider_value": "{{before}}% before, {{after}}% after",
+    "before_alt": "AI simulation: stock grey BMW viewed head-on, with chrome grille and standard bumper",
+    "after_alt": "AI simulation: the same grey BMW head-on, with black grille, sport bumper and carbon lip",
+    "disclaimer": "AI-generated visual simulation: the same vehicle and framing. Black grille, sport bumper and carbon lip illustrated; this is not a TYMotors customer build or a compatibility guarantee.",
+    "loading": "Loading comparison…",
+    "error": "The comparison images could not be loaded right now.",
+    "retry": "Try again"
   },
   "community": {
     "eyebrow": "OWNERS UNIVERSE",

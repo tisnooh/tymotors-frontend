@@ -1,0 +1,55 @@
+.featured-products-rail {
+  --featured-gap: 1rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 82%;
+  gap: var(--featured-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  scrollbar-color: #E10600 #151A23;
+  scrollbar-width: thin;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0.25rem 1rem;
+}
+
+.featured-products-rail::-webkit-scrollbar { height: 5px; }
+.featured-products-rail::-webkit-scrollbar-track { background: #151A23; border-radius: 5px; }
+.featured-products-rail::-webkit-scrollbar-thumb { background: #E10600; border-radius: 5px; }
+.featured-product { min-width: 0; scroll-snap-align: start; }
+.featured-product > [data-testid="product-card"] { height: 100%; }
+.featured-product:focus-within [data-testid="product-card-add-to-cart-button"] { opacity: 1; transform: none; }
+
+.featured-products-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #232B3A;
+  border-radius: 50%;
+  color: #FFF;
+  background: #0F1115;
+}
+.featured-products-arrow:hover:not(:disabled) { border-color: #E10600; background: #E10600; }
+.featured-products-arrow:disabled { opacity: 0.35; cursor: not-allowed; }
+.featured-products-arrow:focus-visible,
+.featured-products-rail:focus-visible { outline: 2px solid #F2C94C; outline-offset: 2px; }
+.featured-product [data-testid="product-card"]:focus-visible { outline: 2px solid #F2C94C; outline-offset: -2px; }
+.featured-product button:focus-visible { outline: 2px solid #F2C94C; outline-offset: 2px; }
+.featured-products-message { padding: 2rem; border: 1px solid #232B3A; border-radius: 1rem; color: #B8BDC8; }
+.featured-product-skeleton { aspect-ratio: 3/4; border: 1px solid #151A23; border-radius: 1rem; background: #0F1115; }
+
+@media (min-width: 640px) {
+  .featured-products-rail { grid-auto-columns: calc((100% - var(--featured-gap)) / 2.3); }
+}
+@media (min-width: 1024px) {
+  .featured-products-rail { --featured-gap: 1.25rem; grid-auto-columns: calc((100% - 3 * var(--featured-gap)) / 4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .featured-products-rail { scroll-behavior: auto; }
+  .featured-product [data-testid="product-card"] *,
+  .featured-product [data-testid="product-card"] { transition-duration: 0s; transition-delay: 0s !important; }
+}

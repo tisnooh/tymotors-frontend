@@ -1,11 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Reveal } from '@/components/shared/Reveal';
-import { responsiveImageProps } from '@/lib/image';
 
-const BEFORE_IMG = 'https://images.unsplash.com/photo-1757910555708-5d26fa0fc2fd?auto=format&fit=crop&w=2000&q=85';
-const AFTER_IMG = 'https://images.unsplash.com/photo-1749393900058-41e1a6a60eef?auto=format&fit=crop&w=2000&q=85';
 const TICK_KEYS = Array.from({ length: 12 }, (_, i) => `tick-${i}`);
+const imageProps = variant => ({
+  src: `/images/transformations/front-${variant}-v1-960.webp`,
+  srcSet: [480, 960, 1672].map(width => `/images/transformations/front-${variant}-v1-${width}.webp ${width}w`).join(', '),
+  sizes: '(min-width: 1280px) 1200px, (min-width: 1024px) calc(100vw - 80px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)',
+  width: 1672, height: 941,
+});
+const BEFORE_IMAGE = imageProps('stock');
+const AFTER_IMAGE = imageProps('tuned');
 
 function TelemetryTicks() {
   return (
@@ -17,42 +22,32 @@ function TelemetryTicks() {
 
 export function BeforeAfterSlider() {
   const { t } = useTranslation();
+  const id = useId();
   const containerRef = useRef(null);
   const [pos, setPos] = useState(50);
+  const [loaded, setLoaded] = useState({ before: false, after: false });
+  const [imageError, setImageError] = useState(false);
+  const [imageAttempt, setImageAttempt] = useState(0);
   const draggingRef = useRef(false);
-  const beforeImage = responsiveImageProps(BEFORE_IMG, [640, 960, 1440], '(max-width: 1280px) 100vw, 1280px', 74);
-  const afterImage = responsiveImageProps(AFTER_IMG, [640, 960, 1440], '(max-width: 1280px) 100vw, 1280px', 74);
+  const ready = loaded.before && loaded.after && !imageError;
 
   const handleMove = useCallback((clientX) => {
     const el = containerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
+    if (!rect.width) return;
     const x = clientX - rect.left;
     const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
     setPos(pct);
   }, []);
 
-  useEffect(() => {
-    const onMove = (e) => {
-      if (!draggingRef.current) return;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      handleMove(clientX);
-    };
-    const onUp = () => { draggingRef.current = false; };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    window.addEventListener('touchmove', onMove, { passive: true });
-    window.addEventListener('touchend', onUp);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-      window.removeEventListener('touchmove', onMove);
-      window.removeEventListener('touchend', onUp);
-    };
-  }, [handleMove]);
+  const stopDragging = event => {
+    draggingRef.current = false;
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  };
 
   return (
-    <section data-testid="before-after-section" className="relative ty-section bg-[#070809]">
+    <section data-testid="before-after-section" className="relative ty-section bg-[#070809]" aria-labelledby={`${id}-title`}>
       <div className="ty-container">
         <Reveal className="mb-10">
           <div className="flex items-end justify-between gap-6 flex-wrap">
@@ -60,9 +55,9 @@ export function BeforeAfterSlider() {
               <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
                 <span className="h-px w-8 bg-[#F2C94C]" /> {t('before_after.eyebrow')}
               </p>
-              <h2 className="mt-3 ty-display text-white text-3xl md:text-5xl">{t('before_after.title')}</h2>
+              <h2 id={`${id}-title`} className="mt-3 ty-display text-white text-3xl md:text-5xl">{t('before_after.title')}</h2>
             </div>
-            <p className="text-ty-textMid max-w-md text-sm md:text-base">{t('before_after.sub')}</p>
+            <p id={`${id}-hint`} className="text-ty-textMid max-w-md text-sm md:text-base">{t('before_after.sub')}</p>
           </div>
         </Reveal>
 
@@ -70,24 +65,43 @@ export function BeforeAfterSlider() {
           <div
             ref={containerRef}
             data-testid="before-after-slider"
-            role="slider"
-            tabIndex={0}
-            aria-valuenow={Math.round(pos)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-[#151A23] cursor-ew-resize select-none"
-            onMouseDown={(e) => { draggingRef.current = true; handleMove(e.clientX); }}
-            onTouchStart={(e) => { draggingRef.current = true; handleMove(e.touches[0].clientX); }}
+            role={ready ? 'slider' : undefined}
+            tabIndex={ready ? 0 : undefined}
+            aria-label={ready ? t('before_after.slider_label') : undefined}
+            aria-describedby={ready ? `${id}-hint ${id}-disclaimer` : undefined}
+            aria-busy={!ready && !imageError}
+            aria-valuenow={ready ? Math.round(pos) : undefined}
+            aria-valuemin={ready ? 0 : undefined}
+            aria-valuemax={ready ? 100 : undefined}
+            aria-valuetext={ready ? t('before_after.slider_value', { before: Math.round(pos), after: 100 - Math.round(pos) }) : undefined}
+            className="relative aspect-[4/3] md:aspect-[16/9] w-full rounded-2xl overflow-hidden border border-[#151A23] bg-[#0F1115] cursor-ew-resize select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2C94C]"
+            style={{ touchAction: 'pan-y pinch-zoom' }}
+            onPointerDown={event => {
+              if (!ready || event.button !== 0) return;
+              draggingRef.current = true;
+              event.currentTarget.setPointerCapture?.(event.pointerId);
+              handleMove(event.clientX);
+            }}
+            onPointerMove={event => { if (ready && draggingRef.current) handleMove(event.clientX); }}
+            onPointerUp={stopDragging}
+            onPointerCancel={stopDragging}
+            onLostPointerCapture={() => { draggingRef.current = false; }}
             onKeyDown={(e) => {
+              if (!ready || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+              e.preventDefault();
               if (e.key === 'ArrowLeft') setPos((p) => Math.max(0, p - 5));
               if (e.key === 'ArrowRight') setPos((p) => Math.min(100, p + 5));
+              if (e.key === 'Home') setPos(0);
+              if (e.key === 'End') setPos(100);
             }}
           >
-            <img {...afterImage} alt="After" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+            <img key={`after-${imageAttempt}`} {...AFTER_IMAGE} data-testid="before-after-after-image" alt={t('before_after.after_alt')} loading="lazy" decoding="async" draggable={false}
+              onLoad={() => setLoaded(current => ({ ...current, after: true }))} onError={() => setImageError(true)} className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute top-4 right-4 ty-chip ty-chip-red font-mono">{t('before_after.after')}</div>
 
             <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-              <img {...beforeImage} alt="Before" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+              <img key={`before-${imageAttempt}`} {...BEFORE_IMAGE} data-testid="before-after-before-image" alt={t('before_after.before_alt')} loading="lazy" decoding="async" draggable={false}
+                onLoad={() => setLoaded(current => ({ ...current, before: true }))} onError={() => setImageError(true)} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute top-4 left-4 ty-chip font-mono">{t('before_after.before')}</div>
             </div>
 
@@ -95,7 +109,16 @@ export function BeforeAfterSlider() {
 
             <div data-testid="before-after-handle" className="ty-ba-handle" style={{ left: `${pos}%` }} />
             <TelemetryTicks />
+            {!ready && <div className="absolute inset-0 bg-[#0F1115] flex flex-col items-center justify-center gap-4 p-6 text-center text-ty-textMid cursor-default">
+              <p role={imageError ? 'alert' : 'status'}>{t(imageError ? 'before_after.error' : 'before_after.loading')}</p>
+              {imageError && <button type="button" className="ty-btn-ghost" data-testid="before-after-retry-button" onClick={() => {
+                setImageError(false); setLoaded({ before: false, after: false }); setImageAttempt(current => current + 1);
+              }}>{t('before_after.retry')}</button>}
+            </div>}
           </div>
+          <p id={`${id}-disclaimer`} data-testid="before-after-disclaimer" className="mt-4 text-xs md:text-sm text-ty-textMid max-w-3xl leading-relaxed">
+            {t('before_after.disclaimer')}
+          </p>
         </Reveal>
       </div>
     </section>

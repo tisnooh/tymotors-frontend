@@ -105,14 +105,30 @@
     "eyebrow": "COLLECTION SIGNATURE",
     "title": "Pièces en Vedette.",
     "sub": "Sélection éditeur des meilleures upgrades TYMotors.",
-    "view_all": "Voir tous les produits"
+    "view_all": "Voir tous les produits",
+    "catalogue_sub": "Découvrez les pièces du catalogue TYMotors et trouvez votre prochaine amélioration.",
+    "scroll_hint": "Faites défiler pour découvrir les pièces.",
+    "previous": "Voir les produits précédents",
+    "next": "Voir les produits suivants",
+    "loading": "Chargement des produits…",
+    "error": "Impossible de charger les produits pour le moment. Réessayez ou ouvrez le catalogue.",
+    "retry": "Réessayer",
+    "empty": "Aucun produit à afficher pour le moment. Retrouvez nos références dans le catalogue."
   },
   "before_after": {
     "eyebrow": "TRANSFORMATIONS",
     "title": "De stock à spectaculaire.",
-    "sub": "Glissez pour révéler une transformation TYMotors complète.",
+    "sub": "Glissez pour comparer la même voiture, d'origine puis préparée, vue de face.",
     "before": "Avant",
-    "after": "Après"
+    "after": "Après",
+    "slider_label": "Comparer le véhicule d'origine et sa préparation esthétique",
+    "slider_value": "{{before}} % avant, {{after}} % après",
+    "before_alt": "Simulation IA : BMW grise d'origine vue de face, calandre chromée et pare-chocs standard",
+    "after_alt": "Simulation IA : même BMW grise de face, calandre noire, bouclier sport et lèvre carbone",
+    "disclaimer": "Simulation visuelle générée par IA : même véhicule, même cadrage. Calandre noire, bouclier sport et lèvre carbone illustrés ; ce n'est pas une réalisation client TYMotors ni une garantie de compatibilité.",
+    "loading": "Chargement de la comparaison…",
+    "error": "Les images de comparaison ne peuvent pas être chargées pour le moment.",
+    "retry": "Réessayer"
   },
   "community": {
     "eyebrow": "UNIVERS TYMOTORS",

@@ -19,6 +19,8 @@ La recherche Unsplash a également été faite ; certains téléchargements/page
 
 Hero : image déjà sélectionnée conservée (`photo-1762314907955-b7c1e11a8782`). Pas de migration de données ni modification des sources produit.
 
+Avant/après : les deux anciennes photos indépendantes sont remplacées par une paire frontale générée puis éditée avec `image_gen`, explicitement étiquetée **simulation IA**, pas réalisation client. Même BMW grise, décor/cadrage cohérents ; calandre noire, bouclier sport et lèvre carbone. Les six fichiers WebP locaux, les prompts complets et la provenance figurent dans [BEFORE_AFTER_ASSETS.md](BEFORE_AFTER_ASSETS.md). Aucun crédit Pexels/Unsplash ne s'applique à cette paire générée.
+
 ## Storytelling portrait plein écran — demande suivante du 13 octobre
 
 Les six images desktop restent identiques. Sur téléphone uniquement (`picture source`, media max-width 767px), les étapes 02 et 06 utilisent de vrais fichiers portrait, sans bande paysage ni `object-fit: contain` :
