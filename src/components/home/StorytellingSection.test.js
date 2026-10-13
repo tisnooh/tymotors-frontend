@@ -35,13 +35,26 @@ test.each([mobileSection, mobileSpacer])('%s remains restricted to the mobile br
   expect(rules[0].parent.params).toBe('(max-width: 767px)');
 });
 
-test('the pinned mobile image has a dedicated window between the heading and caption', () => {
-  const [rule] = rulesFor('.storytelling-touch-active .storytelling-image-window');
+test('the portrait image fills the entire mobile scene without letterboxing', () => {
+  const [rule] = rulesFor('.storytelling-mobile-layout .storytelling-image-window');
   expect(rule.parent.params).toBe('(max-width: 767px)');
-  expect(rule.nodes.some(node => node.prop === 'top')).toBe(true);
-  expect(rule.nodes.some(node => node.prop === 'bottom')).toBe(true);
-  const [wing] = rulesFor('.storytelling-mobile-layout .storytelling-image-6 > img');
-  expect(wing.nodes.find(node => node.prop === 'object-fit').value).toBe('contain');
+  expect(rule.nodes.find(node => node.prop === 'inset').value).toBe('0');
+  expect(rule.nodes.some(node => ['top', 'bottom'].includes(node.prop))).toBe(false);
+  for (const index of [2, 6]) {
+    const [image] = rulesFor(`.storytelling-mobile-layout .storytelling-image-${index} > img`);
+    expect(image.nodes.find(node => node.prop === 'object-fit').value).toBe('cover');
+  }
   const [card] = rulesFor('.storytelling-touch-active .storytelling-card');
   expect(card.nodes.find(node => node.prop === 'background').value).toBe('#050608');
+});
+
+test('the introduction does not cover the subjects in the pinned viewport', () => {
+  const [header] = rulesFor('.storytelling-touch-active .storytelling-header');
+  expect(header.nodes.find(node => node.prop === 'position').value).toBe('relative');
+  expect(header.nodes.some(node => node.prop === 'top')).toBe(false);
+});
+
+test.each(['.storytelling-mobile-layout .storytelling-card', '.storytelling-touch-active .storytelling-viewport'])('%s uses stable full-screen mobile height', selector => {
+  const [rule] = rulesFor(selector);
+  expect(rule.nodes.some(node => node.prop === 'height' && node.value === '100svh')).toBe(true);
 });

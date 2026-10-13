@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { responsiveImageProps } from '@/lib/image';
+import { editorialImageProps, STORY_PORTRAIT_IMAGES } from '@/lib/editorialImages';
 import './StorytellingSection.css';
 
 const BEAT_IMAGES = [
@@ -156,27 +157,33 @@ export function StorytellingSection() {
 
   return (
     <section ref={sectionRef} data-testid="scroll-story-section" className="storytelling-section bg-[#050608] py-16 md:py-24">
+      <div className="storytelling-header ty-container">
+        <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
+          <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
+        </p>
+        <h2 className="mt-3 ty-display text-white text-3xl md:text-5xl">{t('story.title')}</h2>
+        <p className="mt-3 max-w-2xl text-sm text-ty-textMid">Découvrez chaque transformation au fil de votre parcours.</p>
+      </div>
       <div ref={viewportRef} className="storytelling-viewport">
-        <div className="storytelling-header ty-container">
-          <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
-            <span className="h-px w-8 bg-[#F2C94C]" /> {t('story.eyebrow')}
-          </p>
-          <h2 className="mt-3 ty-display text-white text-3xl md:text-5xl">{t('story.title')}</h2>
-          <p className="mt-3 max-w-2xl text-sm text-ty-textMid">Découvrez chaque transformation au fil de votre parcours.</p>
-        </div>
-
         <div ref={trackRef} className="storytelling-track mt-8 flex gap-4 overflow-x-auto px-[max(1.25rem,calc((100vw-80rem)/2))] pb-5 snap-x snap-mandatory [scrollbar-width:thin] [scrollbar-color:#E10600_#151A23]">
           {beats.map((beat, index) => (
             <article key={beat.title} className="storytelling-card relative shrink-0 w-[82vw] sm:w-[55vw] lg:w-[31rem] aspect-[4/3] overflow-hidden rounded-2xl border border-[#232B3A] snap-start">
-              <div className={`storytelling-image-window storytelling-image-${index + 1} absolute inset-0`}>
-              <img
-                {...responsiveImageProps(BEAT_IMAGES[index], [480, 640, 900], '(max-width: 767px) 100vw, 31rem', 72)}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              </div>
+              <picture className={`storytelling-image-window storytelling-image-${index + 1} absolute inset-0`}>
+                {STORY_PORTRAIT_IMAGES[index] && (
+                  <source
+                    media="(max-width: 767px)"
+                    srcSet={editorialImageProps(STORY_PORTRAIT_IMAGES[index]).srcSet}
+                    sizes="100vw"
+                  />
+                )}
+                <img
+                  {...responsiveImageProps(BEAT_IMAGES[index], [480, 640, 900], '(max-width: 767px) 100vw, 31rem', 72)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </picture>
               <div className="storytelling-card-shade absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/45 to-transparent" />
               <div className="storytelling-card-content relative flex h-full items-end p-6 md:p-8">
                 <div className="flex items-start gap-3">

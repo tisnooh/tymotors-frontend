@@ -92,21 +92,21 @@
     backface-visibility: hidden;
   }
 
-  /* Reserve the centre of the scene for the subject, between title and caption.
-     A wide wing/front grille must not be cropped into a full-height portrait. */
-  .storytelling-touch-active .storytelling-image-window {
-    top: clamp(16rem, 32svh, 19rem);
-    bottom: clamp(11rem, 23svh, 14rem);
+  /* Full-bleed portrait, including the non-animated/reduced-motion fallback.
+     The introduction is outside the pinned scene, so it cannot hide the part. */
+  .storytelling-mobile-layout .storytelling-image-window {
+    inset: 0;
     overflow: hidden;
   }
 
   .storytelling-mobile-layout .storytelling-image-2 > img {
-    object-position: 50% 72%;
+    object-fit: cover;
+    object-position: 68% 50%;
   }
 
   .storytelling-mobile-layout .storytelling-image-6 > img {
-    object-fit: contain;
-    object-position: center;
+    object-fit: cover;
+    object-position: 55% 50%;
   }
 
   .storytelling-touch-active .storytelling-card-shade {
@@ -114,16 +114,13 @@
   }
 
   .storytelling-touch-active .storytelling-card-shade {
-    background: linear-gradient(180deg, rgba(5, 6, 8, 0.82) 0%, rgba(5, 6, 8, 0.16) 34%, rgba(5, 6, 8, 0.12) 54%, rgba(5, 6, 8, 0.94) 100%);
+    background: linear-gradient(180deg, rgba(5, 6, 8, 0.4) 0%, rgba(5, 6, 8, 0.06) 18%, rgba(5, 6, 8, 0.02) 58%, rgba(5, 6, 8, 0.85) 100%);
   }
 
   .storytelling-touch-active .storytelling-header {
-    position: absolute;
-    z-index: 20;
-    top: calc(env(safe-area-inset-top) + 5rem);
-    right: 0;
-    left: 0;
-    pointer-events: none;
+    position: relative;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   .storytelling-touch-active .storytelling-header h2 {

@@ -15,12 +15,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Explicit QA-only emulation: the browser viewport capability has no touch/UA
 // option. This exercises the existing phone branches, not a real Safari device.
-const phoneFixture = new URLSearchParams(window.location.search).has('phone');
+const fixtureParams = new URLSearchParams(window.location.search);
+const phoneFixture = fixtureParams.has('phone');
+const reducedMotionFixture = phoneFixture && fixtureParams.has('reduce');
 if (phoneFixture) {
   const nativeMatchMedia = window.matchMedia.bind(window);
   window.matchMedia = query => nativeMatchMedia(query
-    .replaceAll('(prefers-reduced-motion: no-preference)', '(min-width: 0px)')
-    .replaceAll('(prefers-reduced-motion: reduce)', '(max-width: 0px)'));
+    .replaceAll('(prefers-reduced-motion: no-preference)', reducedMotionFixture ? '(max-width: 0px)' : '(min-width: 0px)')
+    .replaceAll('(prefers-reduced-motion: reduce)', reducedMotionFixture ? '(min-width: 0px)' : '(max-width: 0px)'));
   Object.defineProperty(navigator, 'userAgent', { configurable: true, value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile Safari/604.1' });
   Object.defineProperty(navigator, 'maxTouchPoints', { configurable: true, value: 1 });
   gsap.registerPlugin(ScrollTrigger);
@@ -28,7 +30,7 @@ if (phoneFixture) {
 }
 const ScrollWrapper = phoneFixture ? React.Fragment : SmoothScrollProvider;
 createRoot(document.getElementById('root')).render(<BrowserRouter><ScrollWrapper><div className="App"><Navbar />
-  <output className="sr-only" data-testid="visual-profile" data-phone={phoneFixture} data-motion={window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches} data-observer={'IntersectionObserver' in window} data-touch={ScrollTrigger.isTouch}>Fixture visuelle isolée, aucune API réelle.</output>
+  <output className="sr-only" data-testid="visual-profile" data-phone={phoneFixture} data-reduced-motion={window.matchMedia('(prefers-reduced-motion: reduce)').matches} data-motion={window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches} data-observer={'IntersectionObserver' in window} data-touch={ScrollTrigger.isTouch}>Fixture visuelle isolée, aucune API réelle.</output>
   <Routes><Route path="/" element={<Home />} /><Route path="/brands/:slug" element={<BrandDetail />} /><Route path="/category/:slug" element={<CategoryPage />} />
     <Route path="*" element={<main className="ty-container pt-28"><h1>Destination du lien — fixture visuelle</h1><Link to="/">Accueil</Link></main>} />
   </Routes></div></ScrollWrapper></BrowserRouter>);

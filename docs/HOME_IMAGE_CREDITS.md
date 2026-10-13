@@ -17,7 +17,20 @@ Les visuels éditoriaux sont centralisés dans `src/lib/editorialImages.js`.
 
 La recherche Unsplash a également été faite ; certains téléchargements/pages ont renvoyé 403/429/502. Aucun paywall ni contrôle d'accès contourné. Pexels retenu après vérification des images effectivement accessibles.
 
-Hero : image déjà sélectionnée conservée (`photo-1762314907955-b7c1e11a8782`). Storytelling : les six sources existantes sont conservées, seule la fenêtre de cadrage mobile change. Pas de migration de données ni modification des sources produit.
+Hero : image déjà sélectionnée conservée (`photo-1762314907955-b7c1e11a8782`). Pas de migration de données ni modification des sources produit.
+
+## Storytelling portrait plein écran — demande suivante du 13 octobre
+
+Les six images desktop restent identiques. Sur téléphone uniquement (`picture source`, media max-width 767px), les étapes 02 et 06 utilisent de vrais fichiers portrait, sans bande paysage ni `object-fit: contain` :
+
+| Étape mobile | Sujet / dimensions originales | Photographe / source |
+| --- | --- | --- |
+| 02 — Calandres Performance | BMW noire, calandre et capot carbone mouillé ; 3264 × 4928 | [Zhillan_f / Pexels](https://www.pexels.com/photo/close-up-shot-of-black-bmw-car-with-water-droplets-11836461/) |
+| 06 — Aérodynamisme Sport | Audi R8 jaune, aileron installé et feu arrière ; 3456 × 5184 | [Mario Alvarado / Pexels](https://www.pexels.com/photo/backlight-of-a-sportscar-in-close-up-shot-12170112/) |
+
+Recherche Pexels et Unsplash effectuée ; fichiers réellement inspectés en entier dans le navigateur, dimensions/licence vérifiées sur les pages sources. Alternatives écartées : Supra 31853144 (aile trop proche du bord supérieur), gros plan 29734285 (détail/prise d'air plus dominant que l'aileron), 6969030 et Unsplash Mn4WTsRms74 (paysage trop large pour montrer le sujet en plein écran portrait). Aucun téléchargement payant ou contournement d'accès. Les conditions Pexels rappelées ci-dessus s'appliquent ; les images ne représentent ni des produits vendus précis, ni des réalisations TYMotors.
+
+Le titre de section se lit une fois en introduction, avant les scènes ; la photo occupe ensuite 100svh derrière la légende et l'indicateur. Le mode réduit reste sans pin/animation, avec des cartes pleine hauteur. La timeline/les règles de scroll GSAP, Hero et sources produit ne sont pas modifiés.
 
 La CSP autorise uniquement le CDN `https://images.pexels.com` en plus des hôtes image existants. Aucune ouverture des scripts, des connexions API ou des autres directives.
 
@@ -25,4 +38,4 @@ La CSP autorise uniquement le CDN `https://images.pexels.com` en plus des hôtes
 
 Depuis `frontend`, lancer `node tests/browser-build.cjs --visual`, puis `node tests/browser-serve.cjs --visual`. Serveur limité à `127.0.0.1:3001`, APIs remplacées par des fixtures publiques : aucun paiement, session client ou changement de base. Ne pas confondre ce test visuel avec une intégration de production.
 
-Pour le chemin animé téléphone, ouvrir `http://localhost:3001/?phone=1` dans un viewport mobile puis recharger. Cette fixture seule émule un user-agent téléphone, le drapeau tactile GSAP et l'absence de réduction des mouvements ; elle n'est jamais importée dans le bundle de production. Sans ce paramètre, les préférences réelles restent utilisées. Le loader de diagnostic rend visibles les erreurs d'animation dans cette fixture seulement. La validation finale sur Safari/iPhone physique reste nécessaire.
+Pour le chemin animé téléphone, ouvrir `http://localhost:3001/?phone=1` dans un viewport mobile puis recharger. Pour vérifier le repli accessible sans pin, utiliser `http://localhost:3001/?phone=1&reduce=1`. Cette fixture seule émule un user-agent téléphone, le drapeau tactile GSAP et la préférence de mouvement choisie ; elle n'est jamais importée dans le bundle de production. Sans le paramètre téléphone, les préférences réelles restent utilisées. Le loader de diagnostic rend visibles les erreurs d'animation dans cette fixture seulement. La validation finale sur Safari/iPhone physique reste nécessaire.

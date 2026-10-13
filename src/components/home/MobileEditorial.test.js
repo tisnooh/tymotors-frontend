@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { CommunitySection } from './CommunitySection';
 import { CategoriesSection } from './CategoriesSection';
 import { HeroSection } from './HeroSection';
+import { StorytellingSection } from './StorytellingSection';
 import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
 import { categoryEditorialImage, EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
@@ -23,7 +24,7 @@ beforeEach(() => {
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   host = document.createElement('div'); root = createRoot(host);
   originalMedia = window.matchMedia; originalObserver = window.IntersectionObserver;
-  window.matchMedia = jest.fn(() => ({ matches: true }));
+  window.matchMedia = jest.fn(() => ({ matches: true, addEventListener: jest.fn(), removeEventListener: jest.fn() }));
   delete window.IntersectionObserver;
   Products.list.mockResolvedValue({ items: [] });
 });
@@ -52,6 +53,20 @@ test('Hero keeps the selected photo, original animations and catalogue CTA', () 
   expect(host.querySelector('.hero-photo-frame')).not.toBeNull();
   expect(host.querySelector('.ty-hero-rise')).not.toBeNull();
   expect(host.querySelector('a').getAttribute('href')).toBe('/shop');
+});
+
+test('storytelling has phone-only portrait sources and leaves the introduction outside the scene', () => {
+  act(() => root.render(<StorytellingSection />));
+  const viewport = host.querySelector('.storytelling-viewport');
+  expect(viewport.querySelector('.storytelling-header')).toBeNull();
+  expect(host.querySelectorAll('.storytelling-card img')).toHaveLength(6);
+  const sources = [...host.querySelectorAll('picture source')];
+  expect(sources).toHaveLength(2);
+  expect(sources.every(source => source.media === '(max-width: 767px)' && source.sizes === '100vw')).toBe(true);
+  expect(sources[0].srcset).toContain('/11836461/');
+  expect(sources[1].srcset).toContain('/12170112/');
+  expect(host.querySelector('.storytelling-image-2 img').src).toContain('photo-1773709766452-8f96b950bf8f');
+  expect(host.querySelector('.storytelling-image-6 img').src).toContain('photo-1747595558629-6a73f97b62d6');
 });
 
 test('Hero photo space is mobile-only and Pexels is narrowly permitted as an image host', () => {

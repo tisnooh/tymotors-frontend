@@ -9,6 +9,11 @@ export const EDITORIAL_IMAGES = {
   detail: { src: pexels('31768888'), position: '50% 50%' },
   silhouette: { src: pexels('27118859'), position: '50% 53%' },
 };
+// Art direction for phone storytelling only; desktop sources stay unchanged.
+export const STORY_PORTRAIT_IMAGES = {
+  1: { src: pexels('11836461') },
+  5: { src: pexels('12170112') },
+};
 export function categoryEditorialImage(slug) {
   const key = { exterior: 'performance', 'multimedia-technology': 'technology' }[slug] || slug;
   return ['performance', 'interior', 'technology'].includes(key) ? EDITORIAL_IMAGES[key] : null;
