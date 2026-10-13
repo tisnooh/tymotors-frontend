@@ -1,0 +1,4 @@
+extends: ./nyc-base.yml
+all: true
+exclude:
+  - src/**/*.test.js

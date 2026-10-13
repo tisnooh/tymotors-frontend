@@ -1,0 +1,10 @@
+{
+  "exceptions": [{
+    "id": "GHSA-vfj7-8cjw-p6xm",
+    "package": "braces",
+    "versions": ["3.0.3"],
+    "severity": "high",
+    "expires": "2026-11-13T00:00:00Z",
+    "reason": "No fixed upstream release; build/watch/test glob input is repository-controlled. Never run untrusted pull requests with credentials. Re-review within 30 days; see backend/docs/SECURITY_REVIEW.md."
+  }]
+}

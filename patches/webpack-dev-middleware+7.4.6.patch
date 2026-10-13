@@ -1,0 +1,8 @@
+diff --git a/node_modules/webpack-dev-middleware/dist/utils/compatibleAPI.js b/node_modules/webpack-dev-middleware/dist/utils/compatibleAPI.js
+--- a/node_modules/webpack-dev-middleware/dist/utils/compatibleAPI.js
++++ b/node_modules/webpack-dev-middleware/dist/utils/compatibleAPI.js
+@@ -232,3 +232,3 @@ function createReadStreamOrReadFileSync(filename, outputFileSystem, start, end) {
+     // Handle files with zero bytes
+-    byteLength = end === 0 ? 0 : end - start + 1;
++    byteLength = end === 0 && outputFileSystem.statSync(filename).size === 0 ? 0 : end - start + 1;
+   } else {

@@ -1,10 +1,13 @@
 // craco.config.js
 const path = require("path");
 const constrainDevPublicPath = require('./plugins/dev-public-path');
+const adaptDevServer = require('./plugins/dev-server-compat');
 
 // Check if we're in development/preview mode (not production build)
 // Craco sets NODE_ENV=development for start, NODE_ENV=production for build
 const isDevServer = process.env.NODE_ENV !== "production";
+// CRACO loads this before CRA's start script resolves HOST. LAN access is opt-in.
+if (isDevServer && !process.env.HOST) process.env.HOST = '127.0.0.1';
 
 // Environment variable overrides
 const config = {
@@ -72,23 +75,6 @@ let webpackConfig = {
 
 webpackConfig.devServer = (devServerConfig) => {
   constrainDevPublicPath(devServerConfig);
-  // Add health check endpoints if enabled
-  if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
-    const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
-
-    devServerConfig.setupMiddlewares = (middlewares, devServer) => {
-      // Call original setup if exists
-      if (originalSetupMiddlewares) {
-        middlewares = originalSetupMiddlewares(middlewares, devServer);
-      }
-
-      // Setup health endpoints
-      setupHealthEndpoints(devServer, healthPluginInstance);
-
-      return middlewares;
-    };
-  }
-
   return devServerConfig;
 };
 
@@ -107,5 +93,10 @@ if (isDevServer) {
     }
   }
 }
+
+// Visual edits replaces setupMiddlewares: adapt the final result, not its input.
+const finalDevServer = webpackConfig.devServer;
+webpackConfig.devServer = (devServerConfig) => adaptDevServer(finalDevServer(devServerConfig),
+  config.enableHealthCheck ? (server) => setupHealthEndpoints(server, healthPluginInstance) : undefined);
 
 module.exports = webpackConfig;

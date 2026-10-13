@@ -176,7 +176,7 @@ async function devServerControl() {
   const { randomUUID } = require('node:crypto');
   const webpack = require('webpack');
   const Server = require('webpack-dev-server');
-  const constrain = require('./plugins/dev-public-path');
+  const constrain = require('./plugins/dev-server-compat');
   const outputPath = path.join(require('node:os').tmpdir(), `tymotors-toolchain-${randomUUID()}`);
   const compiler = webpack({
     mode: 'development', devtool: false, cache: false,
@@ -215,8 +215,24 @@ async function devServerControl() {
     for (const [file, expected] of [['one.txt', 'x'], ['empty.txt', '']]) {
       const asset = await fetch(`${origin}/assets/${file}`, { signal: AbortSignal.timeout(10000) });
       assert.equal(asset.status, 200);
+      assert.equal(asset.headers.get('content-length'), String(expected.length));
+      assert.equal(await asset.text(), expected);
+      const head = await fetch(`${origin}/assets/${file}`, { method: 'HEAD', signal: AbortSignal.timeout(10000) });
+      assert.equal(head.status, 200);
+      assert.equal(head.headers.get('content-length'), String(expected.length));
+      assert.equal((await head.arrayBuffer()).byteLength, 0);
+    }
+    memoryFs.writeFileSync(path.join(outputPath, 'many.txt'), 'abcdef');
+    for (const [value, expected] of [['bytes=0-0', 'a'], ['bytes=1-1', 'b'], ['bytes=2-4', 'cde'], ['bytes=-2', 'ef']]) {
+      const asset = await fetch(`${origin}/assets/many.txt`, { headers: { Range: value } });
+      assert.equal(asset.status, 206);
+      assert.equal(asset.headers.get('content-length'), String(expected.length));
       assert.equal(await asset.text(), expected);
     }
+    const invalidRange = await fetch(`${origin}/assets/many.txt`, { headers: { Range: 'bytes=999-1000' } });
+    assert.equal(invalidRange.status, 416);
+    const malformedRange = await fetch(`${origin}/assets/many.txt`, { headers: { Range: 'bytes=not-a-range' } });
+    assert.equal(malformedRange.status, 416); // Patched middleware rejects malformed ranges.
     const filename = `tymotors-sentinel-${randomUUID()}.txt`;
     const sentinel = `memory-only-${randomUUID()}`;
     server.middleware.context.outputFileSystem.writeFileSync(path.join(path.dirname(outputPath), filename), sentinel);
@@ -245,6 +261,179 @@ test('webpack middleware: WDS lifecycle works and output-root traversal is denie
   });`], { cwd: path.join(__dirname, '..'), timeout: 45000, encoding: 'utf8', maxBuffer: 1024 * 1024 });
   assert.ifError(result.error);
   assert.equal(result.status, 0, result.stderr);
+});
+
+test('CRA/WDS5 adapter: HTTPS/proxy settings and hook order remain explicit', () => {
+  const adapt = require('../plugins/dev-server-compat');
+  const options = { cert: 'fixture-cert', key: 'fixture-key' };
+  const config = adapt({ https: options, proxy: undefined, headers: { 'Access-Control-Allow-Origin': '*', 'X-Control': 'kept' } });
+  assert.deepEqual(config.server, { type: 'https', options });
+  assert.ok(!('https' in config) && !('proxy' in config));
+  assert.equal(config.headers['X-Control'], 'kept');
+  assert.equal(config.headers['Access-Control-Allow-Origin'], undefined);
+  assert.notEqual(config.allowedHosts, 'all');
+  assert.equal(adapt({ https: false }).server, 'http');
+  assert.deepEqual(adapt({ https: true }).server, { type: 'https', options: {} });
+});
+
+// Actual CRA source-overlay + visual endpoints + optional health + WebSocket.
+async function craDevServerControl() {
+  const assert = require('node:assert/strict');
+  const path = require('node:path');
+  const webpack = require('webpack');
+  const Server = require('webpack-dev-server');
+  const WebSocket = require('ws');
+  const craco = require('./craco.config');
+  const compiler = webpack({ mode: 'development', devtool: 'source-map', cache: false,
+    entry: path.resolve('src/lib/consent.js'),
+    output: { path: path.join(require('node:os').tmpdir(), `tymotors-wds-${require('node:crypto').randomUUID()}`), filename: 'control.js', publicPath: '/assets/' },
+    infrastructureLogging: { level: 'none' }, stats: 'errors-only' });
+  const craConfig = require('react-scripts/config/webpackDevServer.config')(undefined, '127.0.0.1');
+  const server = new Server(craco.devServer({ ...craConfig, static: false, host: '127.0.0.1', port: 0,
+    devMiddleware: { publicPath: '/assets', writeToDisk: false },
+    client: false, hot: true, liveReload: false, webSocketServer: { type: 'ws', options: { path: '/ws' } } }), compiler);
+  let socket;
+  try {
+    await server.start();
+    const stats = await new Promise((resolve) => server.middleware.waitUntilValid(resolve));
+    assert.equal(stats.hasErrors(), false);
+    const origin = `http://127.0.0.1:${server.server.address().port}`;
+    // Node fetch may override the Host header; use raw HTTP to test the wire.
+    const request = (route, headers = {}) => new Promise((resolve, reject) => {
+      const req = require('node:http').get(origin + route, { headers }, (response) => {
+        let body = ''; response.setEncoding('utf8'); response.on('data', (chunk) => { body += chunk; });
+        response.on('end', () => resolve({ status: response.statusCode, body }));
+      });
+      req.setTimeout(10000, () => req.destroy(new Error('fixture HTTP timeout')));
+      req.on('error', reject);
+    });
+    const module = [...stats.compilation.modules].find((item) => item.resource === path.resolve('src/lib/consent.js'));
+    const moduleId = stats.compilation.chunkGraph.getModuleId(module);
+    const overlayUrl = '/__get-internal-source?fileName=' + encodeURIComponent(`webpack-internal:///${moduleId}`);
+    for (const route of ['/assets/control.js', overlayUrl, '/ping', '/health']) {
+      const normal = await fetch(origin + route);
+      assert.equal(normal.status, 200, route);
+      assert.notEqual(normal.headers.get('access-control-allow-origin'), '*');
+      await normal.text();
+      assert.equal((await request(route, { Origin: origin })).status, 200);
+      assert.equal((await request(route, { Origin: 'http://dev-approved.test:4321' })).status, 200);
+      for (const headers of [{ Host: 'untrusted.invalid' }, { Origin: 'https://untrusted.invalid', 'Sec-Fetch-Site': 'cross-site' },
+          { Origin: 'http://203.0.113.9' }, { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'no-cors' }]) {
+        const rejected = await request(route, headers);
+        assert.equal(rejected.status, 403, `${route}: ${JSON.stringify(headers)}`);
+        assert.doesNotMatch(rejected.body, /ty_cookie_preferences|heapUsed|"status":"ok"/);
+      }
+    }
+    socket = new WebSocket(origin.replace('http:', 'ws:') + '/ws', { origin });
+    const messages = [];
+    await new Promise((resolve, reject) => {
+      socket.on('message', (data) => { const message = JSON.parse(String(data)); messages.push(message.type); if (message.type === 'ok') resolve(); });
+      socket.once('error', reject);
+    });
+    assert.ok(messages.includes('hash') && messages.includes('hot'));
+    socket.close();
+    await new Promise((resolve) => socket.once('close', resolve));
+    const approvedSocket = new WebSocket(origin.replace('http:', 'ws:') + '/ws', { origin: 'http://dev-approved.test:4321' });
+    await new Promise((resolve, reject) => {
+      approvedSocket.on('message', (data) => { if (JSON.parse(String(data)).type === 'ok') resolve(); });
+      approvedSocket.once('error', reject);
+    });
+    approvedSocket.close();
+    await new Promise((resolve) => approvedSocket.once('close', resolve));
+    for (const extra of [{ origin: 'https://untrusted.invalid' }, { origin: 'http://203.0.113.9' },
+        { origin: 'http://[2001:db8::1]' }, { origin: 'http://127.0.0.1:1' },
+        { origin, headers: { Host: 'untrusted.invalid' } }]) {
+      const denied = new WebSocket(origin.replace('http:', 'ws:') + '/ws', extra);
+      const deniedMessages = [];
+      await new Promise((resolve, reject) => {
+        denied.on('message', (data) => deniedMessages.push(JSON.parse(String(data))));
+        denied.once('close', resolve); denied.once('error', reject);
+      });
+      assert.deepEqual(deniedMessages, [{ type: 'error', data: 'Invalid Host/Origin header' }]);
+    }
+  } finally {
+    if (socket && socket.readyState !== WebSocket.CLOSED) socket.terminate();
+    await server.stop();
+    await new Promise((resolve, reject) => compiler.close((error) => error ? reject(error) : resolve()));
+  }
+}
+
+test('actual CRA/visual/health routes remain behind host and cross-origin checks, WebSocket works', () => {
+  const result = spawnSync(process.execPath, ['-e', `(${craDevServerControl.toString()})().catch((error) => { console.error(error); process.exitCode=1; });`], {
+    cwd: path.join(__dirname, '..'), env: { ...process.env, NODE_ENV: 'development', ENABLE_HEALTH_CHECK: 'true',
+      DEV_ALLOWED_HOSTS: 'dev-approved.test', DEV_ALLOWED_ORIGINS: 'http://dev-approved.test:4321' },
+    timeout: 60000, encoding: 'utf8', maxBuffer: 1024 * 1024,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test('SVGR8: real CRA loader chain preserves SVG URL, ReactComponent, title/ref/viewBox', async () => {
+  const webpack = require('webpack');
+  const { Volume, createFsFromVolume } = require('memfs');
+  assert.equal(consumerRequire('react-scripts/package.json')('@svgr/webpack/package.json').version, '8.1.0');
+  const outputFs = createFsFromVolume(new Volume());
+  outputFs.join = path.join.bind(path);
+  const outputPath = path.join(require('node:os').tmpdir(), 'tymotors-svg-control');
+  const compiler = webpack({ mode: 'development', target: 'node', devtool: false, cache: false,
+    entry: path.resolve(__dirname, 'fixtures/svg-entry.js'), externals: { react: 'commonjs react' },
+    output: { path: outputPath, filename: 'svg.js', library: { type: 'commonjs2' }, publicPath: '/' },
+    module: { rules: [{ test: /\.svg$/, use: [
+      { loader: require.resolve('@svgr/webpack'), options: { prettier: false, svgo: false,
+        svgoConfig: { plugins: [{ removeViewBox: false }] }, titleProp: true, ref: true } },
+      { loader: require.resolve('file-loader'), options: { name: 'static/media/[name].[hash].[ext]' } },
+    ] }] }, infrastructureLogging: { level: 'none' }, stats: 'errors-only' });
+  compiler.outputFileSystem = outputFs;
+  try {
+    const stats = await new Promise((resolve, reject) => compiler.run((error, stats) => error ? reject(error) : resolve(stats)));
+    assert.equal(stats.hasErrors(), false, stats.toString());
+    const result = { exports: {} };
+    vm.runInNewContext(outputFs.readFileSync(path.join(outputPath, 'svg.js'), 'utf8'), { module: result, exports: result.exports, require });
+    assert.match(result.exports.url, /^\/static\/media\/control\..+\.svg$/);
+    assert.equal(result.exports.ReactComponent.$$typeof, Symbol.for('react.forward_ref'));
+    const React = require('react');
+    const html = require('react-dom/server').renderToStaticMarkup(React.createElement(result.exports.ReactComponent, { title: 'Control', ref: React.createRef() }));
+    assert.match(html, /viewBox="0 0 24 24"/);
+    assert.match(html, /<title[^>]*>Control<\/title>/);
+  } finally { await new Promise((resolve, reject) => compiler.close((error) => error ? reject(error) : resolve())); }
+});
+
+test('NYC YAML4: actual caller loads inherited config; executable YAML tags rejected', async () => {
+  const load = consumerRequire('@istanbuljs/load-nyc-config');
+  assert.equal(load('js-yaml/package.json').version, '4.3.2');
+  const settings = await require('@istanbuljs/load-nyc-config').loadNycConfig({ cwd: path.resolve(__dirname, 'fixtures'), nycrcPath: path.resolve(__dirname, 'fixtures/nyc.yml') });
+  assert.deepEqual(settings.include, ['src/**/*.js']);
+  assert.deepEqual(settings.exclude, ['src/**/*.test.js']);
+  assert.equal(settings.all, true);
+  assert.throws(() => load('js-yaml').load('payload: !!js/function "function(){return 1;}"'));
+});
+
+test('WDS5 HTTPS: async selfsigned certificate and legacy HTTPS options serve a trusted request', async () => {
+  const webpack = require('webpack');
+  const Server = require('webpack-dev-server');
+  const cert = await require('selfsigned').generate([{ name: 'commonName', value: 'localhost' }], {
+    algorithm: 'sha256', extensions: [{ name: 'subjectAltName', altNames: [{ type: 7, ip: '127.0.0.1' }] }],
+  });
+  const compiler = webpack({ mode: 'development', devtool: false, cache: false,
+    entry: path.resolve('src/lib/consent.js'), output: { path: path.join(require('node:os').tmpdir(), 'tymotors-https-control'), filename: 'control.js' },
+    infrastructureLogging: { level: 'none' }, stats: 'errors-only' });
+  const server = new Server(require('../plugins/dev-server-compat')({ https: { key: cert.private, cert: cert.cert },
+    host: '127.0.0.1', port: 0, static: false, client: false, hot: false, liveReload: false, webSocketServer: false }), compiler);
+  try {
+    await server.start();
+    const stats = await new Promise((resolve) => server.middleware.waitUntilValid(resolve));
+    assert.equal(stats.hasErrors(), false);
+    const result = await new Promise((resolve, reject) => {
+      const request = require('node:https').get(`https://127.0.0.1:${server.server.address().port}/control.js`, { ca: cert.cert }, (response) => {
+        let body = ''; response.setEncoding('utf8'); response.on('data', (data) => { body += data; });
+        response.on('end', () => resolve({ status: response.statusCode, body }));
+      });
+      request.setTimeout(10000, () => request.destroy(new Error('fixture HTTPS timeout')));
+      request.on('error', reject);
+    });
+    assert.equal(result.status, 200);
+    assert.match(result.body, /ty_cookie_preferences/);
+  } finally { await server.stop(); await new Promise((resolve, reject) => compiler.close((error) => error ? reject(error) : resolve())); }
 });
 
 test('CRA publicPath guard: root, prefix, absolute URL and auto keep their meaning', () => {
