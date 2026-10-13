@@ -1,0 +1,45 @@
+[data-testid="page-home"] > .universe-section { content-visibility: visible; contain-intrinsic-size: none; }
+.universe-section { overflow: clip; background: radial-gradient(ellipse at 85% 25%, #43130c33, transparent 58%), #070809; }
+.universe-heading { max-width: 54rem; }
+.universe-kicker { display: flex; align-items: center; gap: .75rem; color: #f2c94c; font: 10px/1.6 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .25em; }
+.universe-kicker > span { width: 2rem; height: 1px; background: currentColor; }
+.universe-heading h2 { margin-top: 1.1rem; font-size: clamp(2.3rem, 5.6vw, 5.5rem); line-height: 1; text-wrap: balance; }
+.universe-sub { color: #c7cdd6; max-width: 38rem; margin-top: 1.5rem; line-height: 1.75; }
+.universe-road { height: 1px; margin: 2rem 0; background: #232b3a; }
+.universe-road-fill { display: block; height: 100%; width: 100%; transform-origin: left; background: linear-gradient(90deg, #e10600, #f2c94c); }
+.universe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
+.universe-card { min-width: 0; background: #0b0d10; border: 1px solid #232b3a; border-radius: 1rem; overflow: hidden; }
+.universe-card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1.6fr 1fr; align-items: center; }
+.universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 16/9; }
+.universe-card-featured .universe-image-frame { aspect-ratio: 16/10; }
+.universe-photo { position: absolute; inset: 0; background: #12171e; overflow: hidden; }
+.universe-photo img { width: 100%; height: 114%; top: -7%; position: relative; object-fit: cover; }
+.universe-photo-shade { position: absolute; inset: 0; background: linear-gradient(#05060866, transparent 35%); pointer-events: none; }
+.universe-image-label { position: absolute; top: 1.1rem; left: 1.1rem; display: flex; align-items: center; gap: .8rem; font: 10px/1.4 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .15em; color: white; text-shadow: 0 1px 10px #000; }
+.universe-image-label span { padding: .35rem .45rem; border: 1px solid #ffffff55; border-radius: .3rem; }
+.universe-card-copy { padding: 1.4rem; }
+.universe-card-copy h3 { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.1; }
+.universe-card-featured h3 { font-size: clamp(1.8rem, 3vw, 2.7rem); }
+.universe-card-copy > p { color: #a9b2bf; font-size: .875rem; line-height: 1.65; margin-top: .8rem; max-width: 30rem; }
+.universe-card-link { display: inline-flex; align-items: center; gap: .8rem; min-height: 44px; color: #f2c94c; margin-top: .75rem; font-size: .8rem; }
+.universe-card-link svg { transition: transform .3s ease; }
+.universe-card-link:hover svg { transform: translate(3px, -3px); }
+.universe-photo-error { height: 100%; display: grid; place-content: center; text-align: center; padding: 2rem; color: #a9b2bf; }
+.universe-footer { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 2rem 0; margin-top: 1rem; border-bottom: 1px solid #232b3a; }
+.universe-footer-title { margin-top: .5rem; font-size: clamp(1.3rem, 2.2vw, 1.9rem); font-weight: 600; }
+.universe-disclaimer { font-size: .75rem; color: #929baa; line-height: 1.6; margin-top: 1.5rem; }
+.universe-credits { font-size: .75rem; color: #929baa; margin-top: .6rem; }
+.universe-credits summary { cursor: pointer; width: fit-content; min-height: 28px; }
+.universe-credits a { display: block; width: fit-content; padding: .4rem 0; text-decoration: underline; }
+@media (max-width: 767px) {
+  .universe-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .universe-card-featured { grid-column: auto; display: flex; flex-direction: column; align-items: stretch; }
+  .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; }
+  .universe-image-frame { aspect-ratio: 4/3; }
+  .universe-card-copy { padding: 1.4rem; }
+  .universe-footer { align-items: stretch; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .universe-card-link svg { transition: none; }
+  .universe-card-link:hover svg { transform: none; }
+}

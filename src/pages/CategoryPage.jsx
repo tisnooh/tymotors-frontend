@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Categories, Products } from '@/lib/api';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { Reveal } from '@/components/shared/Reveal';
+import { categoryEditorialImage, editorialImageProps } from '@/lib/editorialImages';
 
 const SKELETON_KEYS = ['c-1', 'c-2', 'c-3', 'c-4', 'c-5', 'c-6', 'c-7', 'c-8'];
 
@@ -89,19 +90,20 @@ export default function CategoryPage() {
     );
   }
 
+  const bannerImage = categoryEditorialImage(slug);
   return (
-    <main data-testid="page-category" className="pt-20 pb-24">
-      <section className="relative aspect-[16/7] md:aspect-[21/8] w-full overflow-hidden">
-        <img src={cat.image} alt={cat.name} className="absolute inset-0 h-full w-full object-cover opacity-50" />
+    <main data-testid="page-category" className="pt-16 lg:pt-20 pb-24">
+      <section data-testid="catalog-hero" className="relative lg:aspect-[21/8] w-full overflow-hidden">
+        <img {...(bannerImage ? editorialImageProps(bannerImage, '100vw') : { src: cat.image })} alt={cat.name} style={{ objectPosition: bannerImage?.position }} className="absolute inset-0 h-full w-full object-cover opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/70 to-transparent" />
         <div className="absolute top-6 left-6 h-2 w-2 border-t border-l border-[#F2C94C]" />
         <div className="absolute bottom-6 right-6 h-2 w-2 border-b border-r border-[#F2C94C]" />
-        <div className="absolute inset-0 ty-container flex flex-col justify-end pb-10 md:pb-14">
+        <div data-testid="catalog-hero-content" className="relative lg:absolute lg:inset-0 ty-container flex flex-col justify-end py-8 lg:pt-0 lg:pb-14">
           <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
             <span className="h-px w-8 bg-[#F2C94C]" /> TYMotors / {cat.name}
           </p>
-          <h1 data-testid="category-title" className="ty-display text-white text-4xl md:text-7xl mt-3">{cat.name}.</h1>
+          <h1 data-testid="category-title" className="ty-display text-white text-4xl md:text-5xl lg:text-7xl mt-3">{cat.name}.</h1>
           <p className="mt-3 text-ty-textMid max-w-xl">{cat.description}</p>
         </div>
       </section>

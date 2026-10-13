@@ -1,0 +1,37 @@
+/* The selected landscape photo gets a dedicated wide frame on phones.
+   Desktop keeps the original full-bleed cover and all existing entrance motion. */
+.hero-mobile-photo { display: none; }
+@media (max-width: 767px) {
+  [data-testid="hero-section"] .hero-photo-frame {
+    display: none;
+  }
+
+  [data-testid="hero-section"] .hero-mobile-photo {
+    display: block;
+    position: relative;
+    margin-top: 2rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    height: clamp(11rem, 50vw, 18rem);
+    flex-shrink: 0;
+    -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent);
+    mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent);
+  }
+
+  [data-testid="hero-section"] .hero-mobile-photo > img {
+    object-fit: cover;
+    object-position: 50% 76%;
+  }
+
+  [data-testid="hero-section"] .hero-side-scrim {
+    background: linear-gradient(180deg, #050608, #050608cc 45%, transparent 67%);
+  }
+
+  [data-testid="hero-section"] .hero-floor-scrim {
+    background: linear-gradient(0deg, #050608 6%, transparent 24%);
+  }
+
+  [data-testid="hero-spec-strip"] {
+    margin-top: 1.5rem;
+  }
+}

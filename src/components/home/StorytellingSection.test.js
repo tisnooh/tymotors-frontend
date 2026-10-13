@@ -34,3 +34,14 @@ test.each([mobileSection, mobileSpacer])('%s remains restricted to the mobile br
   expect(rules[0].parent.name).toBe('media');
   expect(rules[0].parent.params).toBe('(max-width: 767px)');
 });
+
+test('the pinned mobile image has a dedicated window between the heading and caption', () => {
+  const [rule] = rulesFor('.storytelling-touch-active .storytelling-image-window');
+  expect(rule.parent.params).toBe('(max-width: 767px)');
+  expect(rule.nodes.some(node => node.prop === 'top')).toBe(true);
+  expect(rule.nodes.some(node => node.prop === 'bottom')).toBe(true);
+  const [wing] = rulesFor('.storytelling-mobile-layout .storytelling-image-6 > img');
+  expect(wing.nodes.find(node => node.prop === 'object-fit').value).toBe('contain');
+  const [card] = rulesFor('.storytelling-touch-active .storytelling-card');
+  expect(card.nodes.find(node => node.prop === 'background').value).toBe('#050608');
+});

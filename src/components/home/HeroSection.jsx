@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { responsiveImageProps } from '@/lib/image';
+import './HeroSection.css';
 
 const HERO_IMG = 'https://images.unsplash.com/photo-1762314907955-b7c1e11a8782?auto=format&fit=crop&w=2200&q=88';
 
@@ -13,12 +14,12 @@ export function HeroSection() {
   return (
     <section data-testid="hero-section" className="relative min-h-[100svh] w-full overflow-hidden bg-[#050608]">
       {/* BG image */}
-      <div className="absolute inset-0 scale-[1.04]">
+      <div className="hero-photo-frame absolute inset-0 scale-[1.04]">
         <img {...heroImage} alt="" fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
       </div>
       {/* Scrims */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/70 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
+      <div className="hero-side-scrim absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/70 to-transparent" />
+      <div className="hero-floor-scrim absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
       {/* Red side glow */}
       <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#E10600]/20 blur-[120px]" />
       {/* Subtle grid */}
@@ -54,6 +55,10 @@ export function HeroSection() {
             {t('hero.cta_primary')}
             <ArrowRight className="h-4 w-4 ml-1" />
           </Link>
+        </div>
+
+        <div className="hero-mobile-photo" aria-hidden="true">
+          <img {...heroImage} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
         </div>
 
         {/* Telemetry strip */}

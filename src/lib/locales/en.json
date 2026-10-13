@@ -60,7 +60,8 @@
     "eyebrow": "THREE DOMAINS",
     "title": "Performance. Interior. Technology.",
     "sub": "Curated catalogues built around how you actually drive.",
-    "explore": "Explore"
+    "explore": "Explore",
+    "taglines": { "performance": "A more assertive silhouette.", "interior": "Your cockpit, your character.", "technology": "Connected on every journey." }
   },
   "featured": {
     "eyebrow": "SIGNATURE COLLECTION",
@@ -77,8 +78,18 @@
   },
   "community": {
     "eyebrow": "OWNERS UNIVERSE",
-    "title": "The inspiration behind every transformation.",
-    "sub": "A visual selection to imagine the style and character of your next automotive project."
+    "title": "Not just a car. Your signature.",
+    "sub": "A line, a detail, an attitude. Explore tuning culture and find the starting point of your next project.",
+    "next": "WRITE THE NEXT CHAPTER",
+    "next_title": "The next transformation? Yours.",
+    "cta": "Customize my vehicle",
+    "disclaimer": "Independent inspiration photos: these vehicles are not TYMotors builds. Always check equipment compatibility and permitted use.",
+    "credits": "Photo credits",
+    "projects": {
+      "gathering": { "label": "Tuning culture", "title": "Brought together by passion.", "desc": "Individual builds, a shared desire to stand out. Take inspiration, then find your own direction.", "link": "Imagine my project", "alt": "Two modified sedans, including a Subaru with a rear wing, at sunset" },
+      "detail": { "label": "Attention to detail", "title": "Nothing left to chance.", "desc": "Lines, materials, finishes: every detail contributes to a project's identity.", "link": "Explore the equipment", "alt": "Close-up of a polished custom wheel on a modified car" },
+      "silhouette": { "label": "A distinct silhouette", "title": "Express your character.", "desc": "A recognisable silhouette. Find the balance that feels like you, without compromising compatibility.", "link": "Choose my vehicle", "alt": "Rear of a lowered blue BMW with custom wheels" }
+    }
   },
   "cta": {
     "eyebrow": "READY?",

@@ -1,49 +1,108 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Reveal } from '@/components/shared/Reveal';
-import { responsiveImageProps } from '@/lib/image';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
+import './CommunitySection.css';
 
-const CARDS = [
-  { id: 'inspiration-1', src: 'https://images.unsplash.com/photo-1639928197975-719885038475?auto=format&fit=crop&w=1200&q=80' },
-  { id: 'inspiration-2', src: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80' },
-  { id: 'inspiration-3', src: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80' },
-  { id: 'inspiration-4', src: 'https://images.unsplash.com/photo-1639928846767-2b900c357a30?auto=format&fit=crop&w=1200&q=80' },
-  { id: 'inspiration-5', src: 'https://images.unsplash.com/photo-1701012187548-03b07619ba48?auto=format&fit=crop&w=1200&q=80' },
-  { id: 'inspiration-6', src: 'https://images.unsplash.com/photo-1639928846190-9d342619118a?auto=format&fit=crop&w=1200&q=80' },
+const PROJECTS = [
+  { id: 'gathering', image: EDITORIAL_IMAGES.gathering, to: '/customize' },
+  { id: 'detail', image: EDITORIAL_IMAGES.detail, to: '/category/performance' },
+  { id: 'silhouette', image: EDITORIAL_IMAGES.silhouette, to: '/customize' },
 ];
 
-function CommunityCard({ card, delay }) {
-  return (
-    <Reveal delay={delay}>
-      <div data-testid="community-card" className="group relative block aspect-square rounded-xl overflow-hidden border border-[#151A23] hover:border-[#2E394D] transition-colors bg-[#0A0B0E] ty-card-image">
-        <img {...responsiveImageProps(card.src, [240, 400, 640], '(max-width: 767px) 50vw, 17vw', 70)} alt="Inspiration automobile TYMotors" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-90 group-hover:opacity-100" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent" />
-      </div>
-    </Reveal>
-  );
+function InspirationPhoto({ image, alt, sizes }) {
+  const [failed, setFailed] = useState(false);
+  return <div className="universe-photo">
+    {!failed ? <img {...editorialImageProps(image, sizes)} alt={alt} loading="lazy" decoding="async"
+      style={{ objectPosition: image.position }} onError={() => setFailed(true)} />
+      : <p role="status" className="universe-photo-error">{alt}</p>}
+    <span className="universe-photo-shade" aria-hidden="true" />
+  </div>;
 }
 
 export function CommunitySection() {
   const { t } = useTranslation();
-  return (
-    <section data-testid="community-section" className="relative ty-section">
-      <div className="ty-container">
-        <Reveal className="mb-10">
-          <div className="flex items-end justify-between gap-6 flex-wrap">
-            <div>
-              <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
-                <span className="h-px w-8 bg-[#F2C94C]" /> {t('community.eyebrow')}
-              </p>
-              <h2 className="mt-3 ty-display text-white text-3xl md:text-5xl">{t('community.title')}</h2>
-            </div>
-            <p className="text-ty-textMid max-w-md text-sm md:text-base">{t('community.sub')}</p>
-          </div>
-        </Reveal>
+  const sectionRef = useRef(null);
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !('IntersectionObserver' in window)) return undefined;
+    let disposed = false;
+    let media;
+    let context;
+    // Default-visible: import failure/reduced motion never leaves empty cards.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([gsapModule, triggerModule]) => {
+        if (disposed) return;
+        const gsap = gsapModule.default;
+        const { ScrollTrigger } = triggerModule;
+        gsap.registerPlugin(ScrollTrigger);
+        context = gsap.context(() => {
+          media = gsap.matchMedia();
+          media.add('(prefers-reduced-motion: no-preference)', () => {
+            const cards = Array.from(section.querySelectorAll('.universe-card'));
+            gsap.from(section.querySelectorAll('.universe-heading > *'), {
+              y: 32, opacity: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out',
+              scrollTrigger: { trigger: section, start: 'top 90%', once: true },
+            });
+            cards.forEach((card, index) => {
+              gsap.from(card, {
+                y: 64, rotation: index === 1 ? 2 : -1, opacity: 0, duration: 1.1,
+                ease: 'power3.out', clearProps: 'transform,opacity',
+                scrollTrigger: { trigger: card, start: 'top 93%', once: true },
+              });
+              const image = card.querySelector('img');
+              if (image) gsap.fromTo(image, { yPercent: -5 }, {
+                yPercent: 5, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
+              });
+            });
+            gsap.fromTo(section.querySelector('.universe-road-fill'), { scaleX: 0 }, {
+              scaleX: 1, ease: 'none', scrollTrigger: { trigger: section, start: 'top 85%', end: 'bottom 65%', scrub: 0.5 },
+            });
+          });
+        }, section);
+      }).catch(() => { media?.revert(); context?.revert(); /* Restore static content after partial initialization, too. */ });
+    }, { rootMargin: '250px 0px' });
+    observer.observe(section);
+    return () => { disposed = true; observer.disconnect(); media?.revert(); context?.revert(); };
+  }, []);
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-          {CARDS.map((c, i) => <CommunityCard key={c.id} card={c} delay={(i % 6) * 0.05} />)}
-        </div>
+  return <section ref={sectionRef} data-testid="community-section" className="universe-section ty-section">
+    <div className="ty-container">
+      <div className="universe-heading">
+        <p className="universe-kicker"><span />{t('community.eyebrow')}</p>
+        <h2 className="ty-display">{t('community.title')}</h2>
+        <p className="universe-sub">{t('community.sub')}</p>
       </div>
-    </section>
-  );
+      <div className="universe-road" aria-hidden="true"><span className="universe-road-fill" /></div>
+      <div className="universe-grid">
+        {PROJECTS.map((project, index) => <article key={project.id} data-testid="community-card"
+          className={`universe-card ${index === 0 ? 'universe-card-featured' : ''}`}>
+          <div className="universe-image-frame">
+            <InspirationPhoto image={project.image} alt={t(`community.projects.${project.id}.alt`)}
+              sizes={index === 0 ? '(max-width: 767px) 100vw, 55vw' : '(max-width: 767px) 100vw, 40vw'} />
+            <p className="universe-image-label"><span>0{index + 1}</span>{t(`community.projects.${project.id}.label`)}</p>
+          </div>
+          <div className="universe-card-copy">
+            <h3 className="ty-display">{t(`community.projects.${project.id}.title`)}</h3>
+            <p>{t(`community.projects.${project.id}.desc`)}</p>
+            <Link to={project.to} className="universe-card-link">{t(`community.projects.${project.id}.link`)}<ArrowUpRight size={18} aria-hidden="true" /></Link>
+          </div>
+        </article>)}
+      </div>
+      <div className="universe-footer">
+        <div><p className="universe-kicker">{t('community.next')}</p><p className="universe-footer-title">{t('community.next_title')}</p></div>
+        <Link to="/customize" data-testid="community-customize-cta" className="ty-btn-primary min-h-12 h-auto py-3">{t('community.cta')}<ArrowRight size={18} aria-hidden="true" /></Link>
+      </div>
+      <p className="universe-disclaimer">{t('community.disclaimer')}</p>
+      <details className="universe-credits"><summary>{t('community.credits')}</summary>
+        <a href="https://www.pexels.com/photo/sunset-car-showdown-modified-sedans-on-display-32103160/" target="_blank" rel="noopener noreferrer">FBO Media · Pexels</a>
+        <a href="https://www.pexels.com/photo/close-up-of-shiny-custom-car-wheel-31768888/" target="_blank" rel="noopener noreferrer">Bradley de Melo · Pexels</a>
+        <a href="https://www.pexels.com/photo/blue-tuned-bmw-car-27118859/" target="_blank" rel="noopener noreferrer">FBO Media · Pexels</a>
+      </details>
+    </div>
+  </section>;
 }

@@ -54,7 +54,7 @@ export default function Cart() {
                   return (
                   <li key={it.product_id} data-testid="cart-item" className="py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                     <Link to={`/product/${it.slug}`} className="h-24 w-32 rounded-xl overflow-hidden bg-[#0F1115] border border-[#151A23] shrink-0">
-                      <img src={it.image} alt={it.name} className="h-full w-full object-cover" />
+                      <CartImage key={it.images?.[0] || it.image || it.product_id} item={it} />
                     </Link>
                     <div className="flex-1 min-w-0">
                       <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[#F2C94C]/80">{it.subcategory}</p>
@@ -118,6 +118,16 @@ export default function Cart() {
       </div>
     </main>
   );
+}
+
+function CartImage({ item }) {
+  const { i18n } = useTranslation();
+  const [failed, setFailed] = useState(false);
+  const source = item.images?.[0] || item.image;
+  if (!source || failed) {
+    return <span role="img" aria-label={item.name} className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-ty-textLow">{i18n.language?.startsWith('fr') ? 'Image indisponible' : 'Image unavailable'}</span>;
+  }
+  return <img src={source} alt={item.name} decoding="async" onError={() => setFailed(true)} className="h-full w-full object-contain" />;
 }
 
 function Trust({ icon, label }) {

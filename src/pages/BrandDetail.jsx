@@ -40,20 +40,20 @@ export default function BrandDetail() {
   }
 
   return (
-    <main data-testid="page-brand-detail" className="pt-20 pb-24">
-      <section className="relative aspect-[16/8] md:aspect-[21/7] w-full overflow-hidden">
+    <main data-testid="page-brand-detail" className="pt-16 lg:pt-20 pb-24">
+      <section data-testid="catalog-hero" className="relative lg:aspect-[21/7] w-full overflow-hidden">
         <img src={brand.image} alt={brand.name} className="absolute inset-0 h-full w-full object-cover opacity-55" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
         <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#E10600]/20 blur-[120px]" />
 
-        <div className="absolute inset-0 ty-container flex flex-col justify-end pb-12">
+        <div data-testid="catalog-hero-content" className="relative lg:absolute lg:inset-0 ty-container flex flex-col justify-end py-8 lg:pt-0 lg:pb-12">
           <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
             <span className="h-px w-8 bg-[#F2C94C]" /> TYMotors / {brand.name}
           </p>
-          <h1 data-testid="brand-detail-title" className="ty-display text-white text-5xl md:text-8xl mt-4">{brand.name}.</h1>
+          <h1 data-testid="brand-detail-title" className="ty-display text-white text-[clamp(2rem,9vw,3rem)] md:text-6xl lg:text-8xl break-words mt-4">{brand.name}.</h1>
           <p className="mt-4 text-ty-textMid max-w-xl">{brand.description}</p>
-          <Link to="/customize" className="mt-6 ty-btn-line h-11 text-xs uppercase tracking-[0.18em] w-fit">
+          <Link to="/customize" className="mt-6 ty-btn-line min-h-11 h-auto py-3 md:h-11 md:py-0 text-xs uppercase tracking-[0.18em] w-fit max-w-full">
             {t('nav.customize_long')} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

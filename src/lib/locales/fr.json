@@ -76,9 +76,10 @@
   },
   "categories": {
     "eyebrow": "TROIS DOMAINES",
-    "title": "Performance. Style. Technologie.",
+    "title": "Performance. Intérieur. Technologie.",
     "sub": "Catalogues sélectionnés pour votre façon de conduire.",
     "explore": "Découvrir",
+    "taglines": { "performance": "Une silhouette plus affirmée.", "interior": "Votre cockpit, votre caractère.", "technology": "Connecté à chaque trajet." },
     "items": [
       {
         "num": "01",
@@ -115,8 +116,18 @@
   },
   "community": {
     "eyebrow": "UNIVERS TYMOTORS",
-    "title": "L’inspiration derrière chaque transformation.",
-    "sub": "Une sélection visuelle pour imaginer le style et le caractère de votre prochain projet automobile."
+    "title": "Pas juste une voiture. Votre signature.",
+    "sub": "Une ligne, un détail, une attitude. Explorez la culture tuning et trouvez le point de départ de votre prochain projet.",
+    "next": "À VOUS D'ÉCRIRE LA SUITE",
+    "next_title": "La prochaine transformation ? La vôtre.",
+    "cta": "Personnaliser mon véhicule",
+    "disclaimer": "Photos d'inspiration indépendantes : ces véhicules ne sont pas des réalisations TYMotors. Vérifiez toujours la compatibilité et l'usage autorisé des équipements.",
+    "credits": "Crédits photographiques",
+    "projects": {
+      "gathering": { "label": "Culture tuning", "title": "La passion nous rassemble.", "desc": "Des projets singuliers, une même envie de se démarquer. Inspirez-vous, puis construisez votre propre direction.", "link": "Imaginer mon projet", "alt": "Deux berlines modifiées, dont une Subaru avec aileron, au coucher du soleil" },
+      "detail": { "label": "Le sens du détail", "title": "Rien n'est laissé au hasard.", "desc": "Lignes, matières, finitions : chaque détail participe à l'identité d'un projet.", "link": "Explorer les équipements", "alt": "Gros plan d'une jante polie sur une voiture préparée" },
+      "silhouette": { "label": "Une allure à part", "title": "Affirmez votre caractère.", "desc": "Une silhouette reconnaissable. Trouvez l'équilibre qui vous ressemble, sans compromis sur la compatibilité.", "link": "Choisir mon véhicule", "alt": "Arrière d'une BMW bleue rabaissée avec jantes personnalisées" }
+    }
   },
   "cta": {
     "eyebrow": "PRÊT ?",

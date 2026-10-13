@@ -168,6 +168,7 @@ export function StorytellingSection() {
         <div ref={trackRef} className="storytelling-track mt-8 flex gap-4 overflow-x-auto px-[max(1.25rem,calc((100vw-80rem)/2))] pb-5 snap-x snap-mandatory [scrollbar-width:thin] [scrollbar-color:#E10600_#151A23]">
           {beats.map((beat, index) => (
             <article key={beat.title} className="storytelling-card relative shrink-0 w-[82vw] sm:w-[55vw] lg:w-[31rem] aspect-[4/3] overflow-hidden rounded-2xl border border-[#232B3A] snap-start">
+              <div className={`storytelling-image-window storytelling-image-${index + 1} absolute inset-0`}>
               <img
                 {...responsiveImageProps(BEAT_IMAGES[index], [480, 640, 900], '(max-width: 767px) 100vw, 31rem', 72)}
                 alt=""
@@ -175,6 +176,7 @@ export function StorytellingSection() {
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
+              </div>
               <div className="storytelling-card-shade absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/45 to-transparent" />
               <div className="storytelling-card-content relative flex h-full items-end p-6 md:p-8">
                 <div className="flex items-start gap-3">

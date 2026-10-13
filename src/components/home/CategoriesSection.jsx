@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
 import { Categories } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
-import { responsiveImageProps } from '@/lib/image';
+import { categoryEditorialImage, editorialImageProps } from '@/lib/editorialImages';
 
 const HOME_CATEGORY_SLOTS = [
   { slug: 'performance', sourceSlugs: ['performance', 'exterior'], labelKey: 'nav.performance' },
@@ -22,7 +22,7 @@ export function CategoriesSection() {
 
   const homeItems = HOME_CATEGORY_SLOTS.map((slot) => {
     const source = items.find((item) => slot.sourceSlugs.includes(item.slug));
-    return source ? { ...source, slug: slot.slug, name: t(slot.labelKey) } : null;
+    return source ? { ...source, slug: slot.slug, name: t(slot.labelKey), editorial: categoryEditorialImage(slot.slug) } : null;
   }).filter(Boolean);
 
   return (
@@ -49,10 +49,11 @@ export function CategoriesSection() {
                 className="group relative block aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
                 <img
-                  {...responsiveImageProps(c.image, [480, 720, 960], '(max-width: 767px) 100vw, 33vw')}
+                  {...editorialImageProps(c.editorial, '(max-width: 767px) 100vw, 33vw')}
                   alt={c.name}
                   loading="lazy"
                   decoding="async"
+                  style={{ objectPosition: c.editorial.position }}
                   className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.06] group-hover:opacity-95 opacity-70"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-transparent" />
@@ -61,7 +62,7 @@ export function CategoriesSection() {
                 </div>
                 <div className="absolute bottom-0 inset-x-0 p-6 md:p-8">
                   <h3 className="ty-display text-white text-3xl md:text-5xl">{c.name}</h3>
-                  <p className="text-ty-textMid mt-2 text-sm md:text-base max-w-md">{c.tagline}</p>
+                  <p className="text-ty-textMid mt-2 text-sm md:text-base max-w-md">{t(`categories.taglines.${c.slug}`)}</p>
                   <div className="mt-5 inline-flex items-center gap-2 text-sm text-white">
                     <span className="tracking-[0.18em] uppercase text-xs">{t('categories.explore')}</span>
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#E10600] group-hover:bg-[#FF1A12] transition-colors">

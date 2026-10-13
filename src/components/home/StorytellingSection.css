@@ -81,14 +81,36 @@
     border: 0;
     border-radius: 0;
     scroll-snap-align: none;
+    background: #050608;
     box-shadow: 0 -24px 56px rgba(5, 6, 8, 0.48);
     will-change: transform;
     backface-visibility: hidden;
   }
 
-  .storytelling-touch-active .storytelling-card > img {
+  .storytelling-touch-active .storytelling-image-window > img {
     will-change: transform;
     backface-visibility: hidden;
+  }
+
+  /* Reserve the centre of the scene for the subject, between title and caption.
+     A wide wing/front grille must not be cropped into a full-height portrait. */
+  .storytelling-touch-active .storytelling-image-window {
+    top: clamp(16rem, 32svh, 19rem);
+    bottom: clamp(11rem, 23svh, 14rem);
+    overflow: hidden;
+  }
+
+  .storytelling-mobile-layout .storytelling-image-2 > img {
+    object-position: 50% 72%;
+  }
+
+  .storytelling-mobile-layout .storytelling-image-6 > img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .storytelling-touch-active .storytelling-card-shade {
+    pointer-events: none;
   }
 
   .storytelling-touch-active .storytelling-card-shade {
