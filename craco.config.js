@@ -1,5 +1,6 @@
 // craco.config.js
 const path = require("path");
+const constrainDevPublicPath = require('./plugins/dev-public-path');
 
 // Check if we're in development/preview mode (not production build)
 // Craco sets NODE_ENV=development for start, NODE_ENV=production for build
@@ -70,6 +71,7 @@ let webpackConfig = {
 };
 
 webpackConfig.devServer = (devServerConfig) => {
+  constrainDevPublicPath(devServerConfig);
   // Add health check endpoints if enabled
   if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
     const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
