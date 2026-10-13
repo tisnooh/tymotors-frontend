@@ -71,7 +71,7 @@ export default function Cart() {
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
                         <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
-                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= it.stock} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
+                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
                       <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(lineTotal, currency, i18n.language)}</p>
                       <button onClick={() => removeFromCart(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
@@ -133,7 +133,7 @@ function EmptyCart() {
   const { t } = useTranslation();
   return (
     <div data-testid="cart-empty-state" className="py-20 text-center max-w-md mx-auto">
-      <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]">// PANIER VIDE //</p>
+      <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]">{'// PANIER VIDE //'}</p>
       <h2 className="mt-3 ty-display text-white text-3xl">{t('cart.empty')}</h2>
       <Link to="/shop" className="mt-6 inline-flex ty-btn-primary h-11 text-xs uppercase tracking-[0.18em]">{t('cart.continue')}</Link>
     </div>

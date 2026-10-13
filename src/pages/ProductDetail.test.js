@@ -27,3 +27,23 @@ test('related lookup failure keeps full product details visible', async () => {
   act(() => host.querySelectorAll('[data-testid="product-image-thumb"]')[1].click());
   expect(host.querySelector('img').getAttribute('src')).toBe('/two.jpg');
 });
+test('sandbox draft can be added without claiming real stock', async () => {
+  Products.get.mockResolvedValue({ id: 'fixture', name: 'Pièce test', status: 'draft', test_purchase: true, max_order_quantity: 20, stock: 0, price: 19.99, images: [], currency: 'EUR' });
+  Products.list.mockResolvedValue({ items: [] });
+  await act(async () => root.render(<ProductDetail/>));
+  expect(host.textContent).toContain('Disponible pour les tests');
+  expect(host.textContent).toContain('aucun débit réel ni expédition');
+  expect(host.textContent).not.toContain('Bientôt disponible');
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(false);
+  const plus = host.querySelector('[aria-label="Augmenter la quantité"]');
+  expect(plus.disabled).toBe(false);
+  act(() => plus.click());
+  expect(host.querySelector('[data-testid="product-qty"]').textContent).toBe('2');
+});
+test('draft remains disabled when sandbox availability is not granted by API', async () => {
+  Products.get.mockResolvedValue({ id: 'fixture', name: 'Pièce test', status: 'draft', stock: 0, price: 19.99, images: [], currency: 'EUR' });
+  Products.list.mockResolvedValue({ items: [] });
+  await act(async () => root.render(<ProductDetail/>));
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
+  expect(host.textContent).toContain('Bientôt disponible');
+});

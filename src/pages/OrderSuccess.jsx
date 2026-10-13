@@ -54,6 +54,7 @@ export default function OrderSuccess() {
         <CheckCircle2 className={`h-12 w-12 ${order.paid ? 'text-emerald-400' : 'text-[#F2C94C]'}`} />
         <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[#F2C94C] mt-6">Commande vérifiée</p>
         <h1 className="ty-display text-white text-4xl mt-2">{order.paid ? 'Paiement confirmé' : 'Paiement en cours'}</h1>
+        {order.is_test && <p role="note" className="mt-3 text-sm text-[#F2C94C]">Commande de test : aucun débit réel ni expédition.</p>}
         <p className="text-ty-textMid mt-3">{order.customer_email ? `Email de commande : ${order.customer_email}.` : 'Retrouvez votre commande dans le suivi ci-dessous.'}</p>
         <dl className="mt-8 divide-y divide-[#151A23] border-y border-[#151A23] text-sm">
           {order.items.map((item) => <div key={item.product_id} className="flex justify-between gap-4 py-3"><dt className="text-ty-textMid">{item.name} × {item.quantity}</dt><dd className="text-white font-mono">{formatPrice((item.unit_amount * item.quantity) / 100, order.currency, 'fr')}</dd></div>)}

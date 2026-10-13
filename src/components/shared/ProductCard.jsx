@@ -82,7 +82,7 @@ export function ProductCard({ product, index = 0 }) {
   const { t, i18n } = useTranslation();
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const inWishlist = isInWishlist(product.id);
-  const isPreview = product.status !== 'active';
+  const isPreview = product.status !== 'active' && !product.test_purchase;
 
   const img = product.images?.[0];
   const imgHover = product.images?.[1];
@@ -181,7 +181,7 @@ export function ProductCard({ product, index = 0 }) {
             )}
           </div>
           <span className={`font-mono text-[10px] uppercase ${!isPreview && product.stock > 0 ? 'text-emerald-300' : 'text-[#F2C94C]'}`}>
-            {isPreview ? 'Bientôt disponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
+            {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
           </span>
         </div>
       </div>

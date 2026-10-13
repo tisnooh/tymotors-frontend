@@ -248,7 +248,7 @@ export default function ProductDetail() {
 
   const onAdd = useCallback(async () => {
     if (!product) return;
-    if (product.status !== 'active') {
+    if (product.status !== 'active' && !product.test_purchase) {
       toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
       return;
     }
@@ -265,7 +265,7 @@ export default function ProductDetail() {
 
   const onBuyNow = useCallback(async () => {
     if (!product) return;
-    if (product.status !== 'active') {
+    if (product.status !== 'active' && !product.test_purchase) {
       toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
       return;
     }
@@ -285,9 +285,10 @@ export default function ProductDetail() {
   }
 
   const inWishlist = isInWishlist(product.id);
-  const isPreview = product.status !== 'active';
+  const isPreview = product.status !== 'active' && !product.test_purchase;
+  const maxOrderQuantity = product.max_order_quantity ?? Math.min(product.stock, 20);
   const requiresVehicleCheck = Boolean(product.compatibilities?.length);
-  const canOrder = !isPreview && product.stock > 0 && (!requiresVehicleCheck || ['compatible', 'confirm'].includes(compatibilityStatus));
+  const canOrder = !isPreview && maxOrderQuantity > 0 && (!requiresVehicleCheck || ['compatible', 'confirm'].includes(compatibilityStatus));
 
   return (
     <main data-testid="page-product" className="pt-28 pb-24">
@@ -314,13 +315,14 @@ export default function ProductDetail() {
             </div>
 
             <div className="mt-3 flex items-center gap-2 text-xs" role="status">
-              <span className={`h-2 w-2 rounded-full ${isPreview ? 'bg-[#F2C94C]' : product.stock > 0 ? 'bg-emerald-400' : 'bg-[#E10600]'}`} />
-              <span className={isPreview ? 'text-[#F2C94C]' : product.stock > 0 ? 'text-emerald-300' : 'text-red-300'}>
-                {isPreview ? 'Bientôt disponible' : product.stock > 0 ? `${product.stock} article${product.stock > 1 ? 's' : ''} disponible${product.stock > 1 ? 's' : ''}` : 'Rupture de stock'}
+              <span className={`h-2 w-2 rounded-full ${isPreview || product.test_purchase ? 'bg-[#F2C94C]' : product.stock > 0 ? 'bg-emerald-400' : 'bg-[#E10600]'}`} />
+              <span className={isPreview || product.test_purchase ? 'text-[#F2C94C]' : product.stock > 0 ? 'text-emerald-300' : 'text-red-300'}>
+                {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : product.stock > 0 ? `${product.stock} article${product.stock > 1 ? 's' : ''} disponible${product.stock > 1 ? 's' : ''}` : 'Rupture de stock'}
               </span>
             </div>
 
             <p className="mt-6 text-ty-textMid leading-relaxed">{product.description}</p>
+            {product.test_purchase && <p role="note" className="mt-4 text-sm text-[#F2C94C]">Essai uniquement : aucun débit réel ni expédition. Le stock et la compatibilité restent à valider avant la vente.</p>}
 
             <div className="mt-6 flex flex-wrap items-center gap-2">
               <span className="text-xs text-ty-textLow font-mono uppercase tracking-[0.18em]">{t('product.compatible_with')}:</span>
@@ -341,10 +343,10 @@ export default function ProductDetail() {
               <div className="flex items-center h-12 rounded-xl border border-[#232B3A] bg-[#0F1115]">
                 <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Diminuer la quantité' : 'Decrease quantity'} onClick={() => setQty((q) => Math.max(1, q - 1))} className="h-12 w-12 text-white text-lg">{'\u2212'}</button>
                 <span data-testid="product-qty" className="w-10 text-center text-white font-mono">{qty}</span>
-                <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Augmenter la quantité' : 'Increase quantity'} disabled={qty >= Math.min(product.stock, 20)} onClick={() => setQty((q) => Math.min(q + 1, product.stock, 20))} className="h-12 w-12 text-white text-lg disabled:opacity-30">+</button>
+                <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Augmenter la quantité' : 'Increase quantity'} disabled={qty >= maxOrderQuantity} onClick={() => setQty((q) => Math.min(q + 1, maxOrderQuantity))} className="h-12 w-12 text-white text-lg disabled:opacity-30">+</button>
               </div>
               <button type="button" onClick={onAdd} disabled={busy || !canOrder} data-testid="product-add-to-cart-button" className="flex-1 ty-btn-primary h-12 text-xs uppercase tracking-[0.18em] disabled:opacity-50">
-                <ShoppingBag className="h-4 w-4" /> {isPreview ? 'Bientôt disponible' : product.stock < 1 ? 'Indisponible' : requiresVehicleCheck && !compatibilityStatus ? 'Vérifiez votre véhicule' : t('product.add_to_cart')}
+                <ShoppingBag className="h-4 w-4" /> {isPreview ? 'Bientôt disponible' : maxOrderQuantity < 1 ? 'Indisponible' : requiresVehicleCheck && !compatibilityStatus ? 'Vérifiez votre véhicule' : t('product.add_to_cart')}
               </button>
               <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Ajouter aux favoris' : 'Add to wishlist'} aria-pressed={inWishlist} onClick={() => toggleWishlist(product.id)} disabled={isPreview} data-testid="product-wishlist-button" className={`h-12 w-12 rounded-xl border flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${inWishlist ? 'bg-[#E10600] border-[#E10600] text-white' : 'border-[#232B3A] text-ty-textMid hover:text-white hover:border-[#2E394D]'}`}>
                 <Heart className={`h-5 w-5 ${inWishlist ? 'fill-white' : ''}`} />
