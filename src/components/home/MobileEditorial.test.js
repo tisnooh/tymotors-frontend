@@ -74,12 +74,29 @@ test('Hero photo space is mobile-only and Pexels is narrowly permitted as an ima
   expect(css).toContain('@media (max-width: 767px)');
   expect(css).toContain('object-position: 50% 76%');
   expect(css).toContain('.hero-mobile-photo');
-  expect(css).toContain('margin-top: 1.5rem');
+  expect(css).toContain('min-height: 100svh');
+  expect(css).toContain('height: min(50vw, 24svh)');
   const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../vercel.json'), 'utf8'));
   const csp = config.headers[0].headers.find(header => header.key === 'Content-Security-Policy').value;
   expect(csp).toContain("img-src 'self' data: https://images.unsplash.com https://res.cloudinary.com https://images.pexels.com;");
   expect(csp).toContain("script-src 'self';");
   expect(csp).not.toContain('img-src *');
+});
+
+test('phone Hero uses available height without clipping enlarged text or altering desktop motion', () => {
+  act(() => root.render(<HeroSection />));
+  const content = host.querySelector('.hero-content');
+  expect(content.className).toContain('pt-32 pb-20 min-h-[100svh]');
+  expect(content.querySelector('.hero-description').textContent).toBe(fr.hero.sub);
+  expect(content.querySelector('.hero-actions a').textContent).toContain(fr.hero.cta_primary);
+  expect(content.querySelectorAll('[data-testid="hero-spec-strip"] p')).toHaveLength(3);
+  expect(content.querySelector('.hero-mobile-photo img').src).toContain('photo-1762314907955-b7c1e11a8782');
+  const css = fs.readFileSync(path.join(__dirname, 'HeroSection.css'), 'utf8');
+  expect(css).toContain('(max-height: 700px)');
+  expect(css).toContain('env(safe-area-inset-bottom, 0px)');
+  expect(css).not.toMatch(/(?:^|[;{]\s*)height:\s*100(?:s|d)?vh/m);
+  expect(css).not.toContain('text-overflow: ellipsis');
+  expect(host.querySelectorAll('.ty-hero-rise')).toHaveLength(4);
 });
 test('inspiration is default-visible without animation APIs, with useful links and honest attribution', () => {
   act(() => root.render(<CommunitySection />));

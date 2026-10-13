@@ -28,8 +28,8 @@ export function HeroSection() {
       <div className="absolute top-24 left-0 h-px w-24 bg-[#F2C94C]/50" />
       <div className="absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
 
-      <div className="relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
-        <p className="ty-hero-rise font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
+      <div className="hero-content relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
+        <p className="hero-kicker ty-hero-rise font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">
           <span className="h-px w-10 bg-[#F2C94C]" data-testid="hero-eyebrow"/>
           {t('hero.eyebrow')}
         </p>
@@ -46,11 +46,11 @@ export function HeroSection() {
           </span>
         </h1>
 
-        <p className="mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
+        <p className="hero-description mt-8 max-w-2xl text-base md:text-lg text-ty-textMid leading-relaxed">
           {t('hero.sub')}
         </p>
 
-        <div className="ty-hero-rise ty-hero-rise-delay-3 mt-10 flex flex-wrap items-center gap-4">
+        <div className="hero-actions ty-hero-rise ty-hero-rise-delay-3 mt-10 flex flex-wrap items-center gap-4">
           <Link to="/shop" data-testid="hero-primary-cta-button" className="ty-btn-primary h-12 px-6 text-sm tracking-[0.18em] uppercase">
             {t('hero.cta_primary')}
             <ArrowRight className="h-4 w-4 ml-1" />

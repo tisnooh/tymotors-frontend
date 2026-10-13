@@ -19,6 +19,22 @@ La recherche Unsplash a également été faite ; certains téléchargements/page
 
 Hero : image déjà sélectionnée conservée (`photo-1762314907955-b7c1e11a8782`). Pas de migration de données ni modification des sources produit.
 
+## Accueil mobile et barre basse du navigateur — 14 octobre 2026
+
+Le Hero conserve sa photo et ses animations d'entrée. Sur téléphone seulement,
+sa présentation utilise la petite hauteur visible `100svh`, des espacements
+resserrés et une photo proportionnée à la hauteur disponible. La bande jaune
+reste en flux après la photo, avec des caractères de 10–11 px et au moins 24 px
+de réserve basse (augmentée par `safe-area-inset-bottom`). Les marges/polices
+desktop restent intactes. Aucun `height: 100svh` fixe ni texte tronqué : si le
+zoom ou une hauteur extrême impose plus d'espace, le contenu peut grandir et
+défiler normalement plutôt que disparaître.
+
+Recette locale : 320×568, 360×640, 393×600/700/852 et 430×740 ; trois repères
+entièrement visibles dès l'arrivée et aucune largeur excédentaire. Français,
+anglais, CTA catalogue et mouvement réduit vérifiés ; bureau 1440×900 conservé.
+Il s'agit d'une émulation de dimensions/tactile, pas d'un essai Safari physique.
+
 Avant/après : les deux anciennes photos indépendantes sont remplacées par une paire frontale générée puis éditée avec `image_gen`, explicitement étiquetée **simulation IA**, pas réalisation client. Même BMW grise, décor/cadrage cohérents ; calandre noire, bouclier sport et lèvre carbone. Les six fichiers WebP locaux, les prompts complets et la provenance figurent dans [BEFORE_AFTER_ASSETS.md](BEFORE_AFTER_ASSETS.md). Aucun crédit Pexels/Unsplash ne s'applique à cette paire générée.
 
 ## Storytelling portrait plein écran — demande suivante du 13 octobre
