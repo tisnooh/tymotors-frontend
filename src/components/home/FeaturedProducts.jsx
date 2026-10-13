@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react';
 import { Products } from '@/lib/api';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { Reveal } from '@/components/shared/Reveal';
+import { useProductAutoplay } from './useProductAutoplay';
 import './FeaturedProducts.css';
 
 const PRODUCT_LIMIT = 8;
@@ -86,12 +87,15 @@ export function FeaturedProducts() {
     }
   }, []);
 
+  const autoplay = useProductAutoplay(railRef, status === 'ready', scrollProducts);
+
   const onRailKeyDown = event => {
     // Do not steal arrow keys from the product links or their buttons.
     if (event.target !== event.currentTarget) return;
     const direction = { ArrowLeft: -1, ArrowRight: 1, Home: 'start', End: 'end' }[event.key];
     if (direction === undefined) return;
     event.preventDefault();
+    autoplay.restartDelay();
     scrollProducts(direction);
   };
 
@@ -131,16 +135,20 @@ export function FeaturedProducts() {
 
           {status === 'empty' && <p role="status" className="featured-products-message">{t('featured.empty')}</p>}
 
-          {status === 'ready' && <>
+          {status === 'ready' && <div data-testid="featured-autoplay-surface" data-autoplay-state={autoplay.state} {...autoplay.surfaceProps}>
             <div className="flex items-center justify-between gap-4 mb-4">
-              <p id={`${id}-hint`} className="text-sm text-ty-textMid">{t('featured.scroll_hint')}</p>
+              <p id={`${id}-hint`} className="text-sm text-ty-textMid">{t(autoplay.running ? 'featured.auto_scroll_hint' : autoplay.playing && !autoplay.reducedMotion ? 'featured.paused_hint' : 'featured.scroll_hint')}</p>
               <div className="flex gap-2 shrink-0">
+                {!autoplay.reducedMotion && <button type="button" className="featured-products-arrow" aria-label={t(autoplay.playing ? 'featured.pause' : 'featured.play')}
+                  aria-controls={`${id}-rail`} aria-pressed={!autoplay.playing} data-testid="featured-autoplay-button" onClick={autoplay.toggle}>
+                  {autoplay.playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+                </button>}
                 <button type="button" className="featured-products-arrow" aria-label={t('featured.previous')} aria-controls={`${id}-rail`}
-                  data-testid="featured-previous-button" disabled={!position.previous} onClick={() => scrollProducts(-1)}>
+                  data-testid="featured-previous-button" disabled={!position.previous} onClick={() => { autoplay.restartDelay(); scrollProducts(-1); }}>
                   <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 </button>
                 <button type="button" className="featured-products-arrow" aria-label={t('featured.next')} aria-controls={`${id}-rail`}
-                  data-testid="featured-next-button" disabled={!position.next} onClick={() => scrollProducts(1)}>
+                  data-testid="featured-next-button" disabled={!position.next} onClick={() => { autoplay.restartDelay(); scrollProducts(1); }}>
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
               </div>
@@ -152,7 +160,7 @@ export function FeaturedProducts() {
                 <ProductCard product={product} index={index} />
               </li>)}
             </ul>
-          </>}
+          </div>}
         </div>
       </div>
     </section>

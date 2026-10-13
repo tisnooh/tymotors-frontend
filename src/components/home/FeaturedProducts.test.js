@@ -1,6 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { FeaturedProducts } from './FeaturedProducts';
+import { PRODUCT_AUTOPLAY_DELAY } from './useProductAutoplay';
 import { Products } from '@/lib/api';
 import fr from '@/lib/locales/fr.json';
 import en from '@/lib/locales/en.json';
@@ -159,4 +160,132 @@ test('resize observer is cleaned up and recalculates scrolling after a responsiv
 test('new carousel copy is available in both supported languages', () => {
   expect(Object.keys(fr.featured)).toEqual(Object.keys(en.featured));
   expect(Object.values(en.featured).every(value => typeof value === 'string' && value.length > 0)).toBe(true);
+});
+
+describe('automatic horizontal scrolling', () => {
+  let viewportChange, mediaChange, media, observer, originalObserver, hiddenDescriptor, hidden, boundsVisible;
+  beforeEach(() => {
+    jest.useFakeTimers();
+    originalObserver = window.IntersectionObserver;
+    hiddenDescriptor = Object.getOwnPropertyDescriptor(document, 'hidden');
+    hidden = false;
+    boundsVisible = false;
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => hidden });
+    observer = { observe: jest.fn(), disconnect: jest.fn() };
+    window.IntersectionObserver = class { constructor(callback) { viewportChange = callback; } observe(...args) { observer.observe(...args); } disconnect() { observer.disconnect(); } };
+    media = { matches: false, addEventListener: jest.fn((type, callback) => { mediaChange = callback; }), removeEventListener: jest.fn() };
+    window.matchMedia.mockImplementation(() => media);
+  });
+  afterEach(() => {
+    if (root) act(() => root.unmount()); root = null;
+    window.IntersectionObserver = originalObserver;
+    if (hiddenDescriptor) Object.defineProperty(document, 'hidden', hiddenDescriptor);
+    else delete document.hidden;
+    jest.useRealTimers();
+  });
+  function view(visible) { boundsVisible = visible; act(() => viewportChange([{ isIntersecting: visible, intersectionRatio: visible ? 1 : 0 }])); }
+  function autoplayRail() {
+    const rail = railWithOverflow();
+    rail.getBoundingClientRect = () => ({ left: 20, right: 380, top: boundsVisible ? 100 : 2000, bottom: boundsVisible ? 300 : 2200, width: 360, height: 200 });
+    return rail;
+  }
+  function tick() { act(() => jest.advanceTimersByTime(PRODUCT_AUTOPLAY_DELAY)); }
+  function pointer(type, pointerType) {
+    const event = new MouseEvent(type, { bubbles: true, relatedTarget: null });
+    Object.defineProperty(event, 'pointerType', { value: pointerType });
+    act(() => host.querySelector('[data-testid="featured-autoplay-surface"]').dispatchEvent(event));
+  }
+
+  test('moves one card automatically only in view, and loops back at the end', async () => {
+    await render(); const rail = autoplayRail();
+    expect(observer.observe).toHaveBeenCalledWith(rail);
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    view(true);
+    act(() => jest.advanceTimersByTime(PRODUCT_AUTOPLAY_DELAY - 1));
+    expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => jest.advanceTimersByTime(1));
+    expect(rail.scrollBy).toHaveBeenLastCalledWith({ left: 312, behavior: 'smooth' });
+    rail.scrollLeft = 2040; tick();
+    expect(rail.scrollTo).toHaveBeenLastCalledWith({ left: 0, behavior: 'smooth' });
+    view(false); rail.scrollBy.mockClear(); tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    expect(host.querySelectorAll('[data-testid="product-card"]')).toHaveLength(8);
+  });
+
+  test('pause is persistent until explicit resume and the button remains accessible', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    const button = host.querySelector('[data-testid="featured-autoplay-button"]');
+    expect(button.getAttribute('aria-label')).toBe(fr.featured.pause);
+    expect(button.getAttribute('aria-controls')).toBe(rail.id);
+    act(() => button.click());
+    expect(button.getAttribute('aria-label')).toBe(fr.featured.play);
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => button.click()); tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  test('mouse hover pauses but a touch pointer entering does not create sticky hover', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    pointer('pointerover', 'mouse'); tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    expect(rail.scrollTo).toHaveBeenLastCalledWith({ left: 0, behavior: 'auto' });
+    pointer('pointerout', 'mouse'); tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+    rail.scrollBy.mockClear(); pointer('pointerover', 'touch'); tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  test('swiping/touching pauses and pointer cancel safely resumes after a fresh delay', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    pointer('pointerdown', 'touch'); tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    pointer('pointercancel', 'touch'); tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  test('keyboard focus pauses while product controls are being read or used', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    act(() => rail.querySelector('a').dispatchEvent(new FocusEvent('focusin', { bubbles: true })));
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => rail.querySelector('a').dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body })));
+    tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  test('hidden tabs stop rotation and resume with no catch-up when visible', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    hidden = true; act(() => document.dispatchEvent(new Event('visibilitychange')));
+    act(() => jest.advanceTimersByTime(60000)); expect(rail.scrollBy).not.toHaveBeenCalled();
+    hidden = false; act(() => document.dispatchEvent(new Event('visibilitychange')));
+    act(() => jest.advanceTimersByTime(PRODUCT_AUTOPLAY_DELAY - 1)); expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => jest.advanceTimersByTime(1)); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  test('reduced motion disables rotation and its autoplay control, including preference changes', async () => {
+    media.matches = true;
+    await render(); const rail = autoplayRail(); view(true);
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    expect(host.querySelector('[data-testid="featured-autoplay-button"]')).toBeNull();
+    media.matches = false; act(() => mediaChange());
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => host.querySelector('[data-testid="featured-autoplay-button"]').click()); tick();
+    expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+    media.matches = true; act(() => mediaChange()); rail.scrollBy.mockClear();
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+  });
+
+  test('manual navigation resets the delay and unmount removes timer, observer and preference listener', async () => {
+    await render(); const rail = autoplayRail(); view(true);
+    act(() => jest.advanceTimersByTime(4000));
+    act(() => host.querySelector('[data-testid="featured-next-button"]').click());
+    rail.scrollBy.mockClear();
+    act(() => jest.advanceTimersByTime(500)); expect(rail.scrollBy).not.toHaveBeenCalled();
+    act(() => jest.advanceTimersByTime(4000)); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+    act(() => root.unmount()); root = null;
+    expect(observer.disconnect).toHaveBeenCalledTimes(1);
+    expect(media.removeEventListener).toHaveBeenCalledWith('change', mediaChange);
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
+  test('stale visibility notification cannot keep a physically visible rail frozen', async () => {
+    await render(); const rail = autoplayRail();
+    boundsVisible = true; // No observer notification after a pinned-layout jump.
+    tick(); expect(rail.scrollBy).toHaveBeenCalledTimes(1);
+    expect(host.querySelector('[data-testid="featured-autoplay-surface"]').getAttribute('data-autoplay-state')).toBe('running');
+    boundsVisible = false; rail.scrollBy.mockClear();
+    tick(); expect(rail.scrollBy).not.toHaveBeenCalled();
+  });
 });
