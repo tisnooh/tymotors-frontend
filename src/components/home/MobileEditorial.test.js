@@ -75,7 +75,7 @@ test('Hero photo space is mobile-only and Pexels is narrowly permitted as an ima
   expect(css).toContain('object-position: 50% 76%');
   expect(css).toContain('.hero-mobile-photo');
   expect(css).toContain('min-height: 100svh');
-  expect(css).toContain('height: min(50vw, 24svh)');
+  expect(css).toContain('--hero-photo-height: min(50vw, 24svh)');
   const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../vercel.json'), 'utf8'));
   const csp = config.headers[0].headers.find(header => header.key === 'Content-Security-Policy').value;
   expect(csp).toContain("img-src 'self' data: https://images.unsplash.com https://res.cloudinary.com https://images.pexels.com;");
@@ -97,6 +97,20 @@ test('phone Hero uses available height without clipping enlarged text or alterin
   expect(css).not.toMatch(/(?:^|[;{]\s*)height:\s*100(?:s|d)?vh/m);
   expect(css).not.toContain('text-overflow: ellipsis');
   expect(host.querySelectorAll('.ty-hero-rise')).toHaveLength(4);
+});
+
+test('phone Hero aligns its intro under navigation and spends spare height around the photo, not above it', () => {
+  const css = fs.readFileSync(path.join(__dirname, 'HeroSection.css'), 'utf8');
+  expect(css).toContain('justify-content: flex-start');
+  expect(css).not.toContain('justify-content: center');
+  expect(css).toContain('padding-top: 5rem');
+  expect(css).toContain('flex: 1 0 auto');
+  expect(css.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);
+  act(() => root.render(<HeroSection />));
+  const strip = host.querySelector('[data-testid="hero-spec-strip"]');
+  expect(strip.className).not.toContain('absolute');
+  expect(strip.previousElementSibling.className).toBe('hero-mobile-photo');
+  expect(host.querySelectorAll('.hero-corner-accent[aria-hidden="true"]')).toHaveLength(2);
 });
 test('inspiration is default-visible without animation APIs, with useful links and honest attribution', () => {
   act(() => root.render(<CommunitySection />));

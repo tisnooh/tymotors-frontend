@@ -25,8 +25,8 @@ export function HeroSection() {
       {/* Subtle grid */}
       <div className="absolute inset-0 ty-grid-lines opacity-[0.05]" />
       {/* Yellow corner accents */}
-      <div className="absolute top-24 left-0 h-px w-24 bg-[#F2C94C]/50" />
-      <div className="absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
+      <div aria-hidden="true" className="hero-corner-accent absolute top-24 left-0 h-px w-24 bg-[#F2C94C]/50" />
+      <div aria-hidden="true" className="hero-corner-accent absolute top-24 left-24 h-12 w-px bg-[#F2C94C]/50" />
 
       <div className="hero-content relative ty-container pt-32 pb-20 min-h-[100svh] flex flex-col justify-center">
         <p className="hero-kicker ty-hero-rise font-mono text-[11px] md:text-xs tracking-[0.34em] uppercase text-[#F2C94C] flex items-center gap-3 mb-8">

@@ -18,6 +18,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 const fixtureParams = new URLSearchParams(window.location.search);
 const phoneFixture = fixtureParams.has('phone');
 const reducedMotionFixture = phoneFixture && fixtureParams.has('reduce');
+// QA-only enlarged text, without changing any browser/user preference.
+const largeTextFixture = phoneFixture && fixtureParams.get('text') === 'large';
+if (largeTextFixture) document.documentElement.style.fontSize = '24px';
 if (phoneFixture) {
   const nativeMatchMedia = window.matchMedia.bind(window);
   window.matchMedia = query => nativeMatchMedia(query
