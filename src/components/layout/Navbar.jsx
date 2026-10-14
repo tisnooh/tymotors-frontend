@@ -31,13 +31,14 @@ function CountBadge({ count }) {
   );
 }
 
-function IconButton({ children, label, onClick, testId, className = '' }) {
+function IconButton({ children, label, onClick, testId, className = '', ...buttonProps }) {
   return (
     <button
       type="button"
       onClick={onClick}
       data-testid={testId}
       aria-label={label}
+      {...buttonProps}
       className={`h-10 w-10 inline-flex items-center justify-center rounded-full text-ty-textMid hover:text-white hover:bg-white/5 transition-colors ${className}`}
     >
       {children}
@@ -82,14 +83,14 @@ function NavbarCenter({ items, desktopNavigation }) {
           key={item.to}
           to={item.to}
           label={item.label}
-          testId={`nav-link-${item.to.replace(/[\/:]/g, '-')}`}
+          testId={`nav-link-${item.to.replace(/[/:]/g, '-')}`}
         />
       ))}
     </nav>
   );
 }
 
-function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, desktopNavigation, t }) {
+function NavbarRight({ onOpenSearch, onOpenMobile, mobileMenuOpen, cartCount, wishlistCount, desktopNavigation, t }) {
   return (
     <div className={`flex shrink-0 items-center gap-2 2xl:gap-3 ${desktopNavigation ? '' : 'ml-auto'}`}>
       <div className="hidden md:flex">
@@ -130,7 +131,8 @@ function NavbarRight({ onOpenSearch, onOpenMobile, cartCount, wishlistCount, des
       >
         {t('nav.shop_now')}
       </Link>
-      <IconButton testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className={desktopNavigation ? 'hidden' : 'inline-flex'}>
+      <IconButton id="ty-mobile-menu-trigger" aria-expanded={mobileMenuOpen} aria-controls={mobileMenuOpen ? 'ty-mobile-menu' : undefined} aria-haspopup="dialog"
+        testId="navbar-mobile-menu-button" label={t('nav.menu')} onClick={onOpenMobile} className={desktopNavigation ? 'hidden' : 'inline-flex'}>
         <Menu className="h-[18px] w-[18px]" />
       </IconButton>
     </div>
@@ -142,7 +144,7 @@ export function Navbar() {
   const [desktopNavigation, setDesktopNavigation] = useState(isDesktopNavigationDevice);
   const { t } = useTranslation();
   const location = useLocation();
-  const { cartCount, wishlistCount, setSearchOpen, setMobileMenuOpen } = useApp();
+  const { cartCount, wishlistCount, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } = useApp();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -183,6 +185,7 @@ export function Navbar() {
         <NavbarRight
           onOpenSearch={() => setSearchOpen(true)}
           onOpenMobile={() => setMobileMenuOpen(true)}
+          mobileMenuOpen={mobileMenuOpen}
           cartCount={cartCount}
           wishlistCount={wishlistCount}
           desktopNavigation={desktopNavigation}

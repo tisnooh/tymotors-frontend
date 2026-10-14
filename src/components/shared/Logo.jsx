@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export function Logo({ size = 'md', accent = true }) {
+export function Logo({ size = 'md', accent = true, onClick }) {
   const sizes = {
     sm: 'text-base tracking-[0.22em]',
     md: 'text-lg tracking-[0.22em]',
@@ -11,6 +11,7 @@ export function Logo({ size = 'md', accent = true }) {
   return (
     <Link
       to="/"
+      onClick={onClick}
       data-testid="logo-link"
       className={`group inline-flex items-center gap-2 font-display font-bold uppercase text-white ${sizes[size]}`}
     >

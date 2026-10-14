@@ -6,6 +6,9 @@ import '../src/lib/i18n';
 import '../src/App.css';
 import '../src/index.css';
 import { Navbar } from '../src/components/layout/Navbar';
+import { MobileMenu } from '../src/components/layout/MobileMenu';
+import { SearchOverlay } from '../src/components/layout/SearchOverlay';
+import { VisualAppProvider } from './visual-context';
 import { SmoothScrollProvider } from '../src/components/layout/SmoothScrollProvider';
 import Home from '../src/pages/Home';
 import BrandDetail from '../src/pages/BrandDetail';
@@ -32,8 +35,8 @@ if (phoneFixture) {
   Object.defineProperty(ScrollTrigger, 'isTouch', { configurable: true, get: () => 1, set: () => {} });
 }
 const ScrollWrapper = phoneFixture ? React.Fragment : SmoothScrollProvider;
-createRoot(document.getElementById('root')).render(<BrowserRouter><ScrollWrapper><div className="App"><Navbar />
+createRoot(document.getElementById('root')).render(<BrowserRouter><VisualAppProvider><ScrollWrapper><div className="App"><Navbar /><MobileMenu /><SearchOverlay />
   <output className="sr-only" data-testid="visual-profile" data-phone={phoneFixture} data-reduced-motion={window.matchMedia('(prefers-reduced-motion: reduce)').matches} data-motion={window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches} data-observer={'IntersectionObserver' in window} data-touch={ScrollTrigger.isTouch}>Fixture visuelle isolée, aucune API réelle.</output>
   <Routes><Route path="/" element={<Home />} /><Route path="/brands/:slug" element={<BrandDetail />} /><Route path="/category/:slug" element={<CategoryPage />} />
     <Route path="*" element={<main className="ty-container pt-28"><h1>Destination du lien — fixture visuelle</h1><Link to="/">Accueil</Link></main>} />
-  </Routes></div></ScrollWrapper></BrowserRouter>);
+  </Routes></div></ScrollWrapper></VisualAppProvider></BrowserRouter>);

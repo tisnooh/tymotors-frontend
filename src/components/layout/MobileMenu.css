@@ -1,0 +1,169 @@
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  /* A modal must cover non-modal banners, which return unchanged on close. */
+  z-index: 160;
+  background: #050608;
+}
+
+.mobile-menu-sheet {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  color: #f2f4f7;
+  background: radial-gradient(ellipse at top right, rgba(225, 6, 0, 0.08), transparent 55%), #050608;
+}
+
+.mobile-menu-sheet[data-state='open'] {
+  animation: mobileMenuEnter 180ms ease-out both;
+}
+
+.mobile-menu-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4rem;
+  padding: max(0.5rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) 0.5rem max(1rem, env(safe-area-inset-left, 0px));
+  border-top: 1px solid rgba(225, 6, 0, 0.25);
+  border-bottom: 1px solid #1b2230;
+  background: #07080a;
+}
+
+.mobile-menu-close {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid #2e394d;
+  border-radius: 50%;
+  color: #c7cdd6;
+}
+
+/* A bounded flex child is essential: locking the page must not lock the menu.
+   Leave touch/wheel events native inside this explicit Lenis-prevent region. */
+.mobile-menu-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: #394255 transparent;
+}
+
+.mobile-menu-inner {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem max(1rem, env(safe-area-inset-right, 0px)) max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)) max(1rem, env(safe-area-inset-left, 0px));
+}
+
+.mobile-menu-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #232b3a;
+  border-radius: 0.875rem;
+  color: #c7cdd6;
+  background: #0f1115;
+}
+
+.mobile-menu-search span { flex: 1; text-align: left; }
+.mobile-menu-search svg, .mobile-menu-account svg { flex-shrink: 0; }
+
+.mobile-menu-account {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border: 1px solid rgba(225, 6, 0, 0.35);
+  border-radius: 1rem;
+  background: linear-gradient(110deg, rgba(225, 6, 0, 0.13), rgba(15, 17, 21, 0.6));
+}
+
+.mobile-menu-account-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  color: #f2c94c;
+  background: #141014;
+}
+
+.mobile-menu-account-copy { display: grid; flex: 1; min-width: 0; gap: 0.25rem; overflow-wrap: anywhere; }
+.mobile-menu-account-copy strong { font-size: 1.125rem; font-weight: 600; }
+.mobile-menu-account-copy > span { color: #a8b0bd; font-size: 0.75rem; line-height: 1.5; }
+
+.mobile-menu-quick-links, .mobile-menu-help-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.mobile-menu-quick-links { margin-top: 0.75rem; }
+
+.mobile-menu-quick-link, .mobile-menu-help-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem;
+  border: 1px solid #232b3a;
+  border-radius: 0.75rem;
+  color: #c7cdd6;
+  background: #0c0e12;
+  font-size: 0.875rem;
+}
+
+.mobile-menu-quick-link svg, .mobile-menu-help-links svg { flex-shrink: 0; color: #a8b0bd; }
+.mobile-menu-quick-link > span:first-of-type, .mobile-menu-help-links span { min-width: 0; overflow-wrap: anywhere; }
+.mobile-menu-count { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: auto; min-width: 1.5rem; min-height: 1.5rem; padding: 0 0.25rem; border-radius: 50%; background: #e10600; color: #fff; font-size: 0.6875rem; }
+
+.mobile-menu-catalogue { margin-top: 1.5rem; }
+.mobile-menu-section-label { color: #f2c94c; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; line-height: 1.5; letter-spacing: 0.22em; text-transform: uppercase; }
+.mobile-menu-catalogue ul { margin-top: 0.5rem; }
+
+.mobile-menu-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #1b2230;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.mobile-menu-nav-link > span:nth-child(2) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.mobile-menu-index { flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.625rem; letter-spacing: 0.08em; color: #a49159; }
+.mobile-menu-nav-link svg { flex-shrink: 0; color: #596276; }
+.mobile-menu-nav-link.is-active, .mobile-menu-nav-link.is-active svg { color: #ff322a; }
+.mobile-menu-help { margin-top: 1.25rem; }
+.mobile-menu-help-links { margin-top: 0.75rem; }
+
+.mobile-menu-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #232b3a; }
+.mobile-menu-language > button { min-height: 2.75rem; padding: 0.5rem; }
+.mobile-menu-shop { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; min-height: 2.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; color: #fff; background: #e10600; font-family: 'IBM Plex Mono', monospace; font-size: 0.6875rem; line-height: 1.5; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.mobile-menu-sheet a, .mobile-menu-sheet button { -webkit-tap-highlight-color: transparent; }
+.mobile-menu-sheet :focus-visible { outline: 2px solid #f2c94c; outline-offset: -2px; }
+.mobile-menu-sheet a:hover, .mobile-menu-sheet button:hover { color: #fff; }
+
+@keyframes mobileMenuEnter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 359px) {
+  .mobile-menu-quick-links, .mobile-menu-help-links { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .mobile-menu-sheet[data-state='open'] { animation: none; } }

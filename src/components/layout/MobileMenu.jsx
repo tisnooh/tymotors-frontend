@@ -1,23 +1,29 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import * as Dialog from '@radix-ui/react-dialog';
 import { useTranslation } from 'react-i18next';
-import { X, Heart, ShoppingBag, Search } from 'lucide-react';
+import { ArrowUpRight, ChevronRight, Heart, MessageCircle, PackageSearch, Search, ShoppingBag, UserRound, X } from 'lucide-react';
 import { Logo } from '@/components/shared/Logo';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { useApp } from '@/contexts/AppContext';
+import './MobileMenu.css';
+
+function QuickLink({ to, label, count, icon: Icon, onSelect, testId }) {
+  return <Link to={to} onClick={onSelect} className="mobile-menu-quick-link" data-testid={testId}
+    aria-label={count > 0 ? `${label} (${count})` : label}>
+    <Icon size={18} aria-hidden="true" />
+    <span>{label}</span>
+    {count > 0 && <span className="mobile-menu-count" aria-hidden="true">{count}</span>}
+  </Link>;
+}
 
 export function MobileMenu() {
-  const { mobileMenuOpen, setMobileMenuOpen, setSearchOpen } = useApp();
+  const { mobileMenuOpen, setMobileMenuOpen, setSearchOpen, cartCount, wishlistCount } = useApp();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileMenuOpen]);
+  const closeButtonRef = useRef(null);
+  const searchTransferRef = useRef(false);
+  const closeMenu = () => setMobileMenuOpen(false);
 
   const items = [
     { to: '/shop', label: t('nav.shop_all') },
@@ -26,65 +32,80 @@ export function MobileMenu() {
     { to: '/category/technology', label: t('nav.technology') },
     { to: '/brands', label: t('nav.brands') },
     { to: '/customize', label: t('nav.customize') },
-    { to: '/wishlist', label: t('nav.wishlist') },
-    { to: '/cart', label: t('nav.cart') },
-    { to: '/account', label: t('nav.account') },
   ];
 
-  if (!mobileMenuOpen) return null;
+  // The existing modal primitive owns scroll locking, keyboard trapping and
+  // hiding the background from assistive tech. Only the body below scrolls.
+  return <Dialog.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+    <Dialog.Portal>
+      <Dialog.Overlay className="mobile-menu-backdrop" data-lenis-prevent>
+        <Dialog.Content id="ty-mobile-menu" aria-modal="true" data-testid="mobile-menu-sheet" className="mobile-menu-sheet" data-lenis-prevent
+          onOpenAutoFocus={event => { event.preventDefault(); closeButtonRef.current?.focus({ preventScroll: true }); }}
+          onCloseAutoFocus={event => {
+            event.preventDefault();
+            if (!searchTransferRef.current) document.getElementById('ty-mobile-menu-trigger')?.focus({ preventScroll: true });
+            searchTransferRef.current = false;
+          }}>
+          <header className="mobile-menu-header">
+            <Logo size="md" accent={false} onClick={closeMenu} />
+            <Dialog.Title className="sr-only">{t('mobile_menu.title')}</Dialog.Title>
+            <Dialog.Description className="sr-only">{t('mobile_menu.description')}</Dialog.Description>
+            <Dialog.Close asChild>
+              <button ref={closeButtonRef} type="button" data-testid="mobile-menu-close-button" className="mobile-menu-close" aria-label={t('nav.close')}>
+                <X size={20} aria-hidden="true" />
+              </button>
+            </Dialog.Close>
+          </header>
 
-  return (
-    <div data-testid="mobile-menu-sheet" className="fixed inset-0 z-[90] bg-[#050608]/95 backdrop-blur-2xl animate-in fade-in duration-300">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E10600]/60 to-transparent" />
-      <div className="ty-container flex items-center justify-between h-16">
-        <Logo size="md" accent={false} />
-        <button
-          onClick={() => setMobileMenuOpen(false)}
-          data-testid="mobile-menu-close-button"
-          className="h-10 w-10 rounded-full border border-[#232B3A] inline-flex items-center justify-center text-ty-textMid hover:text-white"
-          aria-label={t('nav.close')}
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
+          <div className="mobile-menu-scroll" data-testid="mobile-menu-scroll" data-lenis-prevent>
+            <div className="mobile-menu-inner">
+              <button type="button" data-testid="mobile-menu-search-button" className="mobile-menu-search"
+                onClick={() => { searchTransferRef.current = true; closeMenu(); setSearchOpen(true); }}>
+                <Search size={18} aria-hidden="true" />
+                <span>{t('nav.search')}{'\u2026'}</span>
+                <ChevronRight size={16} aria-hidden="true" />
+              </button>
 
-      <div className="ty-container pt-8 pb-12">
-        <button
-          onClick={() => { setMobileMenuOpen(false); setSearchOpen(true); }}
-          className="w-full flex items-center gap-3 px-4 h-12 rounded-xl bg-[#0F1115] border border-[#232B3A] text-ty-textMid mb-8"
-        >
-          <Search className="h-4 w-4" />
-          <span className="text-sm">{t('nav.search')}{'\u2026'}</span>
-        </button>
-
-        <ul className="space-y-1" data-testid="mobile-menu-list">
-          {items.map((item, idx) => (
-            <li key={item.to} style={{ animationDelay: `${idx * 60}ms` }} className="animate-in fade-in-50 slide-in-from-bottom-4">
-              <Link
-                to={item.to}
-                onClick={() => setMobileMenuOpen(false)}
-                className="group flex items-center justify-between py-4 border-b border-[#151A23] text-white"
-              >
-                <span className="text-2xl font-display font-medium">{item.label}</span>
-                <span className="font-mono text-[10px] tracking-[0.4em] text-[#F2C94C]/70 group-hover:text-[#E10600] transition-colors">
-                  0{idx + 1}
-                </span>
+              <Link to="/account" onClick={closeMenu} data-testid="mobile-menu-account-link" className="mobile-menu-account">
+                <span className="mobile-menu-account-icon"><UserRound size={22} aria-hidden="true" /></span>
+                <span className="mobile-menu-account-copy"><strong>{t('mobile_menu.account')}</strong><span>{t('mobile_menu.account_hint')}</span></span>
+                <ChevronRight size={18} aria-hidden="true" />
               </Link>
-            </li>
-          ))}
-        </ul>
 
-        <div className="mt-10 flex items-center justify-between">
-          <LanguageSwitcher variant="footer" />
-          <Link
-            onClick={() => setMobileMenuOpen(false)}
-            to="/shop"
-            className="ty-btn-primary text-xs px-4 h-10 tracking-[0.18em] uppercase"
-          >
-            {t('nav.shop_now')}
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+              <div className="mobile-menu-quick-links">
+                <QuickLink to="/wishlist" label={t('nav.wishlist')} count={wishlistCount} icon={Heart} onSelect={closeMenu} testId="mobile-menu-wishlist-link" />
+                <QuickLink to="/cart" label={t('nav.cart')} count={cartCount} icon={ShoppingBag} onSelect={closeMenu} testId="mobile-menu-cart-link" />
+              </div>
+
+              <nav aria-label={t('mobile_menu.catalogue')} className="mobile-menu-catalogue">
+                <p className="mobile-menu-section-label">{t('mobile_menu.catalogue')}</p>
+                <ul data-testid="mobile-menu-list">
+                  {items.map((item, index) => <li key={item.to}>
+                    <NavLink to={item.to} onClick={closeMenu} className={({ isActive }) => `mobile-menu-nav-link${isActive ? ' is-active' : ''}`}>
+                      <span className="mobile-menu-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                      <span>{item.label}</span>
+                      <ArrowUpRight size={18} aria-hidden="true" />
+                    </NavLink>
+                  </li>)}
+                </ul>
+              </nav>
+
+              <nav aria-label={t('mobile_menu.help')} className="mobile-menu-help">
+                <p className="mobile-menu-section-label">{t('mobile_menu.help')}</p>
+                <div className="mobile-menu-help-links">
+                  <Link to="/support/track" onClick={closeMenu}><PackageSearch size={18} aria-hidden="true" /><span>{t('mobile_menu.track')}</span></Link>
+                  <Link to="/support/contact" onClick={closeMenu}><MessageCircle size={18} aria-hidden="true" /><span>{t('mobile_menu.contact')}</span></Link>
+                </div>
+              </nav>
+
+              <footer className="mobile-menu-footer" data-testid="mobile-menu-footer">
+                <div className="mobile-menu-language"><LanguageSwitcher variant="footer" /></div>
+                <Link to="/shop" onClick={closeMenu} className="mobile-menu-shop">{t('nav.shop_now')}<ArrowUpRight size={16} aria-hidden="true" /></Link>
+              </footer>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Overlay>
+    </Dialog.Portal>
+  </Dialog.Root>;
 }

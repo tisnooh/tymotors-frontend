@@ -15,6 +15,16 @@
     "menu": "Menu",
     "close": "Fermer"
   },
+  "mobile_menu": {
+    "title": "Menu TYMotors",
+    "description": "Accédez à votre compte et au catalogue. Faites défiler le menu pour retrouver toutes les rubriques.",
+    "account": "Mon compte",
+    "account_hint": "Connexion, commandes et préférences",
+    "catalogue": "Explorer la boutique",
+    "help": "Besoin d'aide ?",
+    "track": "Suivi de commande",
+    "contact": "Nous contacter"
+  },
   "loader": {
     "tagline": "Performance. Technologie. Identité."
   },
