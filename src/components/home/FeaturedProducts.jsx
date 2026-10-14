@@ -102,7 +102,7 @@ export function FeaturedProducts() {
   return (
     <section data-testid="featured-products-section" className="relative ty-section" aria-labelledby={`${id}-title`}>
       <div className="ty-container">
-        <Reveal className="mb-12">
+        <Reveal className="home-section-heading">
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div>
               <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">

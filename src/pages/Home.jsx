@@ -7,10 +7,11 @@ import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { BeforeAfterSlider } from '@/components/home/BeforeAfterSlider';
 import { CommunitySection } from '@/components/home/CommunitySection';
 import { CtaSection } from '@/components/home/CtaSection';
+import './Home.css';
 
 export default function Home() {
   return (
-    <main data-testid="page-home">
+    <main data-testid="page-home" className="home-page">
       <HeroSection />
       <BrandsSection />
       <StorytellingSection />

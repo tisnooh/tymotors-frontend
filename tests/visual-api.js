@@ -6,7 +6,17 @@ const categories = [
 ];
 const names = { porsche: 'Porsche', volkswagen: 'Volkswagen', toyota: 'Toyota', bmw: 'BMW', 'mercedes-benz': 'Mercedes-Benz', audi: 'Audi' };
 export const Categories = { list: async () => categories, get: async slug => categories.find(cat => cat.slug === ({performance:'exterior',technology:'multimedia-technology'}[slug] || slug)) };
-export const Brands = { list: async () => [], get: async slug => ({ slug, name: names[slug] || slug, image: 'https://images.pexels.com/photos/27118861/pexels-photo-27118861.jpeg?auto=compress&w=640', description: `Éléments aérodynamiques, finitions premium et accessoires de performance conçus pour les passionnés ${names[slug]}.` }) };
+// Public brand snapshots for realistic section-height QA; no live database.
+const brandFixtures = [
+  ['bmw', "La performance à l'état pur", '1617531653332-bd46c24f2068'],
+  ['mercedes-benz', "L'élégance rencontre la puissance", '1618843479313-40f8afb4b4d8'],
+  ['audi', "L'esprit RS sans compromis", '1655497520292-e445bffca81b'],
+  ['porsche', 'Inspiré par le circuit', '1658863567312-fcaf9a15bc6f'],
+  ['volkswagen', 'Das Auto', '1680416825319-14f8091e5aeb'],
+  ['toyota', 'Conçue pour se démarquer', '1743308298784-ba0b26dbfac7'],
+].map(([slug, tagline, photo]) => ({ slug, name: names[slug], tagline,
+  image: `https://images.unsplash.com/photo-${photo}?auto=format&fit=crop&w=1600&q=80` }));
+export const Brands = { list: async () => brandFixtures, get: async slug => ({ slug, name: names[slug] || slug, image: 'https://images.pexels.com/photos/27118861/pexels-photo-27118861.jpeg?auto=compress&w=640', description: `Éléments aérodynamiques, finitions premium et accessoires de performance conçus pour les passionnés ${names[slug]}.` }) };
 // Snapshots of public catalogue fields for layout QA; never seed/write a base.
 // Prices/availability on the real site still come exclusively from its API.
 const catalogueFixtures = [

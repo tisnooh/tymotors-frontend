@@ -1,0 +1,69 @@
+/* A single vertical rhythm for the storefront, not the catalogue/legal pages.
+   Spacing is owned by sections: never add a second gap on their parent. */
+.home-page {
+  --home-section-space: 2rem;
+  --home-heading-space: 1.5rem;
+}
+
+.home-page > section:not([data-testid="hero-section"]) {
+  padding-block: var(--home-section-space);
+  /* A guessed 900px skipped-layout height caused blank gaps and moving
+     boundaries. These small sections retain real geometry; images stay lazy. */
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
+.home-page .home-section-heading {
+  margin-bottom: var(--home-heading-space);
+}
+
+.home-page .home-section-heading > div {
+  gap: 1rem;
+}
+
+.home-page .storytelling-header {
+  margin-bottom: var(--home-heading-space);
+}
+
+.home-page .storytelling-track {
+  margin-top: 0;
+}
+
+.home-page .universe-road {
+  margin-block: calc(var(--home-heading-space) * 0.5);
+}
+
+@media (min-width: 640px) {
+  .home-page {
+    --home-section-space: 3rem;
+    --home-heading-space: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-page {
+    --home-section-space: 4rem;
+    --home-heading-space: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-page .home-section-heading > div {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Keep section padding outside the pinned viewport. Neither the spacer,
+     scene height nor timeline is modified by this spacing system. */
+  .home-page > section.storytelling-mobile-layout {
+    padding-top: 0;
+    padding-bottom: var(--home-section-space);
+  }
+
+  .home-page .storytelling-mobile-layout .storytelling-header {
+    margin-bottom: 0;
+    padding-top: var(--home-section-space);
+    padding-bottom: var(--home-heading-space);
+  }
+}

@@ -10,11 +10,6 @@
     color: #FF1A12;
 }
 
-[data-testid="page-home"] > section:not(:first-child) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 900px;
-}
-
 @keyframes tyHeroRise {
     from { transform: translate3d(0, 14px, 0); }
     to { transform: translate3d(0, 0, 0); }
