@@ -253,9 +253,9 @@ test('editorial photo errors never prevent navigation and a changed source reset
 test('photo credits deduplicate images, retain authors/titles and link to each licence', () => {
   act(() => root.render(<HomePhotoCredits photos={[HOME_PHOTOS.cockpit, HOME_PHOTOS.cockpit, HOME_PHOTOS.mercedes]} />));
   expect(host.querySelectorAll('li')).toHaveLength(2);
-  expect(host.textContent).toContain('Motor.es');
+  expect(host.textContent).toContain('Vauxford');
   expect(host.textContent).toContain(HOME_PHOTOS.cockpit.title);
-  expect(host.textContent).toContain('CONCAVO WHEELS');
+  expect(host.textContent).toContain('Mr.choppers');
   expect(host.querySelector(`a[href="${HOME_PHOTOS.cockpit.licenceUrl}"]`)).not.toBeNull();
 });
 
@@ -270,10 +270,33 @@ test('published homepage photos exist locally and have a provenance record, with
   }
   const credits = fs.readFileSync(path.join(__dirname, '../../../public/images/home/CREDITS.md'), 'utf8');
   expect(credits).toContain('CC BY-SA 2.0');
+  expect(credits).toContain('CC BY-SA 3.0');
   expect(credits).toContain('CC BY-SA 4.0');
   for (const photo of Object.values(HOME_PHOTOS)) {
     expect(credits).toContain(photo.src.split('/').pop());
     expect(credits).toContain(require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../../../public', photo.src))).digest('hex'));
+  }
+});
+
+test('approved replacements exclude CONCAVO and preserve the exact Porsche and Technology image bytes', () => {
+  const replacements = {
+    bmw: 'bmw-m4cs-vr46', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-rs6-c8',
+    volkswagen: 'volkswagen-golf-r-black', toyota: 'toyota-gr-supra-black',
+    cockpit: 'interior-audi-rs6', detail: 'detail-amg-gtr-wheel',
+  };
+  for (const [key, file] of Object.entries(replacements)) {
+    expect(HOME_PHOTOS[key].src).toBe(`/images/home/${file}.jpg`);
+    expect(JSON.stringify(HOME_PHOTOS[key])).not.toMatch(/concavo|unsplash|pexels/i);
+    expect(fr.home_photos.alts[key]).not.toMatch(/concavo/i);
+    expect(en.home_photos.alts[key]).not.toMatch(/concavo/i);
+  }
+  const preserved = {
+    porsche: ['porsche-manthey', '1d32bd08e5eea412833f424f219aca5b687bd3740f6918a4142708e5b9e8ad62'],
+    technology: ['technology-bmw-g81', '399d0278a8164ac4c373c68780ef5d2715fb956b6228121018b21b70fbf97137'],
+  };
+  for (const [key, [file, hash]] of Object.entries(preserved)) {
+    expect(HOME_PHOTOS[key].src).toBe(`/images/home/${file}.jpg`);
+    expect(require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../../../public', HOME_PHOTOS[key].src))).digest('hex')).toBe(hash);
   }
 });
 
