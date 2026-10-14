@@ -90,13 +90,14 @@ function NavbarCenter({ items, desktopNavigation }) {
   );
 }
 
-function NavbarRight({ onOpenSearch, onOpenMobile, mobileMenuOpen, cartCount, wishlistCount, desktopNavigation, t }) {
+function NavbarRight({ onOpenSearch, searchOpen, onOpenMobile, mobileMenuOpen, cartCount, wishlistCount, desktopNavigation, t }) {
   return (
     <div className={`flex shrink-0 items-center gap-2 2xl:gap-3 ${desktopNavigation ? '' : 'ml-auto'}`}>
       <div className="hidden md:flex">
         <LanguageSwitcher />
       </div>
-      <IconButton testId="navbar-search-button" label={t('nav.search')} onClick={onOpenSearch}>
+      <IconButton id="ty-search-trigger" aria-expanded={searchOpen} aria-controls={searchOpen ? 'ty-search-dialog' : undefined} aria-haspopup="dialog"
+        testId="navbar-search-button" label={t('nav.search')} onClick={onOpenSearch}>
         <Search className="h-[18px] w-[18px]" />
       </IconButton>
       <Link
@@ -144,7 +145,7 @@ export function Navbar() {
   const [desktopNavigation, setDesktopNavigation] = useState(isDesktopNavigationDevice);
   const { t } = useTranslation();
   const location = useLocation();
-  const { cartCount, wishlistCount, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } = useApp();
+  const { cartCount, wishlistCount, searchOpen, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } = useApp();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -184,6 +185,7 @@ export function Navbar() {
         <NavbarCenter items={navItems} desktopNavigation={desktopNavigation} />
         <NavbarRight
           onOpenSearch={() => setSearchOpen(true)}
+          searchOpen={searchOpen}
           onOpenMobile={() => setMobileMenuOpen(true)}
           mobileMenuOpen={mobileMenuOpen}
           cartCount={cartCount}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Products, Brands as BrandsApi, Categories as CategoriesApi } from '@/lib/api';
@@ -6,6 +6,7 @@ import { ProductCard } from '@/components/shared/ProductCard';
 import { Reveal } from '@/components/shared/Reveal';
 import { SlidersHorizontal } from 'lucide-react';
 import { clearVehicleSelection, readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
+import { normalizeSearchQuery } from '@/lib/search';
 
 const SKELETON_KEYS = ['sh-1', 'sh-2', 'sh-3', 'sh-4', 'sh-5', 'sh-6', 'sh-7', 'sh-8', 'sh-9'];
 
@@ -58,8 +59,12 @@ function EmptyState({ onReset }) {
   );
 }
 
-function ProductGridSection({ loading, products, onReset }) {
+function ProductGridSection({ loading, products, error, onRetry, onReset }) {
+  const { t } = useTranslation();
   if (loading) return <ProductSkeletonGrid />;
+  if (error) return <div role="alert" className="rounded-2xl border border-[#232B3A] p-6 text-ty-textMid">
+    <p>{t('search.catalogue_error')}</p><button type="button" data-testid="shop-retry-button" className="ty-btn-secondary mt-4" onClick={onRetry}>{t('search.retry')}</button>
+  </div>;
   if (products.length === 0) return <EmptyState onReset={onReset} />;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
@@ -78,7 +83,10 @@ export default function Shop() {
   const [brands, setBrands] = useState([]);
   const [cats, setCats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
   const [mobileFilters, setMobileFilters] = useState(false);
+  const resultsRef = useRef(null);
 
   const brand = params.get('brand') || '';
   const category = params.get('category') || '';
@@ -87,9 +95,13 @@ export default function Shop() {
   const year = params.get('year') || '';
   const bodyType = params.get('body_type') || '';
   const sort = params.get('sort') || 'relevance';
+  const query = normalizeSearchQuery(params.get('q') || '');
+  const requestedPage = Number(params.get('page') || 1);
+  const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const pages = Math.max(1, Math.ceil(total / 100));
 
   useEffect(() => {
-    if (brand || model || chassis || year || bodyType) return;
+    if (query || brand || model || chassis || year || bodyType) return;
     const saved = readVehicleSelection();
     if (!saved.brand) return;
     const next = new URLSearchParams(params);
@@ -118,7 +130,9 @@ export default function Shop() {
 
   useEffect(() => {
     setLoading(true);
-    const args = { limit: 100 };
+    setError(false);
+    const args = { limit: 100, page };
+    if (query) args.q = query;
     if (brand) args.brand = brand;
     if (category) args.category = category;
     if (model) args.model = model;
@@ -130,20 +144,22 @@ export default function Shop() {
     Products.list(args)
       .then((d) => {
         if (cancelled) return;
-        setProducts(d.items || []);
-        setTotal(d.total || 0);
+        if (!Array.isArray(d?.items)) throw new Error('Invalid catalogue response');
+        setProducts(d.items);
+        setTotal(Number.isInteger(d.total) && d.total >= d.items.length ? d.total : d.items.length);
       })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.warn('[TYMotors] products load failed:', e?.message || e);
+      .catch(() => {
+        if (cancelled) return;
+        setProducts([]); setTotal(0); setError(true);
       })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [brand, bodyType, category, chassis, model, sort, year]);
+  }, [brand, bodyType, category, chassis, model, page, query, retry, sort, year]);
 
   const setFilter = (key, value) => {
     const next = new URLSearchParams(params);
     if (!value) next.delete(key); else next.set(key, value);
+    if (key !== 'page') next.delete('page');
     if (key === 'brand') {
       ['model', 'chassis', 'year', 'body_type'].forEach((field) => next.delete(field));
     }
@@ -157,6 +173,11 @@ export default function Shop() {
     setParams(next);
   };
 
+  const changePage = value => {
+    setFilter('page', String(value));
+    resultsRef.current?.scrollIntoView?.({ block: 'start' });
+  };
+
   const reset = () => {
     clearVehicleSelection();
     setParams(new URLSearchParams());
@@ -164,9 +185,9 @@ export default function Shop() {
 
   // Memoize body to keep parent JSX flat
   const body = useMemo(
-    () => <ProductGridSection loading={loading} products={products} onReset={reset} />,
+    () => <ProductGridSection loading={loading} products={products} error={error} onRetry={() => setRetry(value => value + 1)} onReset={reset} />,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loading, products]
+    [loading, products, error]
   );
 
   return (
@@ -190,8 +211,8 @@ export default function Shop() {
         )}
 
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <p data-testid="shop-results-count" className="font-mono text-xs tracking-wider text-ty-textLow">
-            {total} {t('shop.results')}
+          <p data-testid="shop-results-count" className="font-mono text-xs tracking-wider text-ty-textLow" role="status">
+            {loading ? t('common.loading') : `${total} ${t('shop.results')}`}
           </p>
           <div className="flex items-center gap-2">
             <select aria-label="Trier les produits" value={sort} onChange={(event) => setFilter('sort', event.target.value)} className="h-10 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-xs text-white">
@@ -209,6 +230,11 @@ export default function Shop() {
             </button>
           </div>
         </div>
+
+        {query && <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-[#232B3A] bg-[#0F1115] p-4" data-testid="shop-search-query">
+          <p className="min-w-0 break-words text-sm text-white">{t('search.query_label', { query })}</p>
+          <button type="button" onClick={() => setFilter('q', '')} className="min-h-11 text-sm text-[#F2C94C] underline" data-testid="shop-clear-query-button">{t('search.clear')}</button>
+        </div>}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <aside data-testid="shop-filters" className={`lg:col-span-3 ${mobileFilters ? 'block' : 'hidden lg:block'}`}>
@@ -249,7 +275,13 @@ export default function Shop() {
             </div>
           </aside>
 
-          <div className="lg:col-span-9">{body}</div>
+          <div ref={resultsRef} className="lg:col-span-9 scroll-mt-24">{body}
+            {!loading && !error && pages > 1 && <nav aria-label={t('search.pagination')} className="mt-8 flex flex-wrap items-center justify-between gap-3">
+              <button type="button" className="ty-btn-secondary disabled:opacity-40" disabled={page <= 1} onClick={() => changePage(page - 1)} data-testid="shop-previous-page">{t('search.previous_page')}</button>
+              <span className="text-sm text-ty-textMid">{t('search.page', { page, pages })}</span>
+              <button type="button" className="ty-btn-secondary disabled:opacity-40" disabled={page >= pages} onClick={() => changePage(page + 1)} data-testid="shop-next-page">{t('search.next_page')}</button>
+            </nav>}
+          </div>
         </div>
       </div>
     </main>

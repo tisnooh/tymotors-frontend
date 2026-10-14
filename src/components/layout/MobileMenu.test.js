@@ -32,7 +32,7 @@ jest.mock('react-router-dom', () => {
       {typeof children === 'function' ? children({ isActive: active }) : children}
     </a>;
   }
-  return { Link, NavLink: Link, useLocation: () => ({ pathname: mockPathname }) };
+  return { Link, NavLink: Link, useLocation: () => ({ pathname: mockPathname }), useNavigate: () => jest.fn() };
 }, { virtual: true });
 
 function Harness() {
@@ -161,10 +161,11 @@ test('search replaces the menu and keeps the page locked until search closes', a
   await click(query('mobile-menu-search-button'));
   expect(query('mobile-menu-sheet')).toBeNull();
   expect(query('search-overlay')).not.toBeNull();
-  expect(document.body.style.overflow).toBe('hidden');
+  expect(document.body.hasAttribute('data-scroll-locked')).toBe(true);
   await act(async () => { await new Promise(resolve => setTimeout(resolve, 110)); });
   expect(document.activeElement).toBe(query('search-overlay-input'));
   await click(query('search-overlay-close-button'));
+  expect(document.body.hasAttribute('data-scroll-locked')).toBe(false);
   expect(document.body.style.overflow).toBe('');
   await openMenu();
   expect(document.activeElement).toBe(query('mobile-menu-close-button'));

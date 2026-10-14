@@ -38,6 +38,9 @@ export const Products = { list: async (params = {}) => {
   const fixture = new URLSearchParams(window.location.search).get('products');
   if (fixture === 'error') throw new Error('Catalogue unavailable — isolated QA fixture');
   if (fixture === 'empty') return { items: [] };
+  const scenario = new URLSearchParams(window.location.search).get('search');
+  if (params.q && scenario === 'error') throw new Error('Search unavailable — isolated QA fixture');
   const items = params.featured && fixture !== 'featured' ? [] : catalogueFixtures;
-  return { items: items.slice(0, params.limit || 8) };
+  const matched = params.q ? items.filter(product => `${product.name} ${product.subtitle}`.toLowerCase().includes(params.q.trim().toLowerCase())) : items;
+  return { items: matched.slice(0, params.limit || 8), total: matched.length };
 } };

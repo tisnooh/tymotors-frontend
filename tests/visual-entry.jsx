@@ -13,6 +13,7 @@ import { SmoothScrollProvider } from '../src/components/layout/SmoothScrollProvi
 import Home from '../src/pages/Home';
 import BrandDetail from '../src/pages/BrandDetail';
 import CategoryPage from '../src/pages/CategoryPage';
+import Shop from '../src/pages/Shop';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -37,6 +38,6 @@ if (phoneFixture) {
 const ScrollWrapper = phoneFixture ? React.Fragment : SmoothScrollProvider;
 createRoot(document.getElementById('root')).render(<BrowserRouter><VisualAppProvider><ScrollWrapper><div className="App"><Navbar /><MobileMenu /><SearchOverlay />
   <output className="sr-only" data-testid="visual-profile" data-phone={phoneFixture} data-reduced-motion={window.matchMedia('(prefers-reduced-motion: reduce)').matches} data-motion={window.matchMedia('(max-width: 767px) and (prefers-reduced-motion: no-preference)').matches} data-observer={'IntersectionObserver' in window} data-touch={ScrollTrigger.isTouch}>Fixture visuelle isolée, aucune API réelle.</output>
-  <Routes><Route path="/" element={<Home />} /><Route path="/brands/:slug" element={<BrandDetail />} /><Route path="/category/:slug" element={<CategoryPage />} />
+  <Routes><Route path="/" element={<Home />} /><Route path="/shop" element={<Shop />} /><Route path="/brands/:slug" element={<BrandDetail />} /><Route path="/category/:slug" element={<CategoryPage />} />
     <Route path="*" element={<main className="ty-container pt-28"><h1>Destination du lien — fixture visuelle</h1><Link to="/">Accueil</Link></main>} />
   </Routes></div></ScrollWrapper></VisualAppProvider></BrowserRouter>);
