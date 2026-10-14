@@ -339,7 +339,7 @@ export default function ProductDetail() {
               <CompatibilityChecker product={product} onSelection={(selection, status) => { setSelectedVehicle(selection); setCompatibilityStatus(status); }} />
             )}
 
-            <div className="mt-8 flex items-center gap-3">
+            <div className="product-purchase-actions mt-8 flex items-center gap-3">
               <div className="flex items-center h-12 rounded-xl border border-[#232B3A] bg-[#0F1115]">
                 <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Diminuer la quantité' : 'Decrease quantity'} onClick={() => setQty((q) => Math.max(1, q - 1))} className="h-12 w-12 text-white text-lg">{'\u2212'}</button>
                 <span data-testid="product-qty" className="w-10 text-center text-white font-mono">{qty}</span>

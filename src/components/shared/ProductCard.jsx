@@ -46,9 +46,9 @@ function QuickAddButton({ onClick, label, disabled = false }) {
       onClick={onClick}
       disabled={disabled}
       data-testid="product-card-add-to-cart-button"
-      className="absolute bottom-3 right-3 h-10 px-3 rounded-xl bg-[#E10600] hover:bg-[#FF1A12] text-white flex items-center gap-2 text-xs font-medium tracking-wide uppercase opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all disabled:bg-[#232B3A] disabled:text-ty-textMid disabled:cursor-not-allowed"
+      className="ty-btn-primary ty-btn-primary--compact absolute bottom-3 right-3 opacity-100 translate-y-0 md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 md:focus-visible:opacity-100 md:focus-visible:translate-y-0"
     >
-      <ShoppingBag className="h-4 w-4" /> {label}
+      <ShoppingBag aria-hidden="true" className="h-4 w-4" /> {label}
     </button>
   );
 }
