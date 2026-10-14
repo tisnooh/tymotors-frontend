@@ -128,6 +128,7 @@ test('phone Hero keeps desktop glow layers hidden without changing photo sources
   expect(phoneRules).toMatch(/\.hero-side-glow,[\s\S]*?\.hero-side-scrim,[\s\S]*?\.hero-floor-scrim\s*\{\s*display:\s*none/);
   expect(phoneRules).not.toMatch(/background:\s*linear-gradient|filter:|transform:|opacity:/);
   expect(phoneRules).toContain('box-shadow: none');
+  expect(phoneRules).toMatch(/\[data-testid="hero-section"\]\s+\[data-testid="hero-primary-cta-button"\]:hover\s*\{\s*box-shadow:\s*none;\s*\}/);
   expect(phoneRules).toContain('object-position: 50% 76%');
   expect(phoneRules).toContain('mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent)');
   expect(phoneRules.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);

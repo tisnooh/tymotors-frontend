@@ -69,6 +69,11 @@
     box-shadow: none;
   }
 
+  /* More specific than the shared .ty-btn-primary:hover rule. */
+  [data-testid="hero-section"] [data-testid="hero-primary-cta-button"]:hover {
+    box-shadow: none;
+  }
+
   /* One continuous ambient background on phones. These absolute desktop
      layers split the red glow around the in-flow photo; hiding them changes
      paint only, not the photo frame, crop, mask, or any content position. */
