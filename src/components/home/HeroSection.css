@@ -2,6 +2,18 @@
    Desktop keeps the original full-bleed cover and all existing entrance motion. */
 .hero-mobile-photo { display: none; }
 @media (max-width: 767px) {
+  /* One soft, full-section ambient wash. It fades before the car instead
+     of creating a second red panel below the opaque landscape photo. */
+  [data-testid="hero-section"] {
+    background-image: radial-gradient(
+      ellipse 115% 58% at 100% 18%,
+      rgba(225, 6, 0, 0.12) 0%,
+      rgba(118, 18, 24, 0.06) 42%,
+      rgba(5, 6, 8, 0) 72%
+    );
+    background-repeat: no-repeat;
+  }
+
   /* Small viewport units account for expanded mobile browser bars. Keep a
      minimum, not a fixed height: zoom/large text can still grow and scroll. */
   [data-testid="hero-section"] .hero-content {
@@ -57,7 +69,7 @@
     box-shadow: none;
   }
 
-  /* One continuous matte background on phones. These absolute desktop
+  /* One continuous ambient background on phones. These absolute desktop
      layers split the red glow around the in-flow photo; hiding them changes
      paint only, not the photo frame, crop, mask, or any content position. */
   [data-testid="hero-section"] .hero-photo-frame,

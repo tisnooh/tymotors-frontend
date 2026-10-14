@@ -114,7 +114,7 @@ test('phone Hero aligns its intro under navigation and spends spare height aroun
   expect(host.querySelectorAll('.hero-corner-accent[aria-hidden="true"]')).toHaveLength(2);
 });
 
-test('phone Hero hides decorative halos without changing photo sources, geometry rules or motion', () => {
+test('phone Hero keeps desktop glow layers hidden without changing photo sources, geometry rules or motion', () => {
   act(() => root.render(<HeroSection />));
   const expected = responsiveImageProps('https://images.unsplash.com/photo-1762314907955-b7c1e11a8782?auto=format&fit=crop&w=2200&q=88', [640, 960, 1440], '100vw', 76);
   const images = [...host.querySelectorAll('.hero-photo-frame img, .hero-mobile-photo img')];
@@ -132,6 +132,24 @@ test('phone Hero hides decorative halos without changing photo sources, geometry
   expect(phoneRules).toContain('mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent)');
   expect(phoneRules.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);
   expect(host.querySelectorAll('.ty-hero-rise')).toHaveLength(4);
+});
+
+test('phone Hero has only one faint theme gradient on its background, never on the photo', () => {
+  const css = fs.readFileSync(path.join(__dirname, 'HeroSection.css'), 'utf8');
+  const phoneRules = css.slice(css.indexOf('@media (max-width: 767px) {'), css.indexOf('@media (max-width: 767px) and'));
+  const background = phoneRules.match(/\[data-testid="hero-section"\]\s*\{([^}]+)\}/)?.[1];
+  expect(background).toBeDefined();
+  expect(background).toContain('background-image: radial-gradient(');
+  expect(background.match(/(?:radial|linear)-gradient\(/g)).toHaveLength(1);
+  expect(background).toContain('ellipse 115% 58% at 100% 18%');
+  expect(background).toContain('rgba(225, 6, 0, 0.12) 0%');
+  expect(background).toContain('rgba(118, 18, 24, 0.06) 42%');
+  expect(background).toContain('rgba(5, 6, 8, 0) 72%');
+  expect(background).toContain('background-repeat: no-repeat');
+  expect(background).not.toMatch(/(?:^|[;{]\s*)(?:position|display|height|width|margin|padding|transform|filter|opacity|border)\s*:/m);
+  expect(phoneRules.match(/background-image:\s*(?:radial|linear)-gradient/g)).toHaveLength(1);
+  const photoRules = phoneRules.match(/\.hero-mobile-photo > img\s*\{([^}]+)\}/)?.[1];
+  expect(photoRules).not.toMatch(/background|filter|opacity|transform/);
 });
 test('inspiration is default-visible without animation APIs, with useful links and honest attribution', () => {
   act(() => root.render(<CommunitySection />));

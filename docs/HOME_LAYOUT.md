@@ -62,14 +62,17 @@ couper le texte. Pour la recette uniquement, `?phone=1&text=large` applique
 une taille racine de 24 px au lieu de 16 ; aucun réglage utilisateur ni code
 de production n'est modifié par ce paramètre.
 
-## Fond du Hero mobile — sans halos rouges
+## Fond du Hero mobile — dégradé discret, sans deux halos
 
-Sous 768 px, le fond noir du Hero reste continu : le halo rouge et les scrims
-du desktop sont masqués, puisqu'ils ne servent pas à lire une photo de fond
-sur téléphone. L'ombre hover rouge du bouton est neutralisée seulement dans
-ce Hero mobile ; sa couleur, son focus et sa géométrie sont conservés.
+Sous 768 px, un seul dégradé radial rouge/bordeaux très sombre est peint sur
+le fond du Hero : teinte principale à 12 % d'alpha, bordeaux à 6 %, puis
+transparent. Centré en haut à droite, il s'efface avant la voiture et ne crée
+pas une seconde zone rouge sous la photo. Le fond noir de base reste présent.
+Le halo flouté et les scrims desktop restent masqués. L'ombre hover rouge du
+bouton reste neutralisée seulement dans ce Hero mobile ; couleur, focus et
+géométrie sont conservés. Aucun filtre/couleur/gradient ajouté à la photo.
 
-Ce changement concerne uniquement la peinture de calques absolus. Ne pas
+Ce changement concerne uniquement la peinture du fond. Ne pas
 déplacer ou retraiter la photo : mêmes src/srcset/sizes, hauteur, cadre flexible,
 object-fit, object-position `50% 76%` et masque. Ne pas toucher à l'espacement
 du contenu ou aux animations. Dès 768 px, le rendu desktop antérieur reste
@@ -79,3 +82,6 @@ Vérification : comparer les rectangles image/titre/CTA/repères avant et après
 aux mêmes tailles de viewport, ainsi que les sources et styles de l'image.
 Le test de régression `MobileEditorial.test.js` protège aussi les sources,
 cadrage/masque, calques masqués uniquement sur téléphone et classes d'animation.
+Un test protège aussi l'unique dégradé, ses faibles opacités et l'absence de
+modification de géométrie dans la règle de fond. Si le navigateur connecté est
+indisponible, ne pas présenter l'ancienne capture noire comme un nouvel aperçu.
