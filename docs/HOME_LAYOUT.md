@@ -61,3 +61,21 @@ les mots peuvent passer à la ligne et le Hero peut grandir/défiler plutôt que
 couper le texte. Pour la recette uniquement, `?phone=1&text=large` applique
 une taille racine de 24 px au lieu de 16 ; aucun réglage utilisateur ni code
 de production n'est modifié par ce paramètre.
+
+## Fond du Hero mobile — sans halos rouges
+
+Sous 768 px, le fond noir du Hero reste continu : le halo rouge et les scrims
+du desktop sont masqués, puisqu'ils ne servent pas à lire une photo de fond
+sur téléphone. L'ombre hover rouge du bouton est neutralisée seulement dans
+ce Hero mobile ; sa couleur, son focus et sa géométrie sont conservés.
+
+Ce changement concerne uniquement la peinture de calques absolus. Ne pas
+déplacer ou retraiter la photo : mêmes src/srcset/sizes, hauteur, cadre flexible,
+object-fit, object-position `50% 76%` et masque. Ne pas toucher à l'espacement
+du contenu ou aux animations. Dès 768 px, le rendu desktop antérieur reste
+identique (photo plein cadre, scrims et halo compris).
+
+Vérification : comparer les rectangles image/titre/CTA/repères avant et après
+aux mêmes tailles de viewport, ainsi que les sources et styles de l'image.
+Le test de régression `MobileEditorial.test.js` protège aussi les sources,
+cadrage/masque, calques masqués uniquement sur téléphone et classes d'animation.

@@ -53,9 +53,17 @@
     padding: 0.75rem 1rem;
     font-size: 0.75rem;
     letter-spacing: 0.14em;
+    /* Avoid a sticky touch-hover halo; focus outlines remain unchanged. */
+    box-shadow: none;
   }
 
-  [data-testid="hero-section"] .hero-photo-frame {
+  /* One continuous matte background on phones. These absolute desktop
+     layers split the red glow around the in-flow photo; hiding them changes
+     paint only, not the photo frame, crop, mask, or any content position. */
+  [data-testid="hero-section"] .hero-photo-frame,
+  [data-testid="hero-section"] .hero-side-glow,
+  [data-testid="hero-section"] .hero-side-scrim,
+  [data-testid="hero-section"] .hero-floor-scrim {
     display: none;
   }
 
@@ -79,14 +87,6 @@
     object-position: 50% 76%;
     -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent);
     mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent);
-  }
-
-  [data-testid="hero-section"] .hero-side-scrim {
-    background: linear-gradient(180deg, #050608, #050608cc 45%, transparent 67%);
-  }
-
-  [data-testid="hero-section"] .hero-floor-scrim {
-    background: linear-gradient(0deg, #050608 6%, transparent 24%);
   }
 
   [data-testid="hero-spec-strip"] {

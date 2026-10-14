@@ -9,6 +9,7 @@ import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
 import { categoryEditorialImage, EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
 import { Categories, Brands, Products } from '@/lib/api';
+import { responsiveImageProps } from '@/lib/image';
 import fr from '@/lib/locales/fr.json';
 import en from '@/lib/locales/en.json';
 import fs from 'fs';
@@ -111,6 +112,26 @@ test('phone Hero aligns its intro under navigation and spends spare height aroun
   expect(strip.className).not.toContain('absolute');
   expect(strip.previousElementSibling.className).toBe('hero-mobile-photo');
   expect(host.querySelectorAll('.hero-corner-accent[aria-hidden="true"]')).toHaveLength(2);
+});
+
+test('phone Hero hides decorative halos without changing photo sources, geometry rules or motion', () => {
+  act(() => root.render(<HeroSection />));
+  const expected = responsiveImageProps('https://images.unsplash.com/photo-1762314907955-b7c1e11a8782?auto=format&fit=crop&w=2200&q=88', [640, 960, 1440], '100vw', 76);
+  const images = [...host.querySelectorAll('.hero-photo-frame img, .hero-mobile-photo img')];
+  expect(images).toHaveLength(2);
+  images.forEach(image => Object.entries(expected).forEach(([key, value]) => expect(image.getAttribute(key)).toBe(value)));
+  expect(host.querySelector('.hero-mobile-photo').className).toBe('hero-mobile-photo');
+  expect(host.querySelector('.hero-photo-frame').className).toBe('hero-photo-frame absolute inset-0 scale-[1.04]');
+  expect(host.querySelector('.hero-side-glow').getAttribute('aria-hidden')).toBe('true');
+  const css = fs.readFileSync(path.join(__dirname, 'HeroSection.css'), 'utf8');
+  const phoneRules = css.slice(css.indexOf('@media (max-width: 767px) {'), css.indexOf('@media (max-width: 767px) and'));
+  expect(phoneRules).toMatch(/\.hero-side-glow,[\s\S]*?\.hero-side-scrim,[\s\S]*?\.hero-floor-scrim\s*\{\s*display:\s*none/);
+  expect(phoneRules).not.toMatch(/background:\s*linear-gradient|filter:|transform:|opacity:/);
+  expect(phoneRules).toContain('box-shadow: none');
+  expect(phoneRules).toContain('object-position: 50% 76%');
+  expect(phoneRules).toContain('mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent)');
+  expect(phoneRules.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);
+  expect(host.querySelectorAll('.ty-hero-rise')).toHaveLength(4);
 });
 test('inspiration is default-visible without animation APIs, with useful links and honest attribution', () => {
   act(() => root.render(<CommunitySection />));

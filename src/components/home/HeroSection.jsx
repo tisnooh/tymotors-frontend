@@ -21,7 +21,7 @@ export function HeroSection() {
       <div className="hero-side-scrim absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/70 to-transparent" />
       <div className="hero-floor-scrim absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/40 to-transparent" />
       {/* Red side glow */}
-      <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#E10600]/20 blur-[120px]" />
+      <div aria-hidden="true" className="hero-side-glow absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#E10600]/20 blur-[120px]" />
       {/* Subtle grid */}
       <div className="absolute inset-0 ty-grid-lines opacity-[0.05]" />
       {/* Yellow corner accents */}
