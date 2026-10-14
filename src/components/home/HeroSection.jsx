@@ -51,9 +51,9 @@ export function HeroSection() {
         </p>
 
         <div className="hero-actions ty-hero-rise ty-hero-rise-delay-3 mt-10 flex flex-wrap items-center gap-4">
-          <Link to="/shop" data-testid="hero-primary-cta-button" className="ty-btn-primary h-12 px-6 text-sm tracking-[0.18em] uppercase">
+          <Link to="/shop" data-testid="hero-primary-cta-button" className="hero-primary-cta">
             {t('hero.cta_primary')}
-            <ArrowRight className="h-4 w-4 ml-1" />
+            <ArrowRight aria-hidden="true" focusable="false" className="hero-primary-cta-arrow" />
           </Link>
         </div>
 

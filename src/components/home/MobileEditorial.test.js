@@ -54,6 +54,9 @@ test('Hero keeps the selected photo, original animations and catalogue CTA', () 
   expect(host.querySelector('.hero-photo-frame')).not.toBeNull();
   expect(host.querySelector('.ty-hero-rise')).not.toBeNull();
   expect(host.querySelector('a').getAttribute('href')).toBe('/shop');
+  expect(host.querySelector('a').textContent).toBe('Explorer la collection');
+  expect(host.querySelector('a').className).toBe('hero-primary-cta');
+  expect(host.querySelector('a svg').getAttribute('aria-hidden')).toBe('true');
 });
 
 test('storytelling has phone-only portrait sources and leaves the introduction outside the scene', () => {
@@ -103,7 +106,7 @@ test('phone Hero uses available height without clipping enlarged text or alterin
 test('phone Hero aligns its intro under navigation and spends spare height around the photo, not above it', () => {
   const css = fs.readFileSync(path.join(__dirname, 'HeroSection.css'), 'utf8');
   expect(css).toContain('justify-content: flex-start');
-  expect(css).not.toContain('justify-content: center');
+  expect(css.match(/\.hero-content\s*\{[^}]*\}/g).every(rule => !rule.includes('justify-content: center'))).toBe(true);
   expect(css).toContain('padding-top: 5rem');
   expect(css).toContain('flex: 1 0 auto');
   expect(css.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);
@@ -127,8 +130,8 @@ test('phone Hero keeps desktop glow layers hidden without changing photo sources
   const phoneRules = css.slice(css.indexOf('@media (max-width: 767px) {'), css.indexOf('@media (max-width: 767px) and'));
   expect(phoneRules).toMatch(/\.hero-side-glow,[\s\S]*?\.hero-side-scrim,[\s\S]*?\.hero-floor-scrim\s*\{\s*display:\s*none/);
   expect(phoneRules).not.toMatch(/background:\s*linear-gradient|filter:|transform:|opacity:/);
-  expect(phoneRules).toContain('box-shadow: none');
-  expect(phoneRules).toMatch(/\[data-testid="hero-section"\]\s+\[data-testid="hero-primary-cta-button"\]:hover\s*\{\s*box-shadow:\s*none;\s*\}/);
+  expect(css).toMatch(/\.hero-primary-cta\s*\{[^}]*box-shadow:\s*none;/);
+  expect(host.querySelector('a').classList.contains('ty-btn-primary')).toBe(false);
   expect(phoneRules).toContain('object-position: 50% 76%');
   expect(phoneRules).toContain('mask-image: linear-gradient(transparent, #000 12%, #000 85%, transparent)');
   expect(phoneRules.match(/height: var\(--hero-photo-height\)/g)).toHaveLength(2);
