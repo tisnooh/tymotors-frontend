@@ -1,5 +1,30 @@
 # Visuels éditoriaux de l'accueil — 13 octobre 2026
 
+## Mise à jour — 15 octobre 2026 : alternatives autorisées et Univers horizontal
+
+Le propriétaire autorise désormais le remplacement des pistes exigeant une
+permission écrite par d'autres photographies Internet, hors Unsplash/Pexels,
+avec une ambiance sombre/premium. Neuf nouveaux JPEG locaux sont intégrés :
+quatre shootings CONCAVO WHEELS (CC BY 2.0), Porsche Manthey / Alexandre Prevot
+(CC BY-SA 2.0), Golf préparée / Monaam Ben Fredj et cockpit numérique M3 G81 /
+Ethan Llamas (CC BY-SA 4.0), deux détails/voiture Supra Motor.es (CC BY 4.0).
+Sources primaires, licences, dimensions décodées et SHA256 :
+[CREDITS.md](../public/images/home/CREDITS.md). Fichiers copiés sans retouche,
+filigranes et marques conservés ; crédits visibles dans les sections. Aucune
+exclusivité, réalisation TYMotors, référence exacte ou affiliation revendiquée.
+
+Les six marques gardent leur grille photographique rétablie ; seules leurs
+sources sont remplacées, sans mutation des données/API ni des destinations.
+Les trois catégories conservent leur architecture. Univers devient un rail
+horizontal natif sur téléphone : cartes compactes, aperçu de la suivante,
+scroll-snap, sélection au toucher de la photo/au clavier sur bouton natif,
+agrandissement 3,5 % d'une seule carte, second appui pour réduire. Liens CTA
+distincts, focus visible, mouvement réduit sans transition ni scroll animé.
+La grille desktop et son animation d'entrée sont conservées. Sur mobile les
+animations GSAP n'écrivent plus la transformation des cartes sélectionnables.
+Porsche du Hero, storytelling, avant/après, header, boutons, images produit et
+backend restent inchangés. AUTOID/OHC/Coding LDN/Csongor ne sont pas publiés.
+
 ## Correction — 15 octobre 2026 : présentation des marques restaurée
 
 À la demande du propriétaire, les cartes marques retrouvent leur présentation

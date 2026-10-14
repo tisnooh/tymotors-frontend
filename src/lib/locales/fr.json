@@ -188,10 +188,14 @@
     "cta": "Personnaliser mon véhicule",
     "disclaimer": "Photos d'inspiration indépendantes : ces véhicules ne sont pas des réalisations TYMotors. Vérifiez toujours la compatibilité et l'usage autorisé des équipements.",
     "credits": "Crédits photographiques",
+    "gallery": "Inspirations automobiles",
+    "swipe_hint": "Glissez pour explorer · Touchez une photo pour l'agrandir",
+    "select_card": "Agrandir l'inspiration : {{title}}",
+    "reduce_card": "Réduire l'inspiration : {{title}}",
     "projects": {
-      "gathering": { "label": "Culture tuning", "title": "Une ligne qui vous ressemble.", "desc": "Carrosserie, jantes, finitions : trouvez votre direction à travers la culture tuning, puis vérifiez les pièces adaptées à votre véhicule.", "link": "Imaginer mon projet", "alt": "BMW orange et noire préparée à Tuning World Bodensee 2018" },
-      "detail": { "label": "Le sens du détail", "title": "La face avant donne le ton.", "desc": "Une calandre, une finition, une attitude. Inspirez-vous sans confondre ces préparations indépendantes avec les articles proposés.", "link": "Explorer les équipements", "alt": "Mercedes-AMG GT bleue devant l'atelier Glass Tuning" },
-      "silhouette": { "label": "L'univers intérieur", "title": "Le cockpit a sa signature.", "desc": "Textures, commandes, détails : imaginez un intérieur à votre image et consultez les compatibilités avant de choisir vos équipements.", "link": "Choisir mon véhicule", "alt": "Console et boîte manuelle d'une BMW M3 au salon de Genève 2011" }
+      "gathering": { "label": "Culture tuning", "title": "Une ligne qui vous ressemble.", "desc": "Carrosserie, jantes, finitions : trouvez votre direction à travers la culture tuning, puis vérifiez les pièces adaptées à votre véhicule.", "link": "Imaginer mon projet", "alt": "Mercedes noire équipée de jantes CONCAVO en décor industriel" },
+      "detail": { "label": "Le sens du détail", "title": "Le détail fait la différence.", "desc": "Une jante, une finition, une attitude. Inspirez-vous sans confondre ces équipements indépendants avec les articles proposés.", "link": "Explorer les équipements", "alt": "Jante CONCAVO CW-5 montée sur une BMW M3" },
+      "silhouette": { "label": "La ligne sportive", "title": "Un profil taillé pour le circuit.", "desc": "Aileron, diffuseur, lignes : explorez l'univers aérodynamique et vérifiez les compatibilités avant de choisir vos équipements.", "link": "Choisir mon véhicule", "alt": "Vue arrière d'une Porsche 992 GT3 RS Manthey avec son aileron" }
     }
   },
   "home_photos": {
@@ -200,10 +204,15 @@
     "presentation": "Images mises à l'échelle et présentées dans des cadres CSS, sans retouche de la pièce ni génération IA par TYMotors. Ces photographies ne sont pas des réalisations TYMotors et ne suggèrent aucun partenariat avec leurs auteurs ou les marques visibles. Les licences indiquées restent applicables à chaque image.",
     "unavailable": "Photographie momentanément indisponible.",
     "alts": {
-      "cockpit": "Console sombre et boîte manuelle d'une BMW M3, photographiées par Cedric Ramirez à Genève en 2011",
-      "carplay": "CarPlay en fonctionnement sur l'écran d'origine d'une Volkswagen ID.4, photographié par Sunnyboy122",
-      "mercedes": "Mercedes-AMG GT bleue devant l'atelier Glass Tuning, photographie de Tayfun Kayabasi / Glasstuning",
-      "exterior": "BMW orange et noire préparée à Tuning World Bodensee 2018, photographie de Matti Blume"
+      "bmw": "BMW bleue équipée de jantes CW-S5, photographie de CONCAVO WHEELS",
+      "mercedes": "Mercedes Classe S noire avec jantes CW-5 en décor industriel, photographie de CONCAVO WHEELS",
+      "audi": "Audi S7 rouge équipée de jantes CW-5, photographie de CONCAVO WHEELS",
+      "porsche": "Porsche 992 GT3 RS Manthey, aileron et diffuseur arrière, photographie d'Alexandre Prevot",
+      "volkswagen": "Volkswagen Golf VI préparée, photographiée par Monaam Ben Fredj",
+      "toyota": "Toyota GR Supra gris mat, photographie de Motor.es",
+      "cockpit": "Détail du volant rouge et des commandes d'une Toyota GR Supra, photographie de Motor.es",
+      "technology": "Cockpit numérique et écran panoramique d'une BMW M3 G81, photographie d'Ethan Llamas",
+      "detail": "Gros plan d'une jante CW-5 montée sur une BMW M3, photographie de CONCAVO WHEELS"
     }
   },
   "cta": {

@@ -9,8 +9,11 @@
 .universe-road-fill { display: block; height: 100%; width: 100%; transform-origin: left; background: linear-gradient(90deg, #e10600, #f2c94c); }
 .universe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
 .universe-card { min-width: 0; background: #0b0d10; border: 1px solid #232b3a; border-radius: 1rem; overflow: hidden; }
+.universe-swipe-hint, .universe-select { display: none; }
+.universe-grid:focus-visible { outline: 2px solid #f2c94c; outline-offset: 4px; }
+.universe-card-link:focus-visible { outline: 2px solid #f2c94c; outline-offset: 4px; }
 .universe-card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1.6fr 1fr; align-items: center; }
-.universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 4/5; }
+.universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 3/2; }
 .universe-card-featured .universe-image-frame { aspect-ratio: 16/10; }
 .universe-photo { position: absolute; inset: 0; background: #12171e; overflow: hidden; }
 .universe-photo img { width: 100%; height: 100%; object-fit: contain; }
@@ -32,14 +35,32 @@
 .universe-credits summary { cursor: pointer; width: fit-content; min-height: 28px; }
 .universe-credits a { display: block; width: fit-content; padding: .4rem 0; text-decoration: underline; }
 @media (max-width: 767px) {
-  .universe-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  .universe-card-featured { grid-column: auto; display: flex; flex-direction: column; align-items: stretch; }
-  .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; }
-  .universe-image-frame { aspect-ratio: 4/5; }
-  .universe-card-copy { padding: 1.4rem; }
+  .universe-road { margin-bottom: 1rem; }
+  .universe-swipe-hint { display: block; font-size: .75rem; color: #a9b2bf; }
+  .universe-grid {
+    display: flex; gap: 1.25rem; align-items: stretch;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+    scroll-padding-inline: .75rem; padding: 1rem .75rem 1.25rem;
+    margin-inline: -.75rem; scrollbar-width: thin; scrollbar-color: #68604b #12171e;
+  }
+  .universe-card, .universe-card-featured {
+    flex: 0 0 min(78vw, 19rem); display: flex; flex-direction: column;
+    align-items: stretch; scroll-snap-align: center; transform-origin: center;
+    transition: transform 220ms ease, border-color 220ms ease;
+  }
+  .universe-card.is-selected { transform: scale(1.035); border-color: #f2c94c99; }
+  .universe-image-frame, .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; }
+  .universe-image-label { top: .75rem; left: .75rem; gap: .5rem; font-size: 9px; }
+  .universe-select { display: block; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; background: transparent; border: 0; }
+  .universe-select:focus-visible { outline: 2px solid #f2c94c; outline-offset: -5px; }
+  .universe-card-copy { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+  .universe-card-copy h3, .universe-card-featured h3 { font-size: 1.3rem; line-height: 1.15; }
+  .universe-card-copy > p { font-size: .8rem; line-height: 1.5; margin-top: .65rem; }
+  .universe-card-link { margin-top: auto; padding-top: .75rem; }
   .universe-footer { align-items: stretch; flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .universe-card { transition: none; }
   .universe-card-link svg { transition: none; }
   .universe-card-link:hover svg { transform: none; }
 }

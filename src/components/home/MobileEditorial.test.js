@@ -8,7 +8,7 @@ import { StorytellingSection } from './StorytellingSection';
 import { BrandsSection } from './BrandsSection';
 import { CtaSection } from './CtaSection';
 import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
-import { HOME_PHOTOS, HOME_CATEGORY_PHOTOS } from '@/lib/homeEditorialPhotos';
+import { HOME_PHOTOS, HOME_CATEGORY_PHOTOS, HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
 import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
 import { categoryEditorialImage, EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
@@ -21,7 +21,10 @@ import path from 'path';
 
 jest.mock('@/lib/api', () => ({ Categories: { list: jest.fn(), get: jest.fn() }, Brands: { get: jest.fn(), list: jest.fn() }, Products: { list: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'technology' }), Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
-jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key.split('.').reduce((value, part) => value?.[part], require('@/lib/locales/fr.json')) ?? key }) }));
+jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key, options = {}) => {
+  const value = key.split('.').reduce((item, part) => item?.[part], require('@/lib/locales/fr.json')) ?? key;
+  return typeof value === 'string' ? value.replace(/{{(\w+)}}/g, (_, name) => options[name] ?? '') : value;
+} }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children }) => children }));
 jest.mock('@/components/shared/ProductCard', () => ({ ProductCard: () => null }));
 let root, host, originalMedia, originalObserver;
@@ -173,7 +176,7 @@ test('inspiration is default-visible without animation APIs, with useful links a
 test('a failed inspiration image has a readable fallback instead of a broken image', () => {
   act(() => root.render(<CommunitySection />));
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
-  expect(host.querySelector('[role="status"]').textContent).toContain('BMW orange et noire');
+  expect(host.querySelector('[role="status"]').textContent).toContain(fr.home_photos.alts.mercedes);
   expect(host.querySelectorAll('img')).toHaveLength(2);
 });
 test('reduced motion disconnects the observer, leaves content visible, and cleans up on unmount', () => {
@@ -202,12 +205,13 @@ test('French and English new editorial copy have matching complete keys', () => 
   expect(fr.categories.title).toBe('Performance. Intérieur. Technologie.');
 });
 
-test('home brand cards restore photographic backgrounds, names and unchanged backend routes', async () => {
-  const brands = ['bmw', 'mercedes', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: `https://images.unsplash.com/photo-${slug}` }));
+test('home brand cards keep their photographic design and backend routes, but use the licensed local photos', async () => {
+  const brands = ['bmw', 'mercedes-benz', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: `https://images.unsplash.com/photo-${slug}` }));
   Brands.list.mockResolvedValue(brands);
   await act(async () => root.render(<BrandsSection />));
   expect(host.querySelectorAll('img')).toHaveLength(6);
-  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(brands.map(brand => responsiveImageProps(brand.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw').src));
+  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(brands.map(brand => HOME_BRAND_PHOTOS[brand.slug].src));
+  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(6);
   expect([...host.querySelectorAll('img')].every(image => image.getAttribute('loading') === 'lazy' && image.className.includes('object-cover'))).toBe(true);
   expect([...host.querySelectorAll('[data-testid="brand-card"]')].map(link => link.getAttribute('href'))).toEqual(brands.map(brand => `/brands/${brand.slug}`));
   expect(host.textContent).toContain('Volkswagen');
@@ -218,7 +222,7 @@ test('home brand cards restore photographic backgrounds, names and unchanged bac
 });
 
 test('a missing or failed brand image leaves its real name and navigation accessible', async () => {
-  Brands.list.mockResolvedValue([{ slug: 'bmw', name: 'BMW', image: '/broken.jpg' }, { slug: 'audi', name: 'Audi' }]);
+  Brands.list.mockResolvedValue([{ slug: 'bmw', name: 'BMW', image: '/broken.jpg' }, { slug: 'other', name: 'Other' }]);
   await act(async () => root.render(<BrandsSection />));
   expect(host.querySelectorAll('img')).toHaveLength(1);
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
@@ -237,7 +241,7 @@ test('final CTA is graphic-only and still opens the catalogue with its premium b
 });
 
 test('editorial photo errors never prevent navigation and a changed source resets the error', () => {
-  act(() => root.render(<HomeEditorialPhoto photo={HOME_PHOTOS.exterior} />));
+  act(() => root.render(<HomeEditorialPhoto photo={HOME_PHOTOS.bmw} />));
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
   expect(host.querySelector('img')).toBeNull();
   expect(host.querySelector('[role="status"]').textContent).toContain(fr.home_photos.unavailable);
@@ -249,22 +253,63 @@ test('editorial photo errors never prevent navigation and a changed source reset
 test('photo credits deduplicate images, retain authors/titles and link to each licence', () => {
   act(() => root.render(<HomePhotoCredits photos={[HOME_PHOTOS.cockpit, HOME_PHOTOS.cockpit, HOME_PHOTOS.mercedes]} />));
   expect(host.querySelectorAll('li')).toHaveLength(2);
-  expect(host.textContent).toContain('Cedric Ramirez');
+  expect(host.textContent).toContain('Motor.es');
   expect(host.textContent).toContain(HOME_PHOTOS.cockpit.title);
-  expect(host.textContent).toContain('Tayfun Kayabasi / Glasstuning');
+  expect(host.textContent).toContain('CONCAVO WHEELS');
   expect(host.querySelector(`a[href="${HOME_PHOTOS.cockpit.licenceUrl}"]`)).not.toBeNull();
 });
 
 test('published homepage photos exist locally and have a provenance record, without changing the shared storytelling map', () => {
   for (const photo of Object.values(HOME_PHOTOS)) {
     expect(fs.existsSync(path.join(__dirname, '../../../public', photo.src))).toBe(true);
-    expect(photo.width).toBe(1280);
+    expect(photo.width).toBeGreaterThanOrEqual(1023);
     expect(photo.height).toBeGreaterThan(0);
-    expect(photo.source).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+    expect(photo.source).toMatch(/^https:\/\/(?:www\.flickr\.com\/photos\/|www\.motor\.es\/|commons\.wikimedia\.org\/wiki\/File:)/);
+    expect(photo.source).not.toMatch(/unsplash|pexels/i);
     expect(photo.licenceUrl).toMatch(/^https:\/\/creativecommons\.org\//);
   }
   const credits = fs.readFileSync(path.join(__dirname, '../../../public/images/home/CREDITS.md'), 'utf8');
   expect(credits).toContain('CC BY-SA 2.0');
   expect(credits).toContain('CC BY-SA 4.0');
-  expect(credits).toContain('3aed100cafdb8a18999288f5fd2f42370f86842a6536c0b318c8b5a83133f9d9');
+  for (const photo of Object.values(HOME_PHOTOS)) {
+    expect(credits).toContain(photo.src.split('/').pop());
+    expect(credits).toContain(require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../../../public', photo.src))).digest('hex'));
+  }
+});
+
+test('mobile inspiration selection enlarges only one card, toggles off, and never changes CTA destinations', () => {
+  act(() => root.render(<CommunitySection />));
+  const cards = [...host.querySelectorAll('[data-testid="community-card"]')];
+  expect(host.querySelector('.universe-grid').hasAttribute('data-lenis-prevent')).toBe(true);
+  expect(host.querySelector('.universe-grid').tabIndex).toBe(0);
+  const buttons = [...host.querySelectorAll('.universe-select')];
+  cards.forEach(card => { card.scrollIntoView = jest.fn(); });
+  const destinations = cards.map(card => card.querySelector('a').getAttribute('href'));
+  expect(buttons.every(button => button.type === 'button' && button.getAttribute('aria-pressed') === 'false')).toBe(true);
+  act(() => buttons[0].click());
+  expect(cards[0].classList.contains('is-selected')).toBe(true);
+  expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+  expect(buttons[0].getAttribute('aria-label')).toContain('Réduire');
+  expect(cards[0].scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'center', behavior: 'auto' });
+  window.matchMedia = jest.fn(() => ({ matches: false }));
+  act(() => buttons[1].click());
+  expect(cards[1].scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  expect(host.querySelectorAll('.is-selected')).toHaveLength(1);
+  expect(cards[1].classList.contains('is-selected')).toBe(true);
+  act(() => buttons[1].click());
+  expect(host.querySelectorAll('.is-selected')).toHaveLength(0);
+  expect(cards.map(card => card.querySelector('a').getAttribute('href'))).toEqual(destinations);
+});
+
+test('mobile inspiration has a native horizontal rail, compact cards, focus and reduced-motion support; desktop keeps its grid', () => {
+  const css = fs.readFileSync(path.join(__dirname, 'CommunitySection.css'), 'utf8');
+  const mobile = css.slice(css.indexOf('@media (max-width: 767px)'));
+  expect(css).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
+  expect(mobile).toContain('overflow-x: auto');
+  expect(mobile).toContain('scroll-snap-type: x proximity');
+  expect(mobile).toContain('flex: 0 0 min(78vw, 19rem)');
+  expect(mobile).toContain('transform: scale(1.035)');
+  expect(mobile).toContain('.universe-select:focus-visible');
+  expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+  expect(css).toContain('.universe-card { transition: none; }');
 });

@@ -150,10 +150,14 @@
     "cta": "Customize my vehicle",
     "disclaimer": "Independent inspiration photos: these vehicles are not TYMotors builds. Always check equipment compatibility and permitted use.",
     "credits": "Photo credits",
+    "gallery": "Automotive inspiration",
+    "swipe_hint": "Swipe to explore · Tap a photo to enlarge it",
+    "select_card": "Enlarge inspiration: {{title}}",
+    "reduce_card": "Reduce inspiration: {{title}}",
     "projects": {
-      "gathering": { "label": "Tuning culture", "title": "A line that feels like you.", "desc": "Bodywork, wheels, finishes: find your direction through tuning culture, then check the parts suited to your vehicle.", "link": "Imagine my project", "alt": "Orange and black tuned BMW at Tuning World Bodensee 2018" },
-      "detail": { "label": "Attention to detail", "title": "The front end sets the tone.", "desc": "A grille, a finish, an attitude. Take inspiration without confusing these independent builds with the products offered.", "link": "Explore the equipment", "alt": "Blue Mercedes-AMG GT outside the Glass Tuning workshop" },
-      "silhouette": { "label": "Interior inspiration", "title": "A cockpit with character.", "desc": "Textures, controls, details: imagine your own interior and check compatibility before choosing your equipment.", "link": "Choose my vehicle", "alt": "BMW M3 centre console and manual gearbox at the 2011 Geneva Motor Show" }
+      "gathering": { "label": "Tuning culture", "title": "A line that feels like you.", "desc": "Bodywork, wheels, finishes: find your direction through tuning culture, then check the parts suited to your vehicle.", "link": "Imagine my project", "alt": "Black Mercedes with CONCAVO wheels in an industrial setting" },
+      "detail": { "label": "Attention to detail", "title": "Details make the difference.", "desc": "A wheel, a finish, an attitude. Take inspiration without confusing this independent equipment with the products offered.", "link": "Explore the equipment", "alt": "CONCAVO CW-5 wheel installed on a BMW M3" },
+      "silhouette": { "label": "Sporting silhouette", "title": "A profile built for the circuit.", "desc": "Wing, diffuser, lines: explore aerodynamic inspiration and check compatibility before choosing your equipment.", "link": "Choose my vehicle", "alt": "Rear view of a Porsche 992 GT3 RS Manthey with its wing" }
     }
   },
   "home_photos": {
@@ -162,10 +166,15 @@
     "presentation": "Images scaled and presented in CSS frames, without product retouching or AI generation by TYMotors. These photographs are not TYMotors builds and do not imply any partnership with their authors or the brands shown. Each image retains its stated licence.",
     "unavailable": "Photograph temporarily unavailable.",
     "alts": {
-      "cockpit": "Dark centre console and manual gearbox in a BMW M3, photographed by Cedric Ramirez in Geneva in 2011",
-      "carplay": "CarPlay running on the factory screen in a Volkswagen ID.4, photographed by Sunnyboy122",
-      "mercedes": "Blue Mercedes-AMG GT outside the Glass Tuning workshop, photograph by Tayfun Kayabasi / Glasstuning",
-      "exterior": "Orange and black tuned BMW at Tuning World Bodensee 2018, photograph by Matti Blume"
+      "bmw": "Blue BMW equipped with CW-S5 wheels, photograph by CONCAVO WHEELS",
+      "mercedes": "Black Mercedes S-Class with CW-5 wheels in an industrial setting, photograph by CONCAVO WHEELS",
+      "audi": "Red Audi S7 equipped with CW-5 wheels, photograph by CONCAVO WHEELS",
+      "porsche": "Porsche 992 GT3 RS Manthey, rear wing and diffuser, photograph by Alexandre Prevot",
+      "volkswagen": "Tuned Volkswagen Golf VI, photographed by Monaam Ben Fredj",
+      "toyota": "Matte grey Toyota GR Supra, photograph by Motor.es",
+      "cockpit": "Red steering wheel and controls in a Toyota GR Supra, photograph by Motor.es",
+      "technology": "Digital cockpit and panoramic display in a BMW M3 G81, photograph by Ethan Llamas",
+      "detail": "Close-up of a CW-5 wheel installed on a BMW M3, photograph by CONCAVO WHEELS"
     }
   },
   "cta": {

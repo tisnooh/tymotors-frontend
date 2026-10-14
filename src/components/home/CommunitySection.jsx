@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
@@ -7,14 +7,23 @@ import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
 import './CommunitySection.css';
 
 const PROJECTS = [
-  { id: 'gathering', image: HOME_PHOTOS.exterior, to: '/customize' },
-  { id: 'detail', image: HOME_PHOTOS.mercedes, to: '/category/performance' },
-  { id: 'silhouette', image: HOME_PHOTOS.cockpit, to: '/customize' },
+  { id: 'gathering', image: HOME_PHOTOS.mercedes, to: '/customize' },
+  { id: 'detail', image: HOME_PHOTOS.detail, to: '/category/performance' },
+  { id: 'silhouette', image: HOME_PHOTOS.porsche, to: '/customize' },
 ];
 
 export function CommunitySection() {
   const { t } = useTranslation();
   const sectionRef = useRef(null);
+  const cardRefs = useRef([]);
+  const [selected, setSelected] = useState(null);
+  const selectCard = (index) => {
+    setSelected(current => current === index ? null : index);
+    cardRefs.current[index]?.scrollIntoView?.({
+      block: 'nearest', inline: 'center',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
   useEffect(() => {
     const section = sectionRef.current;
     if (!section || !('IntersectionObserver' in window)) return undefined;
@@ -40,6 +49,8 @@ export function CommunitySection() {
               scrollTrigger: { trigger: section, start: 'top 90%', once: true },
             });
             cards.forEach((card, index) => {
+              // Mobile selection owns the card transform; entrance motion stays on desktop.
+              if (window.matchMedia('(max-width: 767px)').matches) return;
               gsap.from(card, {
                 y: 64, rotation: index === 1 ? 2 : -1, opacity: 0, duration: 1.1,
                 ease: 'power3.out', clearProps: 'transform,opacity',
@@ -66,13 +77,18 @@ export function CommunitySection() {
         <p className="universe-sub">{t('community.sub')}</p>
       </div>
       <div className="universe-road" aria-hidden="true"><span className="universe-road-fill" /></div>
-      <div className="universe-grid">
+      <p className="universe-swipe-hint">{t('community.swipe_hint')}</p>
+      <div className="universe-grid" role="region" tabIndex={0} aria-label={t('community.gallery')} data-lenis-prevent="">
         {PROJECTS.map((project, index) => <article key={project.id} data-testid="community-card"
-          className={`universe-card ${index === 0 ? 'universe-card-featured' : ''}`}>
+          ref={element => { cardRefs.current[index] = element; }}
+          className={`universe-card ${index === 0 ? 'universe-card-featured' : ''} ${selected === index ? 'is-selected' : ''}`}>
           <div className="universe-image-frame">
             <HomeEditorialPhoto photo={project.image} className="universe-photo" />
             <span className="universe-photo-shade" aria-hidden="true" />
             <p className="universe-image-label"><span>0{index + 1}</span>{t(`community.projects.${project.id}.label`)}</p>
+            <button type="button" className="universe-select" aria-pressed={selected === index}
+              aria-label={t(selected === index ? 'community.reduce_card' : 'community.select_card', { title: t(`community.projects.${project.id}.title`) })}
+              onClick={() => selectCard(index)} />
           </div>
           <div className="universe-card-copy">
             <h3 className="ty-display">{t(`community.projects.${project.id}.title`)}</h3>

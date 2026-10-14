@@ -5,6 +5,8 @@ import { ArrowUpRight } from 'lucide-react';
 import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
 import { responsiveImageProps } from '@/lib/image';
+import { HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
+import { HomePhotoCredits } from './HomeEditorialPhoto';
 import './HomeEditorial.css';
 
 export function BrandsSection() {
@@ -31,16 +33,18 @@ export function BrandsSection() {
         </Reveal>
 
         <div className="home-brand-grid grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-          {items.map((b, idx) => (
+          {items.map((b, idx) => {
+            const photo = HOME_BRAND_PHOTOS[b.slug];
+            return (
             <Reveal key={b.slug} delay={idx * 0.05} className="min-w-0">
               <Link
                 to={`/brands/${b.slug}`}
                 data-testid="brand-card"
                 className="home-brand-card group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
-                {b.image && <img
-                  {...responsiveImageProps(b.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw')}
-                  alt={b.name}
+                {(photo || b.image) && <img
+                  {...(photo ? { src: photo.src, width: photo.width, height: photo.height } : responsiveImageProps(b.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw'))}
+                  alt={photo ? t(photo.altKey) : b.name}
                   loading="lazy"
                   decoding="async"
                   onError={event => { event.currentTarget.hidden = true; }}
@@ -65,8 +69,9 @@ export function BrandsSection() {
                 </div>
               </Link>
             </Reveal>
-          ))}
+          ); })}
         </div>
+        <HomePhotoCredits photos={items.map(brand => HOME_BRAND_PHOTOS[brand.slug]).filter(Boolean)} />
       </div>
     </section>
   );
