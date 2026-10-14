@@ -202,13 +202,29 @@ test('French and English new editorial copy have matching complete keys', () => 
   expect(fr.categories.title).toBe('Performance. Intérieur. Technologie.');
 });
 
-test('home brand cards preserve real backend names and routes without generic photographs', async () => {
-  const brands = ['bmw', 'mercedes', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: 'https://images.unsplash.com/unrelated' }));
+test('home brand cards restore photographic backgrounds, names and unchanged backend routes', async () => {
+  const brands = ['bmw', 'mercedes', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: `https://images.unsplash.com/photo-${slug}` }));
   Brands.list.mockResolvedValue(brands);
   await act(async () => root.render(<BrandsSection />));
-  expect(host.querySelectorAll('img')).toHaveLength(0);
+  expect(host.querySelectorAll('img')).toHaveLength(6);
+  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(brands.map(brand => responsiveImageProps(brand.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw').src));
+  expect([...host.querySelectorAll('img')].every(image => image.getAttribute('loading') === 'lazy' && image.className.includes('object-cover'))).toBe(true);
   expect([...host.querySelectorAll('[data-testid="brand-card"]')].map(link => link.getAttribute('href'))).toEqual(brands.map(brand => `/brands/${brand.slug}`));
   expect(host.textContent).toContain('Volkswagen');
+  const css = fs.readFileSync(path.join(__dirname, 'HomeEditorial.css'), 'utf8');
+  expect(css).not.toContain('.home-brand-card::before');
+  expect(css).toContain('.home-brand-grid > * { min-width: 0; }');
+  expect(css).toContain('box-sizing: border-box; padding: .75rem;');
+});
+
+test('a missing or failed brand image leaves its real name and navigation accessible', async () => {
+  Brands.list.mockResolvedValue([{ slug: 'bmw', name: 'BMW', image: '/broken.jpg' }, { slug: 'audi', name: 'Audi' }]);
+  await act(async () => root.render(<BrandsSection />));
+  expect(host.querySelectorAll('img')).toHaveLength(1);
+  act(() => host.querySelector('img').dispatchEvent(new Event('error')));
+  expect(host.querySelector('img').hidden).toBe(true);
+  expect(host.querySelector('h3').textContent).toBe('BMW');
+  expect(host.querySelector('[data-testid="brand-card"]').getAttribute('href')).toBe('/brands/bmw');
 });
 
 test('final CTA is graphic-only and still opens the catalogue with its premium button', () => {

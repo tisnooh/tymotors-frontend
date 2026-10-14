@@ -1,8 +1,22 @@
 # Visuels éditoriaux de l'accueil — 13 octobre 2026
 
+## Correction — 15 octobre 2026 : présentation des marques restaurée
+
+À la demande du propriétaire, les cartes marques retrouvent leur présentation
+photographique antérieure au commit `3b33674` : image de marque issue de l'API,
+recouvrement sombre, texture, nom/légende et lien d'origine. Le fond graphique
+ajouté le 14 octobre est supprimé pour ces six cartes seulement. La grille reste
+à deux colonnes sur téléphone et trois sur bureau ; min-width et box-sizing
+empêchent les cartes de déborder, avec un texte mobile compact mais lisible.
+
+Il s'agit de restaurer les sources préexistantes, pas de publier la nouvelle
+sélection de photographies spécialisées : ses autorisations restent à obtenir.
+Les catégories, Univers, CTA final, Hero/Porsche, storytelling, avant/après,
+header et gestion des images produit restent inchangés par ce correctif.
+
 ## Mise à jour — 14 octobre 2026 : accueil hors sections conservées
 
-Les cartes de marques et le CTA final utilisent désormais des fonds graphiques CSS, sans photographie. Les catégories de l'accueil et Univers utilisent les quatre photographies indépendantes locales du fichier [CREDITS.md](../public/images/home/CREDITS.md), centralisées dans `src/lib/homeEditorialPhotos.js`. Les noms d'auteurs, titres, sources et licences sont accessibles dans les deux sections ; aucune réalisation TYMotors, référence exacte ou affiliation n'est revendiquée.
+À cette date, les cartes de marques et le CTA final avaient été remplacés par des fonds graphiques CSS, sans photographie. La présentation des marques est restaurée le 15 octobre, comme indiqué ci-dessus. Les catégories de l'accueil et Univers utilisent les quatre photographies indépendantes locales du fichier [CREDITS.md](../public/images/home/CREDITS.md), centralisées dans `src/lib/homeEditorialPhotos.js`. Les noms d'auteurs, titres, sources et licences sont accessibles dans les deux sections ; aucune réalisation TYMotors, référence exacte ou affiliation n'est revendiquée.
 
 Les versions de 1280 px ont été téléchargées auprès de Wikimedia, inspectées et copiées inchangées. Les cadres `contain` gardent chaque photographie entière, sans recadrage de la pièce ni génération IA. La paire avant/après conserve son étiquetage IA. Hero/Porsche et storytelling sont inchangés. Les images des fiches produit/panier/configurateur et les fonds des pages de catégories sont hors scope ; aucune autorisation de ces autres images n'est déduite de cette mise à jour.
 

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowUpRight } from 'lucide-react';
 import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
+import { responsiveImageProps } from '@/lib/image';
 import './HomeEditorial.css';
 
 export function BrandsSection() {
@@ -29,14 +30,24 @@ export function BrandsSection() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+        <div className="home-brand-grid grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
           {items.map((b, idx) => (
-            <Reveal key={b.slug} delay={idx * 0.05}>
+            <Reveal key={b.slug} delay={idx * 0.05} className="min-w-0">
               <Link
                 to={`/brands/${b.slug}`}
                 data-testid="brand-card"
-                className="home-brand-card group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden border border-[#151A23] hover:border-[#2E394D] transition-colors"
+                className="home-brand-card group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
+                {b.image && <img
+                  {...responsiveImageProps(b.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw')}
+                  alt={b.name}
+                  loading="lazy"
+                  decoding="async"
+                  onError={event => { event.currentTarget.hidden = true; }}
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-[1.05] transition-all duration-700"
+                />}
+                <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />
+                <div aria-hidden="true" className="absolute inset-0 ty-noise" />
                 <div className="home-brand-copy relative h-full w-full flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span aria-hidden="true" className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 flex items-center gap-2">
@@ -47,7 +58,7 @@ export function BrandsSection() {
                     </span>
                   </div>
                   <div>
-                    <h3 className="home-brand-name ty-display text-white">{b.name}</h3>
+                    <h3 className="home-brand-name ty-display text-white text-base sm:text-xl md:text-3xl">{b.name}</h3>
                     <p className="text-xs md:text-sm text-ty-textMid mt-1.5 max-w-[14rem] line-clamp-2">{b.tagline}</p>
                     <div className="mt-3 h-[1.5px] w-12 bg-[#E10600] group-hover:w-24 transition-all duration-300" />
                   </div>
