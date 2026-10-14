@@ -151,9 +151,21 @@
     "disclaimer": "Independent inspiration photos: these vehicles are not TYMotors builds. Always check equipment compatibility and permitted use.",
     "credits": "Photo credits",
     "projects": {
-      "gathering": { "label": "Tuning culture", "title": "Brought together by passion.", "desc": "Individual builds, a shared desire to stand out. Take inspiration, then find your own direction.", "link": "Imagine my project", "alt": "Two modified sedans, including a Subaru with a rear wing, at sunset" },
-      "detail": { "label": "Attention to detail", "title": "Nothing left to chance.", "desc": "Lines, materials, finishes: every detail contributes to a project's identity.", "link": "Explore the equipment", "alt": "Close-up of a polished custom wheel on a modified car" },
-      "silhouette": { "label": "A distinct silhouette", "title": "Express your character.", "desc": "A recognisable silhouette. Find the balance that feels like you, without compromising compatibility.", "link": "Choose my vehicle", "alt": "Rear of a lowered blue BMW with custom wheels" }
+      "gathering": { "label": "Tuning culture", "title": "A line that feels like you.", "desc": "Bodywork, wheels, finishes: find your direction through tuning culture, then check the parts suited to your vehicle.", "link": "Imagine my project", "alt": "Orange and black tuned BMW at Tuning World Bodensee 2018" },
+      "detail": { "label": "Attention to detail", "title": "The front end sets the tone.", "desc": "A grille, a finish, an attitude. Take inspiration without confusing these independent builds with the products offered.", "link": "Explore the equipment", "alt": "Blue Mercedes-AMG GT outside the Glass Tuning workshop" },
+      "silhouette": { "label": "Interior inspiration", "title": "A cockpit with character.", "desc": "Textures, controls, details: imagine your own interior and check compatibility before choosing your equipment.", "link": "Choose my vehicle", "alt": "BMW M3 centre console and manual gearbox at the 2011 Geneva Motor Show" }
+    }
+  },
+  "home_photos": {
+    "credits": "Photograph sources and licences",
+    "disclaimer": "Independent, non-exclusive inspiration photographs: these do not depict the exact TYMotors product references. Check each product page for its photographs, package contents and compatibility.",
+    "presentation": "Images scaled and presented in CSS frames, without product retouching or AI generation by TYMotors. These photographs are not TYMotors builds and do not imply any partnership with their authors or the brands shown. Each image retains its stated licence.",
+    "unavailable": "Photograph temporarily unavailable.",
+    "alts": {
+      "cockpit": "Dark centre console and manual gearbox in a BMW M3, photographed by Cedric Ramirez in Geneva in 2011",
+      "carplay": "CarPlay running on the factory screen in a Volkswagen ID.4, photographed by Sunnyboy122",
+      "mercedes": "Blue Mercedes-AMG GT outside the Glass Tuning workshop, photograph by Tayfun Kayabasi / Glasstuning",
+      "exterior": "Orange and black tuned BMW at Tuning World Bodensee 2018, photograph by Matti Blume"
     }
   },
   "cta": {

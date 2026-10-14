@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
-import { responsiveImageProps } from '@/lib/image';
-
-const CTA_IMAGE = 'https://images.unsplash.com/photo-1750712348122-e0c0998e3ff2?auto=format&fit=crop&w=2000&q=85';
+import './HomeEditorial.css';
 
 export function CtaSection() {
   const { t } = useTranslation();
@@ -13,16 +11,8 @@ export function CtaSection() {
     <section data-testid="prefooter-cta-section" className="relative ty-section overflow-hidden">
       <div className="ty-container">
         <Reveal>
-          <div className="relative rounded-3xl overflow-hidden border border-[#232B3A] bg-[#0A0B0E]">
-            <img
-              {...responsiveImageProps(CTA_IMAGE, [640, 960, 1400], '(max-width: 1280px) 100vw, 1280px', 72)}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover opacity-45"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050608] via-[#050608]/85 to-transparent" />
-            <div className="absolute -right-32 top-1/4 h-80 w-80 rounded-full bg-[#E10600]/25 blur-[120px]" />
+          <div className="home-collection-cta relative rounded-3xl overflow-hidden border border-[#232B3A]">
+            <div className="home-collection-cta-art" aria-hidden="true" />
             <div className="absolute top-6 left-6 h-2 w-2 border-t border-l border-[#F2C94C]" />
             <div className="absolute bottom-6 left-6 h-2 w-2 border-b border-l border-[#F2C94C]" />
             <div className="absolute top-6 right-6 h-2 w-2 border-t border-r border-[#F2C94C]" />

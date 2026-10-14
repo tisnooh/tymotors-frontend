@@ -5,6 +5,10 @@ import { CommunitySection } from './CommunitySection';
 import { CategoriesSection } from './CategoriesSection';
 import { HeroSection } from './HeroSection';
 import { StorytellingSection } from './StorytellingSection';
+import { BrandsSection } from './BrandsSection';
+import { CtaSection } from './CtaSection';
+import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
+import { HOME_PHOTOS, HOME_CATEGORY_PHOTOS } from '@/lib/homeEditorialPhotos';
 import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
 import { categoryEditorialImage, EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
@@ -15,7 +19,7 @@ import en from '@/lib/locales/en.json';
 import fs from 'fs';
 import path from 'path';
 
-jest.mock('@/lib/api', () => ({ Categories: { list: jest.fn(), get: jest.fn() }, Brands: { get: jest.fn() }, Products: { list: jest.fn() } }));
+jest.mock('@/lib/api', () => ({ Categories: { list: jest.fn(), get: jest.fn() }, Brands: { get: jest.fn(), list: jest.fn() }, Products: { list: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'technology' }), Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key) => key.split('.').reduce((value, part) => value?.[part], require('@/lib/locales/fr.json')) ?? key }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children }) => children }));
@@ -45,8 +49,10 @@ test('home categories retain backend routes but replace the unrelated category p
   await act(async () => root.render(<CategoriesSection />));
   expect(host.querySelectorAll('img')).toHaveLength(3);
   expect(host.textContent).toContain('Performance. Intérieur. Technologie.');
-  expect([...host.querySelectorAll('a')].map(link => link.getAttribute('href'))).toEqual(['/category/performance', '/category/interior', '/category/technology']);
-  expect([...host.querySelectorAll('img')].every(image => image.src.includes('images.pexels.com'))).toBe(true);
+  expect([...host.querySelectorAll('[data-testid="category-card"]')].map(link => link.getAttribute('href'))).toEqual(['/category/performance', '/category/interior', '/category/technology']);
+  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(Object.values(HOME_CATEGORY_PHOTOS).map(photo => photo.src));
+  expect(host.textContent).toContain('ne montrent pas les références exactes');
+  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(3);
 });
 test('Hero keeps the selected photo, original animations and catalogue CTA', () => {
   act(() => root.render(<HeroSection />));
@@ -161,12 +167,13 @@ test('inspiration is default-visible without animation APIs, with useful links a
   expect(host.textContent).toContain('ne sont pas des réalisations TYMotors');
   expect(host.querySelector('[data-testid="community-customize-cta"]').getAttribute('href')).toBe('/customize');
   expect(host.querySelectorAll('img[loading="lazy"]')).toHaveLength(3);
-  expect(host.querySelectorAll('a[rel="noopener noreferrer"]')).toHaveLength(3);
+  expect(host.querySelectorAll('a[rel="noopener noreferrer"]')).toHaveLength(6);
+  expect([...host.querySelectorAll('img')].every(image => image.getAttribute('src').startsWith('/images/home/'))).toBe(true);
 });
 test('a failed inspiration image has a readable fallback instead of a broken image', () => {
   act(() => root.render(<CommunitySection />));
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
-  expect(host.querySelector('[role="status"]').textContent).toContain('Subaru');
+  expect(host.querySelector('[role="status"]').textContent).toContain('BMW orange et noire');
   expect(host.querySelectorAll('img')).toHaveLength(2);
 });
 test('reduced motion disconnects the observer, leaves content visible, and cleans up on unmount', () => {
@@ -191,5 +198,57 @@ test.each([['brand', BrandDetail], ['category', CategoryPage]])('%s banner conte
 test('French and English new editorial copy have matching complete keys', () => {
   const keys = (value, prefix = '') => Object.entries(value).flatMap(([key, item]) => typeof item === 'object' ? keys(item, `${prefix}${key}.`) : [`${prefix}${key}`]);
   expect(keys(fr.community)).toEqual(keys(en.community));
+  expect(keys(fr.home_photos)).toEqual(keys(en.home_photos));
   expect(fr.categories.title).toBe('Performance. Intérieur. Technologie.');
+});
+
+test('home brand cards preserve real backend names and routes without generic photographs', async () => {
+  const brands = ['bmw', 'mercedes', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: 'https://images.unsplash.com/unrelated' }));
+  Brands.list.mockResolvedValue(brands);
+  await act(async () => root.render(<BrandsSection />));
+  expect(host.querySelectorAll('img')).toHaveLength(0);
+  expect([...host.querySelectorAll('[data-testid="brand-card"]')].map(link => link.getAttribute('href'))).toEqual(brands.map(brand => `/brands/${brand.slug}`));
+  expect(host.textContent).toContain('Volkswagen');
+});
+
+test('final CTA is graphic-only and still opens the catalogue with its premium button', () => {
+  act(() => root.render(<CtaSection />));
+  expect(host.querySelectorAll('img')).toHaveLength(0);
+  const cta = host.querySelector('[data-testid="prefooter-cta-button"]');
+  expect(cta.getAttribute('href')).toBe('/shop');
+  expect(cta.className).toContain('ty-btn-primary');
+  expect(host.querySelector('.home-collection-cta-art').getAttribute('aria-hidden')).toBe('true');
+});
+
+test('editorial photo errors never prevent navigation and a changed source resets the error', () => {
+  act(() => root.render(<HomeEditorialPhoto photo={HOME_PHOTOS.exterior} />));
+  act(() => host.querySelector('img').dispatchEvent(new Event('error')));
+  expect(host.querySelector('img')).toBeNull();
+  expect(host.querySelector('[role="status"]').textContent).toContain(fr.home_photos.unavailable);
+  act(() => root.render(<HomeEditorialPhoto photo={HOME_PHOTOS.cockpit} />));
+  expect(host.querySelector('[role="status"]')).toBeNull();
+  expect(host.querySelector('img').getAttribute('src')).toBe(HOME_PHOTOS.cockpit.src);
+});
+
+test('photo credits deduplicate images, retain authors/titles and link to each licence', () => {
+  act(() => root.render(<HomePhotoCredits photos={[HOME_PHOTOS.cockpit, HOME_PHOTOS.cockpit, HOME_PHOTOS.mercedes]} />));
+  expect(host.querySelectorAll('li')).toHaveLength(2);
+  expect(host.textContent).toContain('Cedric Ramirez');
+  expect(host.textContent).toContain(HOME_PHOTOS.cockpit.title);
+  expect(host.textContent).toContain('Tayfun Kayabasi / Glasstuning');
+  expect(host.querySelector(`a[href="${HOME_PHOTOS.cockpit.licenceUrl}"]`)).not.toBeNull();
+});
+
+test('published homepage photos exist locally and have a provenance record, without changing the shared storytelling map', () => {
+  for (const photo of Object.values(HOME_PHOTOS)) {
+    expect(fs.existsSync(path.join(__dirname, '../../../public', photo.src))).toBe(true);
+    expect(photo.width).toBe(1280);
+    expect(photo.height).toBeGreaterThan(0);
+    expect(photo.source).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+    expect(photo.licenceUrl).toMatch(/^https:\/\/creativecommons\.org\//);
+  }
+  const credits = fs.readFileSync(path.join(__dirname, '../../../public/images/home/CREDITS.md'), 'utf8');
+  expect(credits).toContain('CC BY-SA 2.0');
+  expect(credits).toContain('CC BY-SA 4.0');
+  expect(credits).toContain('3aed100cafdb8a18999288f5fd2f42370f86842a6536c0b318c8b5a83133f9d9');
 });

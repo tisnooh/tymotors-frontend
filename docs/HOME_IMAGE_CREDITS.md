@@ -1,5 +1,15 @@
 # Visuels éditoriaux de l'accueil — 13 octobre 2026
 
+## Mise à jour — 14 octobre 2026 : accueil hors sections conservées
+
+Les cartes de marques et le CTA final utilisent désormais des fonds graphiques CSS, sans photographie. Les catégories de l'accueil et Univers utilisent les quatre photographies indépendantes locales du fichier [CREDITS.md](../public/images/home/CREDITS.md), centralisées dans `src/lib/homeEditorialPhotos.js`. Les noms d'auteurs, titres, sources et licences sont accessibles dans les deux sections ; aucune réalisation TYMotors, référence exacte ou affiliation n'est revendiquée.
+
+Les versions de 1280 px ont été téléchargées auprès de Wikimedia, inspectées et copiées inchangées. Les cadres `contain` gardent chaque photographie entière, sans recadrage de la pièce ni génération IA. La paire avant/après conserve son étiquetage IA. Hero/Porsche et storytelling sont inchangés. Les images des fiches produit/panier/configurateur et les fonds des pages de catégories sont hors scope ; aucune autorisation de ces autres images n'est déduite de cette mise à jour.
+
+La table Pexels ci-dessous est **l'historique de la sélection du 13 octobre**, pas la liste actuelle des images de l'accueil. Ses références de catégories peuvent encore être utilisées hors de l'accueil ; les portraits du storytelling restent documentés plus bas.
+
+## Historique du 13 octobre
+
 Photos recherchées sur internet et inspectées visuellement avant intégration.
 Les photos produit, panier et configurateur ne proviennent pas de ce fichier.
 Les visuels éditoriaux sont centralisés dans `src/lib/editorialImages.js`.

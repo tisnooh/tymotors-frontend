@@ -10,10 +10,10 @@
 .universe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
 .universe-card { min-width: 0; background: #0b0d10; border: 1px solid #232b3a; border-radius: 1rem; overflow: hidden; }
 .universe-card-featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1.6fr 1fr; align-items: center; }
-.universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 16/9; }
+.universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 4/5; }
 .universe-card-featured .universe-image-frame { aspect-ratio: 16/10; }
 .universe-photo { position: absolute; inset: 0; background: #12171e; overflow: hidden; }
-.universe-photo img { width: 100%; height: 114%; top: -7%; position: relative; object-fit: cover; }
+.universe-photo img { width: 100%; height: 100%; object-fit: contain; }
 .universe-photo-shade { position: absolute; inset: 0; background: linear-gradient(#05060866, transparent 35%); pointer-events: none; }
 .universe-image-label { position: absolute; top: 1.1rem; left: 1.1rem; display: flex; align-items: center; gap: .8rem; font: 10px/1.4 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .15em; color: white; text-shadow: 0 1px 10px #000; }
 .universe-image-label span { padding: .35rem .45rem; border: 1px solid #ffffff55; border-radius: .3rem; }
@@ -35,7 +35,7 @@
   .universe-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .universe-card-featured { grid-column: auto; display: flex; flex-direction: column; align-items: stretch; }
   .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; }
-  .universe-image-frame { aspect-ratio: 4/3; }
+  .universe-image-frame { aspect-ratio: 4/5; }
   .universe-card-copy { padding: 1.4rem; }
   .universe-footer { align-items: stretch; flex-direction: column; }
 }

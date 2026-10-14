@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowUpRight } from 'lucide-react';
 import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
-import { responsiveImageProps } from '@/lib/image';
+import './HomeEditorial.css';
 
 export function BrandsSection() {
   const { t } = useTranslation();
@@ -35,28 +35,19 @@ export function BrandsSection() {
               <Link
                 to={`/brands/${b.slug}`}
                 data-testid="brand-card"
-                className="group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
+                className="home-brand-card group relative block aspect-[4/3] md:aspect-[5/4] rounded-2xl overflow-hidden border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
-                <img
-                  {...responsiveImageProps(b.image, [320, 640, 900], '(max-width: 767px) 50vw, 33vw')}
-                  alt={b.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-[1.05] transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />
-                <div className="absolute inset-0 ty-noise" />
-                <div className="relative h-full w-full p-5 md:p-7 flex flex-col justify-between">
+                <div className="home-brand-copy relative h-full w-full flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 flex items-center gap-2">
+                    <span aria-hidden="true" className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 flex items-center gap-2">
                       <span className="h-px w-6 bg-[#F2C94C]/80" /> 0{idx + 1}
                     </span>
-                    <span className="h-9 w-9 rounded-full border border-[#232B3A] inline-flex items-center justify-center text-white/80 group-hover:text-white group-hover:border-[#E10600] transition-colors">
+                    <span aria-hidden="true" className="h-9 w-9 rounded-full border border-[#232B3A] inline-flex items-center justify-center text-white/80 group-hover:text-white group-hover:border-[#E10600] transition-colors">
                       <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </div>
                   <div>
-                    <h3 className="ty-display text-white text-2xl md:text-3xl">{b.name}</h3>
+                    <h3 className="home-brand-name ty-display text-white">{b.name}</h3>
                     <p className="text-xs md:text-sm text-ty-textMid mt-1.5 max-w-[14rem] line-clamp-2">{b.tagline}</p>
                     <div className="mt-3 h-[1.5px] w-12 bg-[#E10600] group-hover:w-24 transition-all duration-300" />
                   </div>

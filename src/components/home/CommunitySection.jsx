@@ -1,25 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { EDITORIAL_IMAGES, editorialImageProps } from '@/lib/editorialImages';
+import { HOME_PHOTOS } from '@/lib/homeEditorialPhotos';
+import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
 import './CommunitySection.css';
 
 const PROJECTS = [
-  { id: 'gathering', image: EDITORIAL_IMAGES.gathering, to: '/customize' },
-  { id: 'detail', image: EDITORIAL_IMAGES.detail, to: '/category/performance' },
-  { id: 'silhouette', image: EDITORIAL_IMAGES.silhouette, to: '/customize' },
+  { id: 'gathering', image: HOME_PHOTOS.exterior, to: '/customize' },
+  { id: 'detail', image: HOME_PHOTOS.mercedes, to: '/category/performance' },
+  { id: 'silhouette', image: HOME_PHOTOS.cockpit, to: '/customize' },
 ];
-
-function InspirationPhoto({ image, alt, sizes }) {
-  const [failed, setFailed] = useState(false);
-  return <div className="universe-photo">
-    {!failed ? <img {...editorialImageProps(image, sizes)} alt={alt} loading="lazy" decoding="async"
-      style={{ objectPosition: image.position }} onError={() => setFailed(true)} />
-      : <p role="status" className="universe-photo-error">{alt}</p>}
-    <span className="universe-photo-shade" aria-hidden="true" />
-  </div>;
-}
 
 export function CommunitySection() {
   const { t } = useTranslation();
@@ -54,10 +45,7 @@ export function CommunitySection() {
                 ease: 'power3.out', clearProps: 'transform,opacity',
                 scrollTrigger: { trigger: card, start: 'top 93%', once: true },
               });
-              const image = card.querySelector('img');
-              if (image) gsap.fromTo(image, { yPercent: -5 }, {
-                yPercent: 5, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-              });
+              // Animate the card, not the photograph: the whole subject stays visible.
             });
             gsap.fromTo(section.querySelector('.universe-road-fill'), { scaleX: 0 }, {
               scaleX: 1, ease: 'none', scrollTrigger: { trigger: section, start: 'top 85%', end: 'bottom 65%', scrub: 0.5 },
@@ -82,8 +70,8 @@ export function CommunitySection() {
         {PROJECTS.map((project, index) => <article key={project.id} data-testid="community-card"
           className={`universe-card ${index === 0 ? 'universe-card-featured' : ''}`}>
           <div className="universe-image-frame">
-            <InspirationPhoto image={project.image} alt={t(`community.projects.${project.id}.alt`)}
-              sizes={index === 0 ? '(max-width: 767px) 100vw, 55vw' : '(max-width: 767px) 100vw, 40vw'} />
+            <HomeEditorialPhoto photo={project.image} className="universe-photo" />
+            <span className="universe-photo-shade" aria-hidden="true" />
             <p className="universe-image-label"><span>0{index + 1}</span>{t(`community.projects.${project.id}.label`)}</p>
           </div>
           <div className="universe-card-copy">
@@ -98,11 +86,7 @@ export function CommunitySection() {
         <Link to="/customize" data-testid="community-customize-cta" className="ty-btn-primary min-h-12 h-auto py-3">{t('community.cta')}<ArrowRight size={18} aria-hidden="true" /></Link>
       </div>
       <p className="universe-disclaimer">{t('community.disclaimer')}</p>
-      <details className="universe-credits"><summary>{t('community.credits')}</summary>
-        <a href="https://www.pexels.com/photo/sunset-car-showdown-modified-sedans-on-display-32103160/" target="_blank" rel="noopener noreferrer">FBO Media · Pexels</a>
-        <a href="https://www.pexels.com/photo/close-up-of-shiny-custom-car-wheel-31768888/" target="_blank" rel="noopener noreferrer">Bradley de Melo · Pexels</a>
-        <a href="https://www.pexels.com/photo/blue-tuned-bmw-car-27118859/" target="_blank" rel="noopener noreferrer">FBO Media · Pexels</a>
-      </details>
+      <HomePhotoCredits photos={PROJECTS.map(project => project.image)} />
     </div>
   </section>;
 }

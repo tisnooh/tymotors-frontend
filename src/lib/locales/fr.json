@@ -189,9 +189,21 @@
     "disclaimer": "Photos d'inspiration indépendantes : ces véhicules ne sont pas des réalisations TYMotors. Vérifiez toujours la compatibilité et l'usage autorisé des équipements.",
     "credits": "Crédits photographiques",
     "projects": {
-      "gathering": { "label": "Culture tuning", "title": "La passion nous rassemble.", "desc": "Des projets singuliers, une même envie de se démarquer. Inspirez-vous, puis construisez votre propre direction.", "link": "Imaginer mon projet", "alt": "Deux berlines modifiées, dont une Subaru avec aileron, au coucher du soleil" },
-      "detail": { "label": "Le sens du détail", "title": "Rien n'est laissé au hasard.", "desc": "Lignes, matières, finitions : chaque détail participe à l'identité d'un projet.", "link": "Explorer les équipements", "alt": "Gros plan d'une jante polie sur une voiture préparée" },
-      "silhouette": { "label": "Une allure à part", "title": "Affirmez votre caractère.", "desc": "Une silhouette reconnaissable. Trouvez l'équilibre qui vous ressemble, sans compromis sur la compatibilité.", "link": "Choisir mon véhicule", "alt": "Arrière d'une BMW bleue rabaissée avec jantes personnalisées" }
+      "gathering": { "label": "Culture tuning", "title": "Une ligne qui vous ressemble.", "desc": "Carrosserie, jantes, finitions : trouvez votre direction à travers la culture tuning, puis vérifiez les pièces adaptées à votre véhicule.", "link": "Imaginer mon projet", "alt": "BMW orange et noire préparée à Tuning World Bodensee 2018" },
+      "detail": { "label": "Le sens du détail", "title": "La face avant donne le ton.", "desc": "Une calandre, une finition, une attitude. Inspirez-vous sans confondre ces préparations indépendantes avec les articles proposés.", "link": "Explorer les équipements", "alt": "Mercedes-AMG GT bleue devant l'atelier Glass Tuning" },
+      "silhouette": { "label": "L'univers intérieur", "title": "Le cockpit a sa signature.", "desc": "Textures, commandes, détails : imaginez un intérieur à votre image et consultez les compatibilités avant de choisir vos équipements.", "link": "Choisir mon véhicule", "alt": "Console et boîte manuelle d'une BMW M3 au salon de Genève 2011" }
+    }
+  },
+  "home_photos": {
+    "credits": "Sources et licences des photographies",
+    "disclaimer": "Photographies d'ambiance indépendantes, non exclusives : elles ne montrent pas les références exactes des articles TYMotors. Retrouvez les photos, le contenu et les compatibilités dans chaque fiche produit.",
+    "presentation": "Images mises à l'échelle et présentées dans des cadres CSS, sans retouche de la pièce ni génération IA par TYMotors. Ces photographies ne sont pas des réalisations TYMotors et ne suggèrent aucun partenariat avec leurs auteurs ou les marques visibles. Les licences indiquées restent applicables à chaque image.",
+    "unavailable": "Photographie momentanément indisponible.",
+    "alts": {
+      "cockpit": "Console sombre et boîte manuelle d'une BMW M3, photographiées par Cedric Ramirez à Genève en 2011",
+      "carplay": "CarPlay en fonctionnement sur l'écran d'origine d'une Volkswagen ID.4, photographié par Sunnyboy122",
+      "mercedes": "Mercedes-AMG GT bleue devant l'atelier Glass Tuning, photographie de Tayfun Kayabasi / Glasstuning",
+      "exterior": "BMW orange et noire préparée à Tuning World Bodensee 2018, photographie de Matti Blume"
     }
   },
   "cta": {
