@@ -1,0 +1,80 @@
+[
+  {
+    "id": "bmw-f30-f35",
+    "interior": "exec-0200ec87-9074-4357-b272-4e8d2b1c634f.png",
+    "technology": "exec-5e833146-e3b3-40b6-81e7-e88e6f447619.png",
+    "exterior": "bmw-serie-3-f30-f35-configurator.png"
+  },
+  {
+    "id": "bmw-g20",
+    "interior": "exec-ca9d0a68-5da5-4f4c-b63a-275325685fb4.png",
+    "technology": "exec-8157a13d-9d92-4a4f-849f-b142de2dc02e.png",
+    "exterior": "bmw-serie-3-g20-configurator.png"
+  },
+  {
+    "id": "bmw-f32-f36",
+    "interior": "exec-e7378075-5b86-40a7-88f3-505aae8aeae0.png",
+    "technology": "exec-90283d1e-b028-44e4-bee1-5b4ddbcc996f.png",
+    "exterior": "bmw-serie-4-f32-f36-configurator.png"
+  },
+  {
+    "id": "mercedes-w205",
+    "interior": "exec-68a39a4c-9b5e-4f09-8c83-2435e834f2d9.png",
+    "technology": "exec-221bff68-2d3b-4c16-b9e4-22fb36de30cb.png",
+    "exterior": "mercedes-classe-c-w205-configurator.png"
+  },
+  {
+    "id": "audi-a3-8v",
+    "interior": "exec-16de702f-876f-4bf5-a78e-041fd0496378.png",
+    "technology": "exec-6739414e-0f24-4b80-9fa3-d235debdc5ba.png",
+    "exterior": "audi-a3-8v-configurator.png"
+  },
+  {
+    "id": "audi-a4-b9",
+    "interior": "exec-381851ed-e5e3-433a-8016-d20fc0119760.png",
+    "technology": "exec-c1836440-d8be-4be7-9158-cdacc6ee6095.png",
+    "exterior": "audi-a4-b9-configurator.png"
+  },
+  {
+    "id": "porsche-991",
+    "interior": "exec-285d7b96-6c24-4f29-9cf7-b93626223ad6.png",
+    "technology": "exec-aef4cae9-76f8-4765-b994-fc6a23eb6923.png",
+    "exterior": "porsche-911-991-configurator.png"
+  },
+  {
+    "id": "porsche-992",
+    "interior": "exec-c62befad-6139-4ef3-bd09-c2e92cef5034.png",
+    "technology": "exec-e31b591e-dd2d-42c9-9bfe-3531a9ffed63.png",
+    "exterior": "porsche-911-992-configurator.png"
+  },
+  {
+    "id": "porsche-cayenne-9ya",
+    "interior": "exec-2472f952-6c1c-4c27-9b74-03ab931d9d50.png",
+    "technology": "exec-b922547f-f418-4fbf-b149-e41aa2d5b155.png",
+    "exterior": "porsche-cayenne-9ya-configurator.png"
+  },
+  {
+    "id": "volkswagen-golf-7-gti",
+    "interior": "exec-29b86bbd-3015-4bb7-8588-ab468ccdd5bc.png",
+    "technology": "exec-ace8f47b-e83b-499a-b793-dbaeab3de217.png",
+    "exterior": "volkswagen-golf-7-gti-configurator.png"
+  },
+  {
+    "id": "volkswagen-golf-7-r",
+    "interior": "exec-5f885263-b2fb-4d26-a595-1c610f3c8018.png",
+    "technology": "exec-d9d24003-ca14-44a1-84d5-1ac952c9bea2.png",
+    "exterior": "volkswagen-golf-7-r-configurator.png"
+  },
+  {
+    "id": "toyota-gr-supra-a90",
+    "interior": "exec-62130519-a559-4db8-9489-687c85a73643.png",
+    "technology": "exec-12e2dfe6-0426-4106-bdbf-ec81e55de9c9.png",
+    "exterior": "toyota-gr-supra-a90-configurator.png"
+  },
+  {
+    "id": "toyota-gr-yaris-xp210",
+    "interior": "exec-1ad75367-32d6-41d3-a6ad-be5909aa5fdc.png",
+    "technology": "exec-d935d4cb-ab66-4d99-8408-382a90ad054f.png",
+    "exterior": "toyota-gr-yaris-xp210-configurator.png"
+  }
+]

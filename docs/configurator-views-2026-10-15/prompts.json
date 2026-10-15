@@ -1,0 +1,141 @@
+{
+  "style": "Original photorealistic 16:9 black cabin, restrained red studio outside windows, center rear-seat camera, readable materials, left-hand drive; W177 interior used for lighting/composition only, no architecture transplant, no people/headings/watermark/collage.",
+  "interiorBmwMercedes": [
+    {
+      "id": "bmw-f30-f35",
+      "spec": "2016 F30/F35, twin analogue gauges, period BMW M wheel, separate 8.8-inch landscape iDrive, paired rectangular central vents with hazard/lock between, physical radio and dual-zone HVAC, tall automatic gear, rotary iDrive and manual handbrake."
+    },
+    {
+      "id": "bmw-g20",
+      "spec": "2020 pre-LCI G20 M Sport, optional 12.3 digital cluster and separate 10.25 center display, rectangular vents and physical climate buttons below, tall shifter and rotary iDrive; no LCI curved screen."
+    },
+    {
+      "id": "bmw-f32-f36",
+      "spec": "2016 F32/F36, analogue gauges, BMW M wheel, 8.8 standing landscape Professional navigation, rectangular vents/hazard/lock, physical radio/HVAC, tall automatic gear, rotary iDrive/manual handbrake, low coupe seating."
+    },
+    {
+      "id": "mercedes-w205",
+      "spec": "2016 pre-facelift W205 LHD AMG Line-style, two analogue gauges, period three-spoke wheel, separate landscape COMAND, three round center vents, physical climate row and analogue clock, rotary COMAND/arched touchpad, steering-column DIRECT SELECT; no console shifter."
+    }
+  ],
+  "interiorBatch2": [
+    {
+      "id": "audi-a3-8v",
+      "spec": "2017 facelift Audi A3 Sportback 8V LHD, S line black interior. Four round turbine-style vents in a thin horizontal dashboard (two center and two outer). Small thin 7-inch RETRACTABLE freestanding MMI screen at top center. Optional Virtual Cockpit digital cluster under separate hood behind Audi four-rings 3-spoke wheel. Physical climate control with three round knobs under the center vents. Compact S tronic automatic gear lever and rotary MMI controller on console behind it. Horizontal silver trim, black sport seats. NOT A3 8Y angular integrated touchscreen, not A4 long vent band, not Mercedes."
+    },
+    {
+      "id": "audi-a4-b9",
+      "spec": "2017 Audi A4 B9 pre-facelift LHD black S line interior. Distinctive continuous horizontal slim ventilation band across passenger dashboard. Freestanding 8.3-inch landscape MMI display on top center. Separate hooded optional Audi Virtual Cockpit behind round three-spoke Audi four-rings wheel. Physical three-zone HVAC controls under vents with knobs and silver toggles, radio preset strip. Short broad automatic selector, round MMI controller with touch surface on center console AHEAD of gear lever. Black leather and brushed aluminium. NOT post-2020 larger touchscreen/no rotary controller; NOT Audi A6 dual touchscreens or Mercedes vents."
+    },
+    {
+      "id": "porsche-991",
+      "spec": "2017 Porsche 911 Carrera 991.2 coupe LHD, black leather cabin. Five overlapping round instrument dials, prominent central ANALOGUE tachometer, digital information in right dial. Period Porsche three-spoke wheel with crest. Seven-inch PCM integrated in center stack BETWEEN two tall vertical air vents. Rising center tunnel lined with paired rows of many physical rectangular buttons. Tall leather PDK automatic shift lever on tunnel, small climate panel under PCM, optional small Sport Chrono stopwatch atop center dash. Rear engine sports coupe low cabin, NOT SUV. NOT 992 wide horizontal infotainment or tiny toggle, NOT fully digital gauges."
+    },
+    {
+      "id": "porsche-992",
+      "spec": "2020 Porsche 911 Carrera 992.1 coupe LHD, black leather cabin. Central ANALOGUE tachometer flanked by four circular digital instruments, Porsche crest on modern round three-spoke wheel. Wide dark horizontal dash with built-in 10.9-inch landscape PCM screen and thin vents. Five physical piano-key toggle switches directly under center display. Sloping slim console with small stubby rectangular PDK selector, two prominent climate rockers and physical buttons, NOT a tall 991 shifter. Small Sport Chrono clock atop center dash. NOT 2025 992.2 all-digital dashboard. NOT Cayenne/ SUV. Clearly different 992 architecture from 991."
+    }
+  ],
+  "interiorBatch3": [
+    {
+      "id": "porsche-cayenne-9ya",
+      "spec": "2019 Porsche Cayenne third-generation 9YA pre-facelift SUV LHD black leather. Tall SUV dashboard and seats, central ANALOGUE tachometer flanked by two seven-inch digital instrument displays. Porsche crest on round three-spoke steering wheel. Wide 12.3-inch PCM touch display INTEGRATED in center dash between slim vertical rectangular vents. Wide rising glossy black console with haptic touch-button climate area plus two physical climate rockers and TALL conventional electronic gear lever. Distinctive grab handles alongside console. Optional round Sport Chrono clock at top dash. No 2024 all-digital cluster, no dashboard gear stalk, no passenger screen, no second large lower touchscreen, not 911."
+    },
+    {
+      "id": "volkswagen-golf-7-gti",
+      "spec": "2016 Volkswagen Golf Mk7 GTI pre-facelift LHD. Driver-oriented integrated center stack with small rectangular 6.5-inch infotainment screen flanked by physical buttons and two rotary knobs. Twin rectangular center vents and hazard button ABOVE screen. Three physical round Climatronic temperature/fan knobs BELOW screen. Hooded twin ANALOGUE gauges with red needles and small central info screen. VW roundel on flat-bottom three-spoke GTI wheel with RED stitching. Golf-ball six-speed MANUAL gear knob, electronic parking brake small switch, Clark tartan black/grey/red cloth sport seats, subtle red factory door stripe. NOT Golf8 touchscreen climate/haptic wheel, not freestandingtablet or Mercedes vents."
+    },
+    {
+      "id": "volkswagen-golf-7-r",
+      "spec": "2016 Volkswagen Golf Mk7 R pre-facelift LHD. Integrated driver-oriented center stack with small rectangular 6.5-inch infotainment screen, physical buttons and rotary knobs at its sides. Two rectangular center vents and hazard switch ABOVE screen. Three physical round Climatronic knobs BELOW. Hooded two ANALOGUE round gauges with BLUE needles and small info screen. VW emblem on flat-bottom three-spoke wheel with silver R badge and grey stitching. DSG traditional automatic gear lever, small electronic parking brake switch, black leather/alcantara sport seats, brushed silver/carbon-look subtle trim. No red GTI/plaid, NOT Golf8, NOT freestanding tablet, NOT digital dashboard."
+    },
+    {
+      "id": "toyota-gr-supra-a90",
+      "spec": "2020 Toyota GR Supra A90 coupe LHD, black cabin, eight-speed automatic. Low focused two-seat sports cabin, unique asymmetrical driver-oriented dash and tall padded console knee brace. Toyota logo on thick three-spoke sport steering wheel, separate compact digital instrument pod with central large tachometer. Separate thin freestanding 8.8-inch center infotainment display on dashboard. Narrow horizontal center vents below it, physical radio buttons and physical dual-zone AC controls. Traditional black automatic shifter and round rotary multimedia controller on center console to its right. Sport seats, carbon-fiber dark console. NOT BMW dashboard/roundel despite BMW-derived switchgear, NOT manual gearbox or GR Yaris, NOT large curved display."
+    },
+    {
+      "id": "toyota-gr-yaris-xp210",
+      "spec": "2021 original Toyota GR Yaris XP210 three-door hatch LHD BEFORE 2024 facelift. Compact practical Yaris-derived black dashboard, TWO circular ANALOGUE gauges with white figures/red pointers and small rectangular center info display. Toyota roundel on round three-spoke GR sport wheel, simple 8-inch freestanding center touchscreen above two horizontal rectangular vents, simple physical rotary climate controls. Tall six-speed MANUAL leather gear knob, conventional manual handbrake lever and small round GR-FOUR AWD mode selector on console. Black cloth/alcantara sport seats, no fancy carbon dashboard. NOT 2024 angled driver cockpit or digital gauge rectangle, no automatic gear, NOT Supra or Mercedes."
+    }
+  ],
+  "technologyCommon": "Camera reframing from each accepted interior. Preserve same generation, factory screen housing, controls, materials, emblem and black/red light. Move closer from passenger side to focus on screen and its physical controls with part of wheel/cluster and console visible. No retrofit screen/phone/accessory/product overlay/other generation, no people/title/collage/watermark. Single 16:9 photorealistic image; subdued illustrative navigation graphics.",
+  "technologyBatch1": [
+    {
+      "id": "bmw-f30-f35",
+      "path": "exec-0200ec87-9074-4357-b272-4e8d2b1c634f.png",
+      "model": "2016 BMW 3 Series F30/F35"
+    },
+    {
+      "id": "bmw-g20",
+      "path": "exec-ca9d0a68-5da5-4f4c-b63a-275325685fb4.png",
+      "model": "2020 pre-LCI BMW 3 Series G20"
+    },
+    {
+      "id": "bmw-f32-f36",
+      "path": "exec-e7378075-5b86-40a7-88f3-505aae8aeae0.png",
+      "model": "2016 BMW 4 Series F32/F36"
+    },
+    {
+      "id": "mercedes-w205",
+      "path": "exec-68a39a4c-9b5e-4f09-8c83-2435e834f2d9.png",
+      "model": "2016 pre-facelift Mercedes-Benz C-Class W205"
+    }
+  ],
+  "technologyBatch2": [
+    {
+      "id": "audi-a3-8v",
+      "file": "exec-16de702f-876f-4bf5-a78e-041fd0496378.png",
+      "model": "2017 Audi A3 Sportback 8V, retractable SMALL landscape MMI screen, circular vents, rotary MMI behind traditional S tronic lever"
+    },
+    {
+      "id": "audi-a4-b9",
+      "file": "exec-381851ed-e5e3-433a-8016-d20fc0119760.png",
+      "model": "2017 pre-facelift Audi A4 B9, 8.3-inch landscape MMI, horizontal ventilation band, rotary controller ahead of the short wide shifter"
+    },
+    {
+      "id": "porsche-992",
+      "file": "exec-c62befad-6139-4ef3-bd09-c2e92cef5034.png",
+      "model": "2020 Porsche 911 992.1, 10.9-inch integrated horizontal PCM, five piano keys, small PDK selector and central analogue tachometer"
+    }
+  ],
+  "technologyBatch3": [
+    {
+      "id": "porsche-cayenne-9ya",
+      "file": "exec-2472f952-6c1c-4c27-9b74-03ab931d9d50.png",
+      "spec": "2019 pre-facelift Porsche Cayenne 9YA, 12.3-inch wide PCM integrated between vertical vents, tall conventional console shifter and haptic black panel, central analogue tachometer"
+    },
+    {
+      "id": "volkswagen-golf-7-gti",
+      "file": "exec-29b86bbd-3015-4bb7-8588-ab468ccdd5bc.png",
+      "spec": "2016 pre-facelift Golf Mk7 GTI, small integrated landscape infotainment with physical buttons and rotary knobs, vents ABOVE it, three climate knobs BELOW, manual gear knob and red stitching/plaid seats"
+    },
+    {
+      "id": "volkswagen-golf-7-r",
+      "file": "exec-5f885263-b2fb-4d26-a595-1c610f3c8018.png",
+      "spec": "2016 pre-facelift Golf Mk7 R, small integrated landscape infotainment with physical buttons and rotary knobs, vents ABOVE it, three climate knobs BELOW, traditional DSG shifter, black sport interior and blue gauge needles"
+    }
+  ],
+  "technologyBatch4": [
+    {
+      "id": "toyota-gr-supra-a90",
+      "file": "exec-62130519-a559-4db8-9489-687c85a73643.png",
+      "spec": "2020 Toyota GR Supra A90 automatic, its specific low sculpted asymmetric dash, raised padded driver knee brace, Toyota wheel, separate compact tachometer pod, 8.8-inch landscape display and physical radio/climate controls, traditional automatic shifter with rotary controller"
+    },
+    {
+      "id": "toyota-gr-yaris-xp210",
+      "file": "exec-1ad75367-32d6-41d3-a6ad-be5909aa5fdc.png",
+      "spec": "2021 pre-facelift Toyota GR Yaris XP210, two analogue gauges, 8-inch screen on top of dash, TWO round automatic climate knobs flanking a small climate readout below center vents, 6-speed manual lever, mechanical handbrake and GR-FOUR dial"
+    }
+  ],
+  "toyotaCorrections": [
+    {
+      "id": "toyota-gr-supra-a90",
+      "prompt": "Create an original automotive interior photograph, 16:9. Exact subject: left-hand-drive 2020 Toyota GR Supra A90, AUTOMATIC transmission, BLACK cabin, NOT a BMW sedan with Toyota badges. Premium dark studio, a restrained red horizon glow through windshield. Wide centered rear-of-cabin looking forward view. Correct Supra-specific low two-seat asymmetric architecture: short deep hood over compact central digital tachometer pod, three-spoke Toyota sport wheel, low horizontally flowing driver-biased dashboard curving into a HIGH PADDED KNEE BRACE alongside center console on driver side. Passenger dashboard is a large simple sculpted soft black shelf with only a slim straight air vent, not a continuous BMW silver vent band. Thin freestanding 8.8-inch center screen above slim rectangular vents and physical AC/radio buttons. Center console rises significantly and angles toward driver, BMW-derived automatic shifter beside a round multimedia rotary controller in dark carbon surround. Compact two-seater proportions, low windscreen, sport seats. Full wheel and console visible, high-end realistic photo, natural controls, no people/title/collage/watermark. Do not use BMW F30 or G20 dashboard layout, no BMW emblem, no GR Yaris controls, no curved giant display."
+    },
+    {
+      "id": "toyota-gr-yaris-xp210",
+      "prompt": "Precise-object-edit. In this 2021 pre-facelift Toyota GR Yaris XP210 cabin photo, correct ONLY the climate control panel below the center vents: it must be the genuine AUTOMATIC climate arrangement with TWO round rotary temperature controls, one at each end of a SMALL horizontal black digital climate readout and compact physical push buttons. Remove the incorrect THREE manual air-conditioning rotary knobs currently shown. Preserve the correct analogue gauges, Toyota GR wheel, eight-inch screen on top, manual six-speed gear lever, mechanical handbrake, GR-FOUR mode dial, black sport seats, camera and dark red studio lighting. Same 16:9 composition. No other design changes, no accessory, people, text overlay or watermark."
+    }
+  ],
+  "porsche991Correction": "Only correct the 991.2 center stack from the rejected tall screen to a small 7-inch landscape PCM between tall vertical vents, with physical buttons/two rotary knobs below; preserve all other controls, camera and lighting. Technology is derived only after this correction."
+}

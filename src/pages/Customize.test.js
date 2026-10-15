@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Customize from './Customize';
 import { Brands, Compatibility, Products } from '@/lib/api';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
+import { REVIEWED_VEHICLES } from './customize/vehicleViews';
 
 jest.mock('@/lib/api', () => ({ Brands: { list: jest.fn() }, Compatibility: { list: jest.fn() }, Products: { list: jest.fn(), checkCompatibility: jest.fn() } }));
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: jest.fn() }) }));
@@ -94,4 +95,31 @@ test('a known later year or different trim removes the pre-facelift illustration
   await change('[data-testid="customize-year"]', '2020');
   await change('[data-testid="customize-trim"]', 'Progressive');
   expect(host.querySelector('[data-testid="customize-stage"] img').getAttribute('src')).toBe('/W177.jpg');
+});
+
+test.each(REVIEWED_VEHICLES)('$vehicle switches its own three views and real catalogue query together', async entry => {
+  Brands.list.mockResolvedValue([{ slug: entry.brand, name: entry.brand }]);
+  Compatibility.list.mockResolvedValue([{ name: entry.model, generations: [entry.generation], generation_records: [{ name: entry.generation, stage_image_url: '/original-generation.jpg', hotspots: [] }] }]);
+  saveVehicleSelection({ brand: entry.brand, model: entry.model, generation: entry.generation });
+  await act(async () => root.render(<Customize />));
+  const stage = () => host.querySelector('[data-testid="customize-stage"]');
+  expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/exterior-v1.webp`);
+  for (const [index, category] of ['performance', 'interior', 'technology'].entries()) {
+    await act(async () => stage().querySelectorAll('.customize-view-controls button')[index].click());
+    expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/${category === 'performance' ? 'exterior' : category}-v1.webp`);
+    expect(stage().querySelector('img').getAttribute('alt')).toContain(entry.vehicle);
+    expect(Products.list.mock.calls.at(-1)[0]).toMatchObject({ brand: entry.brand, model: entry.model, chassis: entry.generation, category });
+    expect(stage().querySelectorAll('.customize-view-controls button')[index].getAttribute('aria-pressed')).toBe('true');
+  }
+  await change('[data-testid="customize-year"]', String(entry.years[1] + 1));
+  expect(stage().querySelector('img').getAttribute('src')).toBe('/original-generation.jpg');
+  expect(stage().textContent).toContain('vue dédiée');
+});
+
+test('a saved unsupported model cannot render reviewed images without a real generation record', async () => {
+  saveVehicleSelection({ brand: 'bmw', model: 'Série 3', generation: 'G20' });
+  Compatibility.list.mockResolvedValue([]);
+  await act(async () => root.render(<Customize />));
+  expect(host.querySelector('.customize-view-note')).toBeNull();
+  expect(host.querySelector('[data-testid="customize-project"]')).toBeNull();
 });

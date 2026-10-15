@@ -60,7 +60,7 @@ export function VehicleStage({ brand, model, generation, onHotspotClick, activeH
   const active = hotspots.find((item) => item.id === activeHotspot);
   const dedicated = views?.[category === 'all' ? 'performance' : category];
   const image = dedicated?.src || active?.image_url || generation?.stage_image_url;
-  const alt = dedicated ? t(dedicated.altKey) : active?.image_alt || generation?.stage_image_alt || `${model || 'Véhicule'} ${generation?.name || ''}`;
+  const alt = dedicated ? t(dedicated.altKey, views.altValues || {}) : active?.image_alt || generation?.stage_image_alt || `${model || 'Véhicule'} ${generation?.name || ''}`;
   const selectionComplete = Boolean(brand && model && generation);
   return <div className="customize-stage mt-10 relative w-full overflow-hidden rounded-2xl border border-[#151A23] bg-[#0A0B0E]" data-testid="customize-stage">
     {views && selectionComplete && <div className="customize-stage-heading"><span>{BRAND_PRESENTATION[brand]?.name || brand} · {model} · {generation.name}</span><span>{t(`customize.project.category_${category === 'all' ? 'performance' : category}`)}</span></div>}
