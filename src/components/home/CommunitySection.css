@@ -36,9 +36,9 @@
   .universe-road { margin-bottom: 1rem; }
   .universe-swipe-hint { display: block; font-size: .75rem; color: #a9b2bf; }
   .universe-grid {
-    display: flex; gap: 1.25rem; align-items: stretch;
+    display: flex; gap: 1.25rem; align-items: flex-start;
     overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
-    scroll-padding-inline: .75rem; padding: 1rem .75rem 1.25rem;
+    scroll-padding-inline: .75rem; padding: 1rem .75rem .75rem;
     margin-inline: -.75rem; scrollbar-width: thin; scrollbar-color: #68604b #12171e;
   }
   .universe-card, .universe-card-featured {
@@ -47,14 +47,16 @@
     transition: transform 220ms ease, border-color 220ms ease;
   }
   .universe-card.is-selected { transform: scale(1.035); border-color: #f2c94c99; }
-  .universe-image-frame, .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; }
+  .universe-image-frame, .universe-card-featured .universe-image-frame { aspect-ratio: 4/3; flex-shrink: 0; }
+  .universe-image-frame .universe-photo img { object-fit: cover; object-position: 50% 50%; }
+  .universe-card[data-project="gathering"] .universe-photo img { object-position: 50% 70%; }
   .universe-image-label { top: .75rem; left: .75rem; gap: .5rem; font-size: 9px; }
   .universe-select { display: block; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; background: transparent; border: 0; }
   .universe-select:focus-visible { outline: 2px solid #f2c94c; outline-offset: -5px; }
-  .universe-card-copy { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+  .universe-card-copy { padding: 1rem; flex: 0 0 auto; display: flex; flex-direction: column; }
   .universe-card-copy h3, .universe-card-featured h3 { font-size: 1.3rem; line-height: 1.15; }
   .universe-card-copy > p { font-size: .8rem; line-height: 1.5; margin-top: .65rem; }
-  .universe-card-link { margin-top: auto; padding-top: .75rem; }
+  .universe-card-link { margin-top: .65rem; padding-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .universe-card { transition: none; }

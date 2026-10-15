@@ -27,6 +27,7 @@ export const HOME_PHOTOS = {
   mercedesBrand: redditPhoto('mercedesBrand', 'mercedes-s63-three-quarter-reddit', 6790, 3809, 'u/V1p3rlucky', 'S63 Yellow Night Photoshoot', 'https://www.reddit.com/r/AMG/comments/1j7uuif/s63_yellow_night_photoshoot/'),
   audi: commonsPhoto('audi', 'audi-rs6-c8', 1280, 853, 'Sestmedia', 'Audi rs6 c8 2020-4', 'Audi_rs6_c8_2020-4.jpg'),
   porsche: flickrPhoto('porsche', 'porsche-manthey', 1024, 683, 'Alexandre Prevot', 'Porsche 992 GT3 RS Manthey Racing', '54309097379', 'alexprevot', true),
+  porscheBrand: redditPhoto('porscheBrand', 'porsche-gt3-touring-silver-reddit', 1080, 1080, 'u/demoralising (posting account; photographer unconfirmed)', 'Porsche 911 GT3 Touring [1080x1080]', 'https://www.reddit.com/r/carporn/comments/r91zqe/porsche_911_gt3_touring_1080x1080/'),
   volkswagen: commonsPhoto('volkswagen', 'volkswagen-golf-r-black', 1280, 855, 'Alexander-93', 'Volkswagen Golf VIII R Black Edition Auto Zuerich 2024 DSC 6898', 'Volkswagen_Golf_VIII_R_Black_Edition_Auto_Zuerich_2024_DSC_6898.jpg'),
   toyota: commonsPhoto('toyota', 'toyota-gr-supra-black', 1280, 853, 'Ethan Llamas', 'Toyota GR Supra DB41 3.0L Turbo Black Metallic 01', 'Toyota_GR_Supra_DB41_3.0L_Turbo_Black_Metallic_01.jpg'),
   cockpit: commonsPhoto('cockpit', 'technology-bmw-g81', 1280, 853, 'Ethan Llamas', 'BMW M3 Competition G81 xDrive Touring interior', 'BMW_M3_Competition_G81_xDrive_Touring_interior.jpg'),
@@ -35,7 +36,7 @@ export const HOME_PHOTOS = {
 };
 export const HOME_BRAND_PHOTOS = {
   bmw: HOME_PHOTOS.bmw, 'mercedes-benz': HOME_PHOTOS.mercedesBrand, audi: HOME_PHOTOS.audi,
-  porsche: HOME_PHOTOS.porsche, volkswagen: HOME_PHOTOS.volkswagen, toyota: HOME_PHOTOS.toyota,
+  porsche: HOME_PHOTOS.porscheBrand, volkswagen: HOME_PHOTOS.volkswagen, toyota: HOME_PHOTOS.toyota,
 };
 export const HOME_CATEGORY_PHOTOS = {
   performance: HOME_PHOTOS.bmw, interior: HOME_PHOTOS.cockpit, technology: HOME_PHOTOS.technology,

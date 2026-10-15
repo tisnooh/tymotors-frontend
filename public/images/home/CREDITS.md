@@ -1,5 +1,13 @@
 # Homepage photograph credits — TYMotors
 
+## Porsche brand selection — option 1 approved 15 October 2026
+
+The owner selected the square silver GT3 Touring front three-quarter photograph for the Porsche brand card and brand pages. The shared brand map uses porscheBrand; the red Hero Porsche, Universe night Porsche and historical Manthey asset remain unchanged. Original JPEG bytes are copied without retouching or watermark removal. u/demoralising is the posting account, not a confirmed photographer credit. No commercial reuse permission or licence is confirmed or asserted.
+
+| Local file | Title / posting account | Source | Rights status | Dimensions | SHA256 |
+| --- | --- | --- | --- | --- | --- |
+| [porsche-gt3-touring-silver-reddit.jpg](porsche-gt3-touring-silver-reddit.jpg) | Porsche 911 GT3 Touring — u/demoralising | [Reddit post](https://www.reddit.com/r/carporn/comments/r91zqe/porsche_911_gt3_touring_1080x1080/) · [Original JPEG](https://i.redd.it/cfb03w5u0m381.jpg) | Reuse rights not confirmed | 1080 × 1080 | `19c40cd70b00f3e5c40df0c27dc499d8c88c36578a8e3878935b4f01abba1976` |
+
 ## Universe replacements — approved 15 October 2026
 
 The owner approved the displayed BMW widebody and rear-view Porsche night photographs. Only the Culture tuning and Sporting silhouette cards use them. The AMG wheel, brand cards, category cards, Hero and Storytelling keep their existing photographs. Original JPEG bytes are copied locally without image editing, watermark removal or AI generation. No commercial reuse permission is confirmed; no licence is asserted. These are independent inspiration photographs, not TYMotors builds or exact catalogue products.

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowUpRight } from 'lucide-react';
 import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
+import { HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
 
 export default function BrandsIndex() {
   const { t } = useTranslation();
@@ -29,14 +30,22 @@ export default function BrandsIndex() {
 
         {error && <p role="alert" className="text-ty-textMid mb-6">Les marques sont temporairement indisponibles. Réessayez dans quelques instants.</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {brands.map((b, idx) => (
+          {brands.map((b, idx) => {
+            const photo = HOME_BRAND_PHOTOS[b.slug];
+            return (
             <Reveal key={b.slug} delay={(idx % 6) * 0.05}>
               <Link
                 to={`/brands/${b.slug}`}
                 data-testid="brand-card-index"
                 className="group relative block aspect-[4/5] rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
-                <img src={b.image} alt={b.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-55 group-hover:opacity-80 transition-all duration-700 group-hover:scale-[1.05]" />
+                {(photo || b.image) && <img
+                  src={photo ? photo.src : b.image}
+                  width={photo?.width} height={photo?.height}
+                  alt={photo ? t(photo.altKey) : b.name}
+                  loading="lazy" decoding="async"
+                  onError={event => { event.currentTarget.hidden = true; }}
+                  className="absolute inset-0 h-full w-full object-cover opacity-55 group-hover:opacity-80 transition-all duration-700 group-hover:scale-[1.05]" />}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/55 to-transparent" />
                 <div className="relative h-full p-6 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
@@ -51,7 +60,7 @@ export default function BrandsIndex() {
                 </div>
               </Link>
             </Reveal>
-          ))}
+          ); })}
         </div>
       </div>
     </main>

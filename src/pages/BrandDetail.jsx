@@ -5,6 +5,7 @@ import { Brands, Products } from '@/lib/api';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { Reveal } from '@/components/shared/Reveal';
 import { ArrowRight } from 'lucide-react';
+import { HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
 
 export default function BrandDetail() {
   const { slug } = useParams();
@@ -39,10 +40,18 @@ export default function BrandDetail() {
     return <main data-testid="page-brand-detail" className="pt-28 pb-24 ty-container">{loading ? <p className="text-ty-textMid">{t('common.loading')}</p> : <><h1 className="ty-display text-white text-3xl">{error || 'Marque introuvable'}</h1><Link className="ty-btn-line mt-6" to="/brands">Retour aux marques</Link></>}</main>;
   }
 
+  const photo = HOME_BRAND_PHOTOS[slug];
   return (
     <main data-testid="page-brand-detail" className="pt-16 lg:pt-20 pb-24">
       <section data-testid="catalog-hero" className="relative lg:aspect-[21/7] w-full overflow-hidden">
-        <img src={brand.image} alt={brand.name} className="absolute inset-0 h-full w-full object-cover opacity-55" />
+        {(photo || brand.image) && <img
+          key={photo?.src || brand.image}
+          src={photo ? photo.src : brand.image}
+          width={photo?.width} height={photo?.height}
+          alt={photo ? t(photo.altKey) : brand.name}
+          decoding="async"
+          onError={event => { event.currentTarget.hidden = true; }}
+          className="absolute inset-0 h-full w-full object-cover opacity-55" />}
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-[#050608]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#050608]/85 via-transparent to-transparent" />
         <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[#E10600]/20 blur-[120px]" />

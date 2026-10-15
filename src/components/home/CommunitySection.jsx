@@ -79,7 +79,7 @@ export function CommunitySection() {
       <div className="universe-road" aria-hidden="true"><span className="universe-road-fill" /></div>
       <p className="universe-swipe-hint">{t('community.swipe_hint')}</p>
       <div className="universe-grid" role="region" tabIndex={0} aria-label={t('community.gallery')} data-lenis-prevent="">
-        {PROJECTS.map((project, index) => <article key={project.id} data-testid="community-card"
+        {PROJECTS.map((project, index) => <article key={project.id} data-testid="community-card" data-project={project.id}
           ref={element => { cardRefs.current[index] = element; }}
           className={`universe-card ${index === 0 ? 'universe-card-featured' : ''} ${selected === index ? 'is-selected' : ''}`}>
           <div className="universe-image-frame">

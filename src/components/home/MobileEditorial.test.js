@@ -314,12 +314,25 @@ test('approved Universe replacements preserve the wheel, brand photos and shoppi
   ]);
   expect([...host.querySelectorAll('.universe-card-link')].map(link => link.getAttribute('href'))).toEqual(['/customize', '/category/performance', '/customize']);
   expect(HOME_BRAND_PHOTOS.bmw).toBe(HOME_PHOTOS.bmw);
-  expect(HOME_BRAND_PHOTOS.porsche).toBe(HOME_PHOTOS.porsche);
+  expect(HOME_BRAND_PHOTOS.porsche).toBe(HOME_PHOTOS.porscheBrand);
   expect(HOME_CATEGORY_PHOTOS.performance).toBe(HOME_PHOTOS.bmw);
   expect(HOME_PHOTOS.culture.src).not.toBe(HOME_PHOTOS.bmw.src);
   expect(HOME_PHOTOS.sport.src).not.toBe(HOME_PHOTOS.porsche.src);
   expect(fr.home_photos.alts.culture).toContain('BMW M4');
   expect(fr.home_photos.alts.sport).toContain('arrière de nuit');
+});
+
+test('silver GT3 Touring is used only for Porsche branding, keeping the night Universe photo', () => {
+  const photo = HOME_BRAND_PHOTOS.porsche;
+  expect(photo).toBe(HOME_PHOTOS.porscheBrand);
+  expect(photo.src).toBe('/images/home/porsche-gt3-touring-silver-reddit.jpg');
+  expect([photo.width, photo.height]).toEqual([1080, 1080]);
+  expect(photo.rightsStatus).toBe('unverified');
+  expect(photo.licence).toBeNull();
+  const bytes = fs.readFileSync(path.join(__dirname, '../../../public', photo.src));
+  expect(require('crypto').createHash('sha256').update(bytes).digest('hex')).toBe('19c40cd70b00f3e5c40df0c27dc499d8c88c36578a8e3878935b4f01abba1976');
+  act(() => root.render(<CommunitySection />));
+  expect(host.querySelectorAll('.universe-card img')[2].getAttribute('src')).toBe(HOME_PHOTOS.sport.src);
 });
 
 test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
@@ -435,4 +448,19 @@ test('mobile inspiration has a native horizontal rail, compact cards, focus and 
   expect(mobile).toContain('.universe-select:focus-visible');
   expect(css).toContain('@media (prefers-reduced-motion: reduce)');
   expect(css).toContain('.universe-card { transition: none; }');
+});
+
+test('mobile inspiration removes stretched empty bodies and letterboxing without changing desktop framing', () => {
+  const css = fs.readFileSync(path.join(__dirname, 'CommunitySection.css'), 'utf8');
+  const mobile = css.slice(css.indexOf('@media (max-width: 767px)'), css.indexOf('@media (prefers-reduced-motion'));
+  const desktop = css.slice(0, css.indexOf('@media (max-width: 767px)'));
+  expect(mobile).toContain('align-items: flex-start');
+  expect(mobile).toContain('flex: 0 0 auto');
+  expect(mobile).toContain('.universe-card-link { margin-top: .65rem; padding-top: 0; }');
+  expect(mobile).not.toContain('margin-top: auto');
+  expect(mobile).toContain('.universe-image-frame .universe-photo img { object-fit: cover; object-position: 50% 50%; }');
+  expect(mobile).toContain('object-position: 50% 70%');
+  expect(desktop).toContain('object-fit: contain');
+  act(() => root.render(<CommunitySection />));
+  expect([...host.querySelectorAll('[data-testid="community-card"]')].map(card => card.dataset.project)).toEqual(['gathering', 'detail', 'silhouette']);
 });
