@@ -136,7 +136,7 @@
     "slider_value": "{{before}}% before, {{after}}% after",
     "before_alt": "AI simulation: stock grey BMW viewed head-on, with chrome grille and standard bumper",
     "after_alt": "AI simulation: the same grey BMW head-on, with black grille, sport bumper and carbon lip",
-    "disclaimer": "AI-generated visual simulation: the same vehicle and framing. Black grille, sport bumper and carbon lip illustrated; this is not a TYMotors customer build or a compatibility guarantee.",
+    "disclaimer": "AI-generated simulation — illustration, not a customer build.",
     "loading": "Loading comparison…",
     "error": "The comparison images could not be loaded right now.",
     "retry": "Try again"
@@ -145,9 +145,6 @@
     "eyebrow": "OWNERS UNIVERSE",
     "title": "Not just a car. Your signature.",
     "sub": "A line, a detail, an attitude. Explore tuning culture and find the starting point of your next project.",
-    "next": "WRITE THE NEXT CHAPTER",
-    "next_title": "The next transformation? Yours.",
-    "cta": "Customize my vehicle",
     "disclaimer": "Independent inspiration photos: these vehicles are not TYMotors builds. Always check equipment compatibility and permitted use.",
     "credits": "Photo credits",
     "gallery": "Automotive inspiration",
@@ -165,6 +162,7 @@
     "alts": {
       "bmw": "Black BMW 430i front view against a dark geometric facade, photograph posted by knrdv",
       "mercedes": "Matte grey Mercedes-AMG GT R with black wheels, front three-quarter view, photograph by Mr.choppers",
+      "mercedesBrand": "Grey Mercedes-AMG S63 coupe, front three-quarter view at dusk, with the Mercedes star visible on the grille",
       "audi": "Black Audi RS6 C8 front view, photograph by Sestmedia",
       "porsche": "Porsche 992 GT3 RS Manthey, rear wing and diffuser, photograph by Alexandre Prevot",
       "volkswagen": "Black Volkswagen Golf VIII R Black Edition at a motor show, photograph by Alexander-93",

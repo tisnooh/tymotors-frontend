@@ -22,6 +22,7 @@ const redditPhoto = (id, file, width, height, author, title, source) => ({
 export const HOME_PHOTOS = {
   bmw: redditPhoto('bmw', 'bmw-430i-black-reddit', 2591, 3317, 'u/knrdv', 'Bleeding Black', 'https://www.reddit.com/r/carphotography/comments/1jk7zm5/bleeding_black/'),
   mercedes: commonsPhoto('mercedes', 'mercedes-amg-gtr-grey', 1280, 853, 'Mr.choppers', '2018 Mercedes-Benz AMG GT-R, designo matte Selenite Grey Magno, front right', '2018_Mercedes-Benz_AMG_GT-R,_designo_matte_Selenite_Grey_Magno,_front_right.jpg', '3.0'),
+  mercedesBrand: redditPhoto('mercedesBrand', 'mercedes-s63-three-quarter-reddit', 6790, 3809, 'u/V1p3rlucky', 'S63 Yellow Night Photoshoot', 'https://www.reddit.com/r/AMG/comments/1j7uuif/s63_yellow_night_photoshoot/'),
   audi: commonsPhoto('audi', 'audi-rs6-c8', 1280, 853, 'Sestmedia', 'Audi rs6 c8 2020-4', 'Audi_rs6_c8_2020-4.jpg'),
   porsche: flickrPhoto('porsche', 'porsche-manthey', 1024, 683, 'Alexandre Prevot', 'Porsche 992 GT3 RS Manthey Racing', '54309097379', 'alexprevot', true),
   volkswagen: commonsPhoto('volkswagen', 'volkswagen-golf-r-black', 1280, 855, 'Alexander-93', 'Volkswagen Golf VIII R Black Edition Auto Zuerich 2024 DSC 6898', 'Volkswagen_Golf_VIII_R_Black_Edition_Auto_Zuerich_2024_DSC_6898.jpg'),
@@ -31,7 +32,7 @@ export const HOME_PHOTOS = {
   detail: redditPhoto('detail', 'detail-amg-red-caliper-reddit', 2541, 2737, null, 'Simple picture of extraordinary things', 'https://www.reddit.com/r/AMG/comments/lbrha9/simple_picture_of_extraordinary_things/'),
 };
 export const HOME_BRAND_PHOTOS = {
-  bmw: HOME_PHOTOS.bmw, 'mercedes-benz': HOME_PHOTOS.mercedes, audi: HOME_PHOTOS.audi,
+  bmw: HOME_PHOTOS.bmw, 'mercedes-benz': HOME_PHOTOS.mercedesBrand, audi: HOME_PHOTOS.audi,
   porsche: HOME_PHOTOS.porsche, volkswagen: HOME_PHOTOS.volkswagen, toyota: HOME_PHOTOS.toyota,
 };
 export const HOME_CATEGORY_PHOTOS = {

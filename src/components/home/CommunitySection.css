@@ -28,8 +28,6 @@
 .universe-card-link svg { transition: transform .3s ease; }
 .universe-card-link:hover svg { transform: translate(3px, -3px); }
 .universe-photo-error { height: 100%; display: grid; place-content: center; text-align: center; padding: 2rem; color: #a9b2bf; }
-.universe-footer { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 2rem 0; margin-top: 1rem; border-bottom: 1px solid #232b3a; }
-.universe-footer-title { margin-top: .5rem; font-size: clamp(1.3rem, 2.2vw, 1.9rem); font-weight: 600; }
 .universe-disclaimer { font-size: .75rem; color: #929baa; line-height: 1.6; margin-top: 1.5rem; }
 .universe-credits { font-size: .75rem; color: #929baa; margin-top: .6rem; }
 .universe-credits summary { cursor: pointer; width: fit-content; min-height: 28px; }
@@ -57,7 +55,6 @@
   .universe-card-copy h3, .universe-card-featured h3 { font-size: 1.3rem; line-height: 1.15; }
   .universe-card-copy > p { font-size: .8rem; line-height: 1.5; margin-top: .65rem; }
   .universe-card-link { margin-top: auto; padding-top: .75rem; }
-  .universe-footer { align-items: stretch; flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {
   .universe-card { transition: none; }

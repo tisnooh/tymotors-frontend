@@ -8,6 +8,9 @@
 .home-category-photo .home-editorial-photo { position: absolute; inset: 0; }
 .home-editorial-photo { width: 100%; height: 100%; }
 .home-editorial-photo img { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
+.home-category-photo .home-editorial-photo img { object-fit: cover; object-position: 50% 50%; }
+.home-category-card[data-category="performance"] .home-category-photo img { object-position: 50% 75%; }
+.home-category-card[data-category="technology"] .home-category-photo img { object-position: 65% 50%; }
 .home-editorial-photo-error { display: flex; height: 100%; align-items: center; justify-content: center; flex-direction: column; gap: .75rem; padding: 1rem; color: #a9b2bf; text-align: center; font-size: .875rem; }
 .home-editorial-photo-error span { font-size: .75rem; }
 .home-category-card .home-category-title { font-size: clamp(1.5rem, 2.8vw, 2.625rem); overflow-wrap: anywhere; }

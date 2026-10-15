@@ -47,6 +47,7 @@ export function CategoriesSection() {
               <Link
                 to={`/category/${c.slug}`}
                 data-testid="category-card"
+                data-category={c.slug}
                 className="home-category-card group relative block rounded-2xl overflow-hidden bg-[#0A0B0E] border border-[#151A23] hover:border-[#2E394D] transition-colors"
               >
                 <div className="home-category-photo"><HomeEditorialPhoto photo={c.photo} /></div>

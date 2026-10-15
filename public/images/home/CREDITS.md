@@ -1,5 +1,13 @@
 # Homepage photograph credits — TYMotors
 
+## Mercedes brand-card selection — requested 15 October 2026
+
+The owner selected the front three-quarter S63 photograph (option 2). Only the Mercedes-Benz brand card uses this replacement; the Universe gathering card keeps mercedes-amg-gtr-grey.jpg. Original JPEG bytes are hosted without retouching or watermark removal. Public Reddit provenance does not grant a reuse licence; commercial permission is unverified and no licence is asserted.
+
+| Local file | Title / posting account | Source | Rights status | Dimensions | SHA256 |
+| --- | --- | --- | --- | --- | --- |
+| [mercedes-s63-three-quarter-reddit.jpg](mercedes-s63-three-quarter-reddit.jpg) | S63 Yellow Night Photoshoot — u/V1p3rlucky | [Reddit post](https://www.reddit.com/r/AMG/comments/1j7uuif/s63_yellow_night_photoshoot/) · [Original JPEG](https://i.redd.it/t4u84q161une1.jpg) | Reuse rights not confirmed | 6790 × 3809 | `d8285ad94c124b6862b64a6efdfdb663192af36ddedf1d6c04460b41297c4c5f` |
+
 ## Public UI removal — requested 15 October 2026
 
 The owner requested removing the visible source/licence details and outbound photo-source links. The footer photo-credits link, dedicated page and credit-list renderer were removed. The old /legal/photo-credits URL redirects internally to the homepage instead of showing a broken link. Images, their alt descriptions, layouts and catalogue navigation were not changed by this follow-up.

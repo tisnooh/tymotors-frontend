@@ -42,6 +42,8 @@ test('uses a matched local responsive pair and identifies the simulation, never 
   expect(before.srcset).toContain('480w'); expect(after.srcset).toContain('1672w');
   expect(before.alt).toContain('Simulation IA'); expect(after.alt).toContain('Simulation IA');
   expect(host.querySelector('[data-testid="before-after-disclaimer"]').textContent).toBe(fr.before_after.disclaimer);
+  expect(fr.before_after.disclaimer).toBe('Simulation générée par IA — illustration, pas une réalisation client.');
+  expect(en.before_after.disclaimer).toBe('AI-generated simulation — illustration, not a customer build.');
   expect(host.textContent).not.toContain('transformation TYMotors complète');
   expect(frame().className).toContain('aspect-[4/3] md:aspect-[16/9]');
   expect(frame().style.touchAction).toBe('pan-y pinch-zoom');

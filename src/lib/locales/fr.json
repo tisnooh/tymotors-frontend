@@ -174,7 +174,7 @@
     "slider_value": "{{before}} % avant, {{after}} % après",
     "before_alt": "Simulation IA : BMW grise d'origine vue de face, calandre chromée et pare-chocs standard",
     "after_alt": "Simulation IA : même BMW grise de face, calandre noire, bouclier sport et lèvre carbone",
-    "disclaimer": "Simulation visuelle générée par IA : même véhicule, même cadrage. Calandre noire, bouclier sport et lèvre carbone illustrés ; ce n'est pas une réalisation client TYMotors ni une garantie de compatibilité.",
+    "disclaimer": "Simulation générée par IA — illustration, pas une réalisation client.",
     "loading": "Chargement de la comparaison…",
     "error": "Les images de comparaison ne peuvent pas être chargées pour le moment.",
     "retry": "Réessayer"
@@ -183,9 +183,6 @@
     "eyebrow": "UNIVERS TYMOTORS",
     "title": "Pas juste une voiture. Votre signature.",
     "sub": "Une ligne, un détail, une attitude. Explorez la culture tuning et trouvez le point de départ de votre prochain projet.",
-    "next": "À VOUS D'ÉCRIRE LA SUITE",
-    "next_title": "La prochaine transformation ? La vôtre.",
-    "cta": "Personnaliser mon véhicule",
     "disclaimer": "Photos d'inspiration indépendantes : ces véhicules ne sont pas des réalisations TYMotors. Vérifiez toujours la compatibilité et l'usage autorisé des équipements.",
     "credits": "Crédits photographiques",
     "gallery": "Inspirations automobiles",
@@ -203,6 +200,7 @@
     "alts": {
       "bmw": "BMW 430i noire vue de face devant une façade graphique sombre, photographie publiée par knrdv",
       "mercedes": "Mercedes-AMG GT R gris mat avec jantes noires, vue de trois quarts avant, photographie de Mr.choppers",
+      "mercedesBrand": "Mercedes-AMG S63 coupé grise, vue de trois quarts avant au crépuscule, étoile Mercedes visible sur la calandre",
       "audi": "Audi RS6 C8 noire vue de face, photographie de Sestmedia",
       "porsche": "Porsche 992 GT3 RS Manthey, aileron et diffuseur arrière, photographie d'Alexandre Prevot",
       "volkswagen": "Volkswagen Golf VIII R Black Edition noire en salon automobile, photographie d'Alexander-93",

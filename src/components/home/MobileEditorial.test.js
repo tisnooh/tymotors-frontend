@@ -54,9 +54,19 @@ test('home categories retain backend routes but replace the unrelated category p
   expect(host.textContent).toContain('Performance. Intérieur. Technologie.');
   expect([...host.querySelectorAll('[data-testid="category-card"]')].map(link => link.getAttribute('href'))).toEqual(['/category/performance', '/category/interior', '/category/technology']);
   expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(Object.values(HOME_CATEGORY_PHOTOS).map(photo => photo.src));
+  expect([...host.querySelectorAll('[data-testid="category-card"]')].map(card => card.dataset.category)).toEqual(['performance', 'interior', 'technology']);
   expect(host.querySelector('.home-photo-note')).toBeNull();
   expect(host.querySelector('.home-photo-credits')).toBeNull();
 });
+test('only category photos fill their square frames with subject-specific cropping', () => {
+  const css = fs.readFileSync(path.join(__dirname, 'HomeEditorial.css'), 'utf8');
+  expect(css).toMatch(/\.home-category-photo\s*\{[^}]*aspect-ratio:\s*1\s*;/);
+  expect(css).toContain('.home-category-photo .home-editorial-photo img { object-fit: cover; object-position: 50% 50%; }');
+  expect(css).toContain('.home-category-card[data-category="performance"] .home-category-photo img { object-position: 50% 75%; }');
+  expect(css).toContain('.home-category-card[data-category="technology"] .home-category-photo img { object-position: 65% 50%; }');
+  expect(css).toMatch(/\.home-editorial-photo img\s*\{[^}]*object-fit:\s*contain\s*;/);
+});
+
 test('Hero keeps the selected photo, original animations and catalogue CTA', () => {
   act(() => root.render(<HeroSection />));
   expect(host.querySelector('img').src).toContain('photo-1762314907955-b7c1e11a8782');
@@ -164,12 +174,17 @@ test('phone Hero has only one faint theme gradient on its background, never on t
   const photoRules = phoneRules.match(/\.hero-mobile-photo > img\s*\{([^}]+)\}/)?.[1];
   expect(photoRules).not.toMatch(/background|filter|opacity|transform/);
 });
-test('inspiration is default-visible without animation APIs and keeps useful links without inline credit blocks', () => {
+test('inspiration keeps its three cards and links without the redundant closing CTA or inline credit blocks', () => {
   act(() => root.render(<CommunitySection />));
   expect(host.querySelectorAll('[data-testid="community-card"]')).toHaveLength(3);
   expect(host.querySelector('.universe-disclaimer')).toBeNull();
   expect(host.querySelector('.home-photo-credits')).toBeNull();
-  expect(host.querySelector('[data-testid="community-customize-cta"]').getAttribute('href')).toBe('/customize');
+  expect(host.querySelector('[data-testid="community-customize-cta"]')).toBeNull();
+  expect(host.querySelector('.universe-footer')).toBeNull();
+  expect(host.textContent).not.toContain('À VOUS D\'ÉCRIRE LA SUITE');
+  expect(host.textContent).not.toContain('La prochaine transformation ? La vôtre.');
+  expect([...host.querySelectorAll('.universe-card-link')].map(link => link.getAttribute('href'))).toEqual(['/customize', '/category/performance', '/customize']);
+  expect(host.querySelectorAll('a')).toHaveLength(3);
   expect(host.querySelectorAll('img[loading="lazy"]')).toHaveLength(3);
   expect(host.querySelectorAll('a[rel="noopener noreferrer"]')).toHaveLength(0);
   expect([...host.querySelectorAll('img')].every(image => image.getAttribute('src').startsWith('/images/home/'))).toBe(true);
@@ -273,6 +288,23 @@ test('published homepage photos exist locally and have a provenance record, with
     expect(credits).toContain(photo.src.split('/').pop());
     expect(credits).toContain(require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../../../public', photo.src))).digest('hex'));
   }
+});
+
+test('selected three-quarter Mercedes replaces only the brand card, preserving the Universe photo', async () => {
+  const photo = HOME_BRAND_PHOTOS['mercedes-benz'];
+  expect(photo).toBe(HOME_PHOTOS.mercedesBrand);
+  expect(photo.src).toBe('/images/home/mercedes-s63-three-quarter-reddit.jpg');
+  expect([photo.width, photo.height]).toEqual([6790, 3809]);
+  expect(photo.author).toBe('u/V1p3rlucky');
+  expect(photo.rightsStatus).toBe('unverified');
+  expect(photo.licence).toBeNull();
+  const bytes = fs.readFileSync(path.join(__dirname, '../../../public', photo.src));
+  expect(require('crypto').createHash('sha256').update(bytes).digest('hex')).toBe('d8285ad94c124b6862b64a6efdfdb663192af36ddedf1d6c04460b41297c4c5f');
+  Brands.list.mockResolvedValue([{ slug: 'mercedes-benz', name: 'Mercedes-Benz' }]);
+  await act(async () => root.render(<><BrandsSection /><CommunitySection /></>));
+  expect(host.querySelector('[data-testid="brand-card"]').getAttribute('href')).toBe('/brands/mercedes-benz');
+  expect(host.querySelector('[data-testid="brand-card"] img').getAttribute('src')).toBe(photo.src);
+  expect(host.querySelector('.universe-card img').getAttribute('src')).toBe(HOME_PHOTOS.mercedes.src);
 });
 
 test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
