@@ -6,6 +6,9 @@ const EMPTY_SELECTION = {
   generation: '',
   year: '',
   body_type: '',
+  trim: '',
+  has_camera: null,
+  has_parking_sensors: null,
 };
 
 function normalize(value = {}) {
@@ -16,6 +19,9 @@ function normalize(value = {}) {
     generation: String(value.generation || value.chassis || ''),
     year: year && Number(year) >= 1950 && Number(year) <= 2100 ? year : '',
     body_type: String(value.body_type || ''),
+    trim: String(value.trim || '').slice(0, 100),
+    has_camera: typeof value.has_camera === 'boolean' ? value.has_camera : null,
+    has_parking_sensors: typeof value.has_parking_sensors === 'boolean' ? value.has_parking_sensors : null,
   };
 }
 

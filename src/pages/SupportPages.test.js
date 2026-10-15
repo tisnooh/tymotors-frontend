@@ -1,17 +1,20 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { FAQPage, ShippingPage, TrackPage } from './SupportPages';
-import { Tracking } from '@/lib/api';
+import { FAQPage, ShippingPage, TrackPage, ContactPage } from './SupportPages';
+import { Tracking, Contact } from '@/lib/api';
+import { useLocation } from 'react-router-dom';
 
 jest.mock('@/lib/api', () => ({ Contact: { send: jest.fn() }, Tracking: { lookup: jest.fn() } }));
 jest.mock('react-router-dom', () => ({
+  useLocation: jest.fn(),
   Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }),
 }), { virtual: true });
 
 let container, root;
 beforeEach(() => {
-  global.IS_REACT_ACT_ENVIRONMENT = true;
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   jest.clearAllMocks();
+  useLocation.mockReturnValue({ state: null });
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
@@ -27,6 +30,14 @@ async function searchTracking() {
     container.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
   });
 }
+
+test('project review prefills contact safely without automatically sending anything', async () => {
+  useLocation.mockReturnValue({ state: { customizeRequest: { subject: 'Projet W177', message: 'Classe A W177\nCalandre W177' } } });
+  await act(async () => root.render(<ContactPage />));
+  expect(container.querySelector('input[name="subject"]')?.value || [...container.querySelectorAll('input')].find(input => input.placeholder === 'Sujet de votre message')?.value).toBe('Projet W177');
+  expect(container.querySelector('textarea').value).toContain('Calandre W177');
+  expect(Contact.send).not.toHaveBeenCalled();
+});
 
 test.each([
   ['unfulfilled', 'Commande reçue'],

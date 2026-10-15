@@ -1,19 +1,22 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import Shop from './Shop';
+import { Footer } from '@/components/layout/Footer';
 import { Products, Brands, Categories } from '@/lib/api';
 import { readVehicleSelection } from '@/lib/vehicleSelection';
 
 let mockParams = new URLSearchParams();
 const mockSetParams = jest.fn();
-jest.mock('react-router-dom', () => ({ useSearchParams: () => [mockParams, mockSetParams] }), { virtual: true });
+jest.mock('react-router-dom', () => ({ useSearchParams: () => [mockParams, mockSetParams], Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
 jest.mock('@/lib/api', () => ({ Products: { list: jest.fn() }, Brands: { list: jest.fn() }, Categories: { list: jest.fn() } }));
 jest.mock('@/lib/vehicleSelection', () => ({ readVehicleSelection: jest.fn(), saveVehicleSelection: jest.fn(), clearVehicleSelection: jest.fn() }));
-jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key, options = {}) => {
+jest.mock('react-i18next', () => ({ useTranslation: () => ({ i18n: { language: 'fr' }, t: (key, options = {}) => {
   const text = key.split('.').reduce((value, part) => value?.[part], require('@/lib/locales/fr.json')) || key;
   return typeof text === 'string' ? text.replace(/{{(\w+)}}/g, (_, name) => String(options[name] ?? '')) : key;
 } }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children }) => children }));
+jest.mock('@/components/shared/Logo', () => ({ Logo: () => <span>TYMotors</span> }));
+jest.mock('@/components/shared/LanguageSwitcher', () => ({ LanguageSwitcher: () => null }));
 jest.mock('@/components/shared/ProductCard', () => ({ ProductCard: ({ product }) => <article>{product.name}</article> }));
 
 let root, host;
@@ -27,6 +30,20 @@ beforeEach(() => {
   Products.list.mockResolvedValue({ items: [part], total: 1 });
 });
 afterEach(() => act(() => root.unmount()));
+
+test('footer new arrivals link opens the catalogue with the server-supported newest sort', async () => {
+  act(() => root.render(<Footer />));
+  const link = [...host.querySelectorAll('a')].find(item => item.textContent === 'Nouveautés');
+  expect(link).toBeDefined();
+  expect(link.getAttribute('href')).toBe('/shop?sort=newest');
+  const destination = new URL(link.getAttribute('href'), 'https://tymotors.vercel.app');
+  expect(destination.pathname).toBe('/shop');
+  await render(destination.search);
+  expect(Products.list).toHaveBeenLastCalledWith({ sort: 'newest', limit: 100, page: 1 });
+  expect(host.querySelector('select[aria-label="Trier les produits"]').value).toBe('newest');
+  expect(host.querySelector('article').textContent).toBe(part.name);
+  expect(host.querySelector('[role="alert"]')).toBeNull();
+});
 
 test('the catalogue actually submits a decoded search term and displays its query', async () => {
   await render('q=calandre+%26+BMW');

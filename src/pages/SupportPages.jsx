@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Package, RotateCcw, HelpCircle, Truck, Shield, FileText, Cookie } from 'lucide-react';
 import { Contact, Tracking } from '@/lib/api';
 
@@ -40,7 +40,11 @@ function Section({ title, children }) {
 // ─── CONTACT ─────────────────────────────────────────────────────────────────
 
 export function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
+  const location = useLocation();
+  const [form, setForm] = useState(() => {
+    const request = location.state?.customizeRequest;
+    return { name: '', email: '', subject: typeof request?.subject === 'string' ? request.subject.slice(0, 160) : '', message: typeof request?.message === 'string' ? request.message.slice(0, 5000) : '', website: '' };
+  });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);

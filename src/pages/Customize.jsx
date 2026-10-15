@@ -6,44 +6,53 @@ import { Reveal } from '@/components/shared/Reveal';
 import { SelectCard } from './customize/SelectCard';
 import { ConfiguratorSelect } from './customize/ConfiguratorSelect';
 import { VehicleStage } from './customize/VehicleStage';
-import { RecommendedDrawer } from './customize/RecommendedDrawer';
-import { useBrands, useVehicleSelection, useRecommendedForHotspot } from './customize/useCustomize';
+import { useBrands, useVehicleSelection } from './customize/useCustomize';
+import { VehicleDetails } from './customize/VehicleDetails';
+import { ProjectBuilder } from './customize/ProjectBuilder';
+import { catalogueCategory, vehicleViewSet } from './customize/vehicleViews';
+import './customize/Customize.css';
 
-// Stable IDs for skeleton placeholders (lint: no-array-index-key)
-const SKELETON_KEYS = ['sk-1', 'sk-2', 'sk-3', 'sk-4', 'sk-5', 'sk-6'];
 const EMDASH = '\u2014';
 
 export default function Customize() {
   const { t } = useTranslation();
   const brands = useBrands();
-  const { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj } =
+  const { brand, setBrand, model, setModel, generation, setGeneration, models, modelObj, details, setDetails } =
     useVehicleSelection();
   const [activeHotspot, setActiveHotspot] = useState(null);
-  useEffect(() => setActiveHotspot(null), [brand, model, generation]);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [projectBusy, setProjectBusy] = useState(false);
+  useEffect(() => { setActiveHotspot(null); setActiveCategory('all'); }, [brand, model, generation]);
   const generationRecord = useMemo(
     () => modelObj?.generation_records?.find((item) => item.name === generation) || null,
     [generation, modelObj]
   );
-  const activeHotspotRecord = useMemo(
-    () => generationRecord?.hotspots?.find((item) => item.id === activeHotspot) || null,
-    [activeHotspot, generationRecord]
-  );
-  const selection = useMemo(() => ({ brand, model, generation }), [brand, model, generation]);
-  const { recommended, loading: loadingProducts } = useRecommendedForHotspot(activeHotspotRecord, selection);
+  const selection = useMemo(() => ({ brand, model, generation, ...details }), [brand, model, generation, details]);
+  const views = useMemo(() => generationRecord ? vehicleViewSet(selection) : null, [selection, generationRecord]);
+  const complete = Boolean(brand && model && generationRecord);
+  const brandName = brands.find(item => item.slug === brand)?.name || brand;
   const compatibleUrl = useMemo(() => {
     const params = new URLSearchParams({ brand, model, chassis: generation });
+    if (details.year) params.set('year', details.year);
+    if (details.body_type) params.set('body_type', details.body_type);
     return `/shop?${params.toString()}`;
-  }, [brand, generation, model]);
+  }, [brand, generation, model, details.year, details.body_type]);
 
-  const handleHotspotClick = useCallback((id) => setActiveHotspot(id), []);
-  const handleClose = useCallback(() => setActiveHotspot(null), []);
+  const handleHotspotClick = useCallback((id) => {
+    setActiveHotspot(id);
+    setActiveCategory(catalogueCategory(generationRecord?.hotspots?.find(item => item.id === id)?.category_slug));
+  }, [generationRecord]);
+  const handleCategoryChange = useCallback((category) => {
+    setActiveHotspot(null);
+    setActiveCategory(catalogueCategory(category));
+  }, []);
 
   const brandPlaceholder = useMemo(() => `${EMDASH} ${t('customize.select_brand')} ${EMDASH}`, [t]);
   const modelPlaceholder = useMemo(() => `${EMDASH} ${t('customize.select_model')} ${EMDASH}`, [t]);
   const genPlaceholder = useMemo(() => `${EMDASH} ${t('customize.select_generation')} ${EMDASH}`, [t]);
 
   return (
-    <main data-testid="page-customize" className="pt-28 pb-24">
+    <main data-testid="page-customize" className="customize-page pt-28 pb-24">
       <div className="ty-container">
         <Reveal>
           <p className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C] flex items-center gap-2">
@@ -51,6 +60,7 @@ export default function Customize() {
           </p>
           <h1 className="mt-3 ty-display text-white text-4xl md:text-6xl">{t('customize.title')}</h1>
           <p className="mt-3 text-ty-textMid max-w-2xl">{t('customize.sub')}</p>
+          <p className="customize-intro-note">{t('customize.project.visual_hint')}</p>
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3" data-testid="customize-selector">
@@ -61,6 +71,7 @@ export default function Customize() {
               placeholder={brandPlaceholder}
               options={brands.map((item) => ({ value: item.slug, label: item.name }))}
               testId="compatibility-brand-select"
+              disabled={projectBusy}
             />
           </SelectCard>
           <SelectCard label={t('customize.select_model')}>
@@ -69,7 +80,7 @@ export default function Customize() {
               onValueChange={setModel}
               placeholder={modelPlaceholder}
               options={models.map((item) => ({ value: item.name, label: item.name }))}
-              disabled={!brand}
+              disabled={!brand || projectBusy}
               testId="compatibility-model-select"
             />
           </SelectCard>
@@ -79,29 +90,27 @@ export default function Customize() {
               onValueChange={setGeneration}
               placeholder={genPlaceholder}
               options={(modelObj?.generations || []).map((item) => ({ value: item, label: item }))}
-              disabled={!modelObj}
+              disabled={!modelObj || projectBusy}
               testId="compatibility-generation-select"
             />
           </SelectCard>
         </div>
 
-        <VehicleStage brand={brand} model={model} generation={generationRecord} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} />
+        <VehicleStage brand={brand} model={model} generation={generationRecord} onHotspotClick={handleHotspotClick} activeHotspot={activeHotspot} views={views} category={activeCategory} onCategoryChange={handleCategoryChange} disabled={projectBusy} />
+
+        {complete && <>
+          <VehicleDetails generation={generationRecord} details={details} onChange={setDetails} disabled={projectBusy} />
+          <ProjectBuilder key={JSON.stringify(selection)} selection={selection} brandName={brandName} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} onBusyChange={setProjectBusy} />
+        </>}
 
         {brand && model && generation && (
           <div className="mt-5 flex justify-end">
             <Link to={compatibleUrl} className="ty-btn-primary h-12 px-6 text-xs uppercase tracking-[0.14em]">
-              Voir tous les produits compatibles <ArrowRight className="h-4 w-4" />
+              {t('customize.project.browse_catalogue')} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         )}
 
-        <RecommendedDrawer
-          activeHotspot={activeHotspot}
-          loading={loadingProducts}
-          recommended={recommended}
-          skeletonKeys={SKELETON_KEYS}
-          onClose={handleClose}
-        />
       </div>
     </main>
   );

@@ -69,7 +69,7 @@ function ShopColumn() {
         <FooterLink to="/category/performance">{t('nav.performance')}</FooterLink>
         <FooterLink to="/category/interior">{t('nav.interior')}</FooterLink>
         <FooterLink to="/category/technology">{t('nav.technology')}</FooterLink>
-        <FooterLink to="/shop?sort=new">{t('footer.links.new_arrivals')}</FooterLink>
+        <FooterLink to="/shop?sort=newest">{t('footer.links.new_arrivals')}</FooterLink>
       </Column>
     </div>
   );

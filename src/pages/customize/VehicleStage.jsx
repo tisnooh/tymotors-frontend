@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Car, Sparkles } from 'lucide-react';
 import LoadedImage from '@/components/shared/LoadedImage';
+import { useTranslation } from 'react-i18next';
+import { VIEW_CATEGORIES } from './vehicleViews';
 
 const BRAND_PRESENTATION = {
   bmw: { name: 'BMW', icon: 'https://cdn.simpleicons.org/bmw/FFFFFF' },
@@ -51,25 +53,30 @@ function Hotspot({ hotspot, onClick, isActive }) {
   </button>;
 }
 
-export function VehicleStage({ brand, model, generation, onHotspotClick, activeHotspot }) {
+export function VehicleStage({ brand, model, generation, onHotspotClick, activeHotspot, views, category = 'all', onCategoryChange, disabled }) {
+  const { t } = useTranslation();
   const [loadedImage, setLoadedImage] = useState(null);
-  const hotspots = generation?.hotspots || [];
+  const hotspots = views ? [] : generation?.hotspots || [];
   const active = hotspots.find((item) => item.id === activeHotspot);
-  const image = active?.image_url || generation?.stage_image_url;
-  const alt = active?.image_alt || generation?.stage_image_alt || `${model || 'Véhicule'} ${generation?.name || ''}`;
+  const dedicated = views?.[category === 'all' ? 'performance' : category];
+  const image = dedicated?.src || active?.image_url || generation?.stage_image_url;
+  const alt = dedicated ? t(dedicated.altKey) : active?.image_alt || generation?.stage_image_alt || `${model || 'Véhicule'} ${generation?.name || ''}`;
   const selectionComplete = Boolean(brand && model && generation);
-  return <div className="mt-10 relative w-full overflow-hidden rounded-2xl border border-[#151A23] bg-[#0A0B0E]">
-    <div className="relative aspect-[16/9] flex items-center justify-center md:aspect-[21/8]">
+  return <div className="customize-stage mt-10 relative w-full overflow-hidden rounded-2xl border border-[#151A23] bg-[#0A0B0E]" data-testid="customize-stage">
+    {views && selectionComplete && <div className="customize-stage-heading"><span>{BRAND_PRESENTATION[brand]?.name || brand} · {model} · {generation.name}</span><span>{t(`customize.project.category_${category === 'all' ? 'performance' : category}`)}</span></div>}
+    <div className={`customize-stage-frame relative aspect-[16/9] flex items-center justify-center md:aspect-[21/8] ${dedicated ? 'has-views' : ''}`}>
       {!image && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,6,0,0.13),transparent_38%),linear-gradient(135deg,#0A0B0E_0%,#10131A_50%,#08090C_100%)]" />}
       {!image && <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px] [mask-image:radial-gradient(circle_at_center,black,transparent_75%)]" />}
-      {image ? <LoadedImage src={image} alt={alt} className="absolute inset-0 h-full w-full opacity-75" onStatus={status => setLoadedImage(status === 'loaded' ? image : null)}/> : <BrandWaitingState brand={brand} model={model} selectionComplete={selectionComplete} />}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent pointer-events-none" />
-      {selectionComplete && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
+      {image ? <LoadedImage src={image} alt={alt} className={`absolute inset-0 h-full w-full ${dedicated ? '' : 'opacity-75'}`} imageClassName={dedicated ? 'object-contain' : 'object-cover'} onStatus={status => setLoadedImage(status === 'loaded' ? image : null)}/> : <BrandWaitingState brand={brand} model={model} selectionComplete={selectionComplete} />}
+      {!dedicated && <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent pointer-events-none" />}
+      {selectionComplete && !views && <div className="absolute top-5 left-5 ty-chip ty-chip-red font-mono"><Sparkles className="h-3 w-3" />{brand.toUpperCase()} · {model} · {generation.name}</div>}
       {loadedImage === image && image && hotspots.map((hotspot) => <Hotspot key={hotspot.id} hotspot={hotspot} onClick={onHotspotClick} isActive={activeHotspot === hotspot.id} />)}
     </div>
     <div className="px-4 py-4 border-t border-[#151A23]">
       {!selectionComplete && <p className="text-sm text-ty-textMid flex items-center gap-2"><Car className="h-4 w-4" />Marque, modèle puis génération : aucune image générique ne sera substituée.</p>}
-      {selectionComplete && hotspots.length === 0 && <p className="text-sm text-amber-100">Les zones interactives de cette génération ne sont pas encore vérifiées. Aucun autre véhicule ne sera affiché à sa place.</p>}
+      {selectionComplete && onCategoryChange && <div className="customize-view-controls" role="group" aria-label={t('customize.project.vehicle_views')}>{VIEW_CATEGORIES.map(value => <button type="button" key={value} disabled={disabled} aria-pressed={category === value || category === 'all' && value === 'performance'} onClick={() => onCategoryChange(value)}>{t(`customize.project.category_${value}`)}</button>)}</div>}
+      {views && <p className="customize-view-note">{t(views.noteKey)}</p>}
+      {selectionComplete && !views && hotspots.length === 0 && <p className="text-sm text-ty-textMid">{t(category === 'interior' || category === 'technology' ? 'customize.project.view_pending' : 'customize.project.no_zones')}</p>}
       {hotspots.length > 0 && <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">{hotspots.map((hotspot) => <button key={hotspot.id} onClick={() => onHotspotClick(hotspot.id)} className={`rounded-xl border px-3 py-3 text-xs font-mono uppercase tracking-[0.12em] ${activeHotspot === hotspot.id ? 'border-[#E10600] bg-[#E10600]/10 text-white' : 'border-[#232B3A] text-ty-textMid'}`}>{hotspot.label}</button>)}</div>}
     </div>
   </div>;
