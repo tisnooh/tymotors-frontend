@@ -20,12 +20,12 @@ const HATCH = ['compacte', 'hatchback', '5portes', 'berline5portes', 'bicorps', 
 // deliberately exclude ambiguous facelift years and cabins not reviewed here.
 export const REVIEWED_VEHICLES = [
   { id: 'bmw-f30-f35', brand: 'bmw', model: 'Série 3', generation: 'F30 / F35', vehicle: 'BMW Série 3 F30 / F35', year: 2016, years: [2012, 2016], bodies: SEDAN, trims: ['msport'] },
-  { id: 'bmw-g20', brand: 'bmw', model: 'Série 3', generation: 'G20', vehicle: 'BMW Série 3 G20', year: 2020, years: [2019, 2021], bodies: SEDAN, trims: ['msport'] },
+  { id: 'bmw-g20', brand: 'bmw', model: 'Série 3', generation: 'G20', vehicle: 'BMW Série 3 G20', year: 2020, years: [2019, 2021], bodies: SEDAN, trims: ['msport'], exteriorVersion: 2 },
   { id: 'bmw-f32-f36', brand: 'bmw', model: 'Série 4', generation: 'F32 / F36', vehicle: 'BMW Série 4 F32 / F36', year: 2016, years: [2014, 2016], bodies: ['coupe', '2portes'], trims: ['msport'] },
   { id: 'mercedes-w205', brand: 'mercedes-benz', model: 'Classe C', generation: 'W205', vehicle: 'Mercedes-Benz Classe C W205', year: 2016, years: [2014, 2017], bodies: SEDAN, trims: ['amgline'] },
-  { id: 'audi-a3-8v', brand: 'audi', model: 'A3', generation: '8V', vehicle: 'Audi A3 8V', year: 2017, years: [2017, 2020], bodies: HATCH, trims: ['sline'] },
+  { id: 'audi-a3-8v', brand: 'audi', model: 'A3', generation: '8V', vehicle: 'Audi A3 8V', year: 2017, years: [2017, 2020], bodies: HATCH, trims: ['sline'], exteriorVersion: 2 },
   { id: 'audi-a4-b9', brand: 'audi', model: 'A4', generation: 'B9', vehicle: 'Audi A4 B9', year: 2017, years: [2016, 2018], bodies: SEDAN, trims: ['sline'] },
-  { id: 'porsche-991', brand: 'porsche', model: '911', generation: '991', vehicle: 'Porsche 911 991', year: 2017, years: [2016, 2019], bodies: ['coupe', '2portes'], trims: ['carrera'] },
+  { id: 'porsche-991', brand: 'porsche', model: '911', generation: '991', vehicle: 'Porsche 911 991', year: 2017, years: [2016, 2019], bodies: ['coupe', '2portes'], trims: ['carrera'], exteriorVersion: 2 },
   { id: 'porsche-992', brand: 'porsche', model: '911', generation: '992', vehicle: 'Porsche 911 992', year: 2020, years: [2019, 2023], bodies: ['coupe', '2portes'], trims: ['carrera'] },
   { id: 'porsche-cayenne-9ya', brand: 'porsche', model: 'Cayenne', generation: '9YA', vehicle: 'Porsche Cayenne 9YA', year: 2019, years: [2018, 2022], bodies: ['suv', '5portes'], trims: [] },
   { id: 'volkswagen-golf-7-gti', brand: 'volkswagen', model: 'Golf 7', generation: 'GTI', vehicle: 'Volkswagen Golf 7 GTI', year: 2016, years: [2013, 2016], bodies: HATCH, trims: ['gti'] },
@@ -38,7 +38,7 @@ const reviewedSets = new Map(REVIEWED_VEHICLES.map(item => [item.id, {
   noteKey: `customize.project.${item.id.replace(/-/g, '_')}_view_note`,
   altValues: { vehicle: item.vehicle, year: item.year },
   ...Object.fromEntries(VIEW_CATEGORIES.map(category => [category, {
-    src: `/images/customize/${item.id}/${category === 'performance' ? 'exterior' : category}-v1.webp`,
+    src: `/images/customize/${item.id}/${category === 'performance' ? 'exterior' : category}-v${category === 'performance' ? item.exteriorVersion || 1 : 1}.webp`,
     altKey: `customize.project.reviewed_${category}_alt`,
   }])),
 }]));

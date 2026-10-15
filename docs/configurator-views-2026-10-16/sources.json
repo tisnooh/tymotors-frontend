@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bmw-g20",
+    "source": "exec-1c7806fd-d6ff-4881-a071-d01334ee4949.png",
+    "reason": "Original exterior showed July 2022 LCI lights/bumper beside a 2020 pre-LCI cabin.",
+    "version": 2,
+    "prompt": "Edit this existing configurator illustration. Change only the vehicle's phase-specific exterior design so it is unmistakably a 2020 BMW 3 Series G20 sedan M Sport, original PRE-FACELIFT 2019-2021, NOT the July 2022 LCI. Keep the same black metallic paint, front three-quarter angle with the nose pointing right, full car visible, realistic proportions, premium black studio and red horizon glow, wet black floor reflection, landscape 16:9. Critical corrections: original G20 fuller headlight housings with the distinct small lower-edge notch and two U-shaped daytime-light signatures; original smaller kidney grille with vertical bars, not LCI mesh; original 2020 M Sport bumper with separate sculpted side inlets, not the vast 2023 angular black intake. Four-door G20, NOT F30, G22/M4 or long-wheelbase. Photorealistic CGI illustration with controlled reflections and detailed wheels. No people, text overlays, watermark, collage, added parts or advertisement. Preserve visual darkness but make the correct factory model recognizable.",
+    "originalRetained": true
+  },
+  {
+    "id": "audi-a3-8v",
+    "source": "exec-2ff998f7-424c-43f9-a03d-bf082c5f7fde.png",
+    "reason": "Original exterior showed the early 8V while the reviewed set describes the 2017 facelift.",
+    "version": 2,
+    "prompt": "Edit this existing configurator illustration. Change only phase-specific exterior features to a clearly accurate 2017 Audi A3 8V Sportback facelift S line, 5-door hatchback. Keep its red metallic paint, full-car three-quarter front angle nose to left, black studio with red horizon and glossy dark floor, landscape 16:9, premium restrained lighting. It must be the 2016-update 8V, NOT the older 2013 8V front and NOT the 2020 8Y. Correct angular facelift headlight housings with the distinctive lower-edge step/notch and sharp LED lighting, sharper wider singleframe hexagonal grille and accurate 2017 S line bumper with side air inlets. Preserve compact five-door Sportback proportions, normal A3 grille without RS3 honeycomb or huge modern apertures, no sedan body. Photorealistic automotive CGI, realistic tires/rims, complete car in frame. No people, extra text, watermark, collage or unrelated accessories.",
+    "originalRetained": true
+  },
+  {
+    "id": "porsche-991",
+    "source": "exec-6ae3a8e3-4939-4c70-9c53-6d53285b1919.png",
+    "reason": "Original exterior showed 991.1 while the reviewed cabin/PCM example is 2017 991.2.",
+    "version": 2,
+    "prompt": "Edit this existing illustration into an accurate 2017 Porsche 911 Carrera coupe 991.2 facelift exterior so it agrees with its 2017 PCM interior. Keep the silver/grey paint, full-car front three-quarter angle nose to left, black studio with red horizon and subtle glossy black floor reflection, landscape 16:9. Critical model: 991 SECOND PHASE Carrera 2016-2019, NOT original 2012-2015 991.1 and NOT 992. Correct the bumper to the 991.2 horizontal slim LED daytime/indicator light strips and revised lower intakes with active slats; correct modern 991.2 headlights with four-point daytime-light elements. Preserve the classic 991 roof/window silhouette and two-door coupe body, natural Porsche wheelbase/wheels and sober factory appearance. Remove the old 991.1 stacked curved running-light/bumper signature. Photorealistic premium CGI illustration, controlled readable dark lighting. No people, text overlays, watermarks, collage, giant wing, GT3 treatment or modern 992 bumper.",
+    "originalRetained": true
+  }
+]

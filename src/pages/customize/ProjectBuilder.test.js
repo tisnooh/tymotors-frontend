@@ -23,7 +23,7 @@ beforeEach(() => {
   host = document.createElement('div'); root = createRoot(host);
   addToCart = jest.fn().mockResolvedValue({ items: [] }); onBusyChange = jest.fn();
   useApp.mockReturnValue({ addToCart });
-  Products.list.mockResolvedValue({ items: [part], total: 1 });
+  Products.list.mockResolvedValue({ items: [part], total: 1, fitment_scope: 'verified_vehicle' });
   Products.get.mockResolvedValue(part);
   Products.checkCompatibility.mockResolvedValue({ status: 'compatible', compatibility: { is_verified: true } });
   mockLinkState = null;
@@ -34,9 +34,9 @@ const render = async (vehicle = selection, props = {}) => act(async () => root.r
 const choose = async (index = 0) => act(async () => host.querySelectorAll('.customize-select-part')[index].click());
 
 test('equipment appears without hotspots and filtering, paging and retry use real catalogue parameters', async () => {
-  Products.list.mockResolvedValue({ items: [part], total: 25 });
+  Products.list.mockResolvedValue({ items: [part], total: 25, fitment_scope: 'verified_vehicle' });
   await render();
-  expect(Products.list).toHaveBeenLastCalledWith({ brand: 'mercedes-benz', model: 'Classe A', chassis: 'W177', year: 2020, body_type: 'Berline', limit: 12, page: 1 });
+  expect(Products.list).toHaveBeenLastCalledWith({ brand: 'mercedes-benz', model: 'Classe A', chassis: 'W177', year: 2020, body_type: 'Berline', trim: 'AMG Line', has_camera: false, has_parking_sensors: true, strict_vehicle: true, limit: 12, page: 1 });
   expect(host.querySelectorAll('[data-testid="customize-equipment"]')).toHaveLength(1);
   expect(host.textContent).toContain('Compatibilité à vérifier');
   expect(cartButton().disabled).toBe(true);
@@ -89,7 +89,7 @@ test.each([
   { status: 'draft', test_purchase: true, stock: 0 },
   { stock: 0 }, { purchase_available: false }, { max_order_quantity: 0 },
 ])('draft/test/unavailable equipment cannot be purchased: %j', async change => {
-  Products.list.mockResolvedValue({ items: [{ ...part, ...change }], total: 1 });
+  Products.list.mockResolvedValue({ items: [{ ...part, ...change }], total: 1, fitment_scope: 'verified_vehicle' });
   await render(); await choose(); expect(cartButton().disabled).toBe(true);
   expect(addToCart).not.toHaveBeenCalled();
 });
@@ -105,7 +105,7 @@ test('stock or price changes at submission stop before a cart write', async () =
 
 test('partial cart failure removes only successful additions so retry does not duplicate them', async () => {
   const second = { ...part, id: 'part-2', slug: 'diffuseur-w177', name: 'Diffuseur W177', price: 50 };
-  Products.list.mockResolvedValue({ items: [part, second], total: 2 });
+  Products.list.mockResolvedValue({ items: [part, second], total: 2, fitment_scope: 'verified_vehicle' });
   Products.get.mockImplementation(slug => Promise.resolve(slug === part.slug ? part : second));
   addToCart.mockResolvedValueOnce({ items: [] }).mockRejectedValueOnce(new Error('private failure'));
   await render(); await choose(0); await choose(1);
@@ -142,9 +142,25 @@ test('catalogue and verification failures are explicit and retryable, not presen
 });
 
 test('empty catalogue retains support access and translation keys match in both languages', async () => {
-  Products.list.mockResolvedValue({ items: [], total: 0 }); await render();
+  Products.list.mockResolvedValue({ items: [], total: 0, fitment_scope: 'verified_vehicle' }); await render();
   expect(host.querySelector('.customize-state a').getAttribute('href')).toBe('/support/contact');
   expect(Object.keys(fr.customize.project)).toEqual(Object.keys(en.customize.project));
   expect(projectTotals([{ product: { price: 0.1, currency: 'EUR' } }, { product: { price: 0.2, currency: 'EUR' } }])).toEqual({ EUR: 30 });
   expect(availableForProject({ ...part, price: NaN })).toBe(false);
+});
+
+test('an old backend cannot silently display its broad demo catalogue as vehicle-specific', async () => {
+  Products.list.mockResolvedValue({ items: [{ ...part, name: 'Calandre W205' }], total: 1 });
+  await render();
+  expect(host.querySelector('[role="alert"]')).not.toBeNull();
+  expect(host.querySelector('[data-testid="customize-equipment"]')).toBeNull();
+  expect(host.textContent).not.toContain('Calandre W205');
+  expect(addToCart).not.toHaveBeenCalled();
+});
+
+test('explicit unknown/false equipment values are not converted into positive options', async () => {
+  await render({ ...selection, trim: '', has_camera: null, has_parking_sensors: false });
+  expect(Products.list.mock.calls.at(-1)[0]).toMatchObject({ strict_vehicle: true, has_parking_sensors: false });
+  expect(Products.list.mock.calls.at(-1)[0]).not.toHaveProperty('has_camera');
+  expect(Products.list.mock.calls.at(-1)[0]).not.toHaveProperty('trim');
 });

@@ -363,7 +363,7 @@
       "request_subject": "Vérification de mon projet automobile",
       "catalogue_error": "Les équipements ne peuvent pas être chargés pour le moment.",
       "retry": "Réessayer",
-      "empty": "Aucune référence pour cette sélection. Essayez un autre univers ou contactez-nous pour vérifier les possibilités.",
+      "empty": "Aucune référence avec compatibilité vérifiée pour ce véhicule dans cet univers. Contactez-nous pour vérifier les possibilités.",
       "ask_help": "Demander conseil",
       "pagination": "Pages des équipements",
       "previous": "Précédent",

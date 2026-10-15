@@ -74,3 +74,11 @@ test('all 14 generation groups have isolated assets; unknown models remain pendi
     { brand: 'toyota', model: '911', generation: '992' },
   ]) expect(vehicleViewSet(entry)).toBeNull();
 });
+
+test.each(['bmw-g20', 'audi-a3-8v', 'porsche-991'])('%s uses the phase-corrected exterior without replacing its cabin', id => {
+  const entry = REVIEWED_VEHICLES.find(item => item.id === id);
+  const views = vehicleViewSet(entry);
+  expect(views.performance.src).toBe(`/images/customize/${id}/exterior-v2.webp`);
+  expect(views.interior.src).toBe(`/images/customize/${id}/interior-v1.webp`);
+  expect(views.technology.src).toBe(`/images/customize/${id}/technology-v1.webp`);
+});

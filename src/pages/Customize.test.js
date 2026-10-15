@@ -21,7 +21,7 @@ beforeEach(() => {
   localStorage.clear(); host = document.createElement('div'); root = createRoot(host);
   Brands.list.mockResolvedValue([{ slug: 'mercedes-benz', name: 'Mercedes-Benz' }]);
   Compatibility.list.mockResolvedValue(vehicleModels);
-  Products.list.mockResolvedValue({ items: [{ id: 'part', slug: 'part', name: 'Pièce', images: [], price: 99, status: 'draft' }], total: 1 });
+  Products.list.mockResolvedValue({ items: [{ id: 'part', slug: 'part', name: 'Pièce', images: [], price: 99, status: 'draft' }], total: 1, fitment_scope: 'verified_vehicle' });
   Products.checkCompatibility.mockResolvedValue({ status: 'unknown' });
 });
 afterEach(() => { act(() => root.unmount()); jest.clearAllMocks(); });
@@ -103,10 +103,10 @@ test.each(REVIEWED_VEHICLES)('$vehicle switches its own three views and real cat
   saveVehicleSelection({ brand: entry.brand, model: entry.model, generation: entry.generation });
   await act(async () => root.render(<Customize />));
   const stage = () => host.querySelector('[data-testid="customize-stage"]');
-  expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/exterior-v1.webp`);
+  expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/exterior-v${entry.exteriorVersion || 1}.webp`);
   for (const [index, category] of ['performance', 'interior', 'technology'].entries()) {
     await act(async () => stage().querySelectorAll('.customize-view-controls button')[index].click());
-    expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/${category === 'performance' ? 'exterior' : category}-v1.webp`);
+    expect(stage().querySelector('img').getAttribute('src')).toBe(`/images/customize/${entry.id}/${category === 'performance' ? 'exterior' : category}-v${category === 'performance' ? entry.exteriorVersion || 1 : 1}.webp`);
     expect(stage().querySelector('img').getAttribute('alt')).toContain(entry.vehicle);
     expect(Products.list.mock.calls.at(-1)[0]).toMatchObject({ brand: entry.brand, model: entry.model, chassis: entry.generation, category });
     expect(stage().querySelectorAll('.customize-view-controls button')[index].getAttribute('aria-pressed')).toBe('true');

@@ -54,17 +54,22 @@ export function ProjectBuilder({ selection, brandName, activeCategory, onCategor
   useEffect(() => {
     let cancelled = false;
     setCatalogue({ loading: true, error: false, products: [], total: 0 });
-    const args = { brand: selection.brand, model: selection.model, chassis: selection.generation, limit: PAGE_SIZE, page };
+    const args = { brand: selection.brand, model: selection.model, chassis: selection.generation, strict_vehicle: true, limit: PAGE_SIZE, page };
     if (vehicle.year) args.year = vehicle.year;
     if (vehicle.body_type) args.body_type = vehicle.body_type;
+    if (vehicle.trim) args.trim = vehicle.trim;
+    if (vehicle.has_camera != null) args.has_camera = vehicle.has_camera;
+    if (vehicle.has_parking_sensors != null) args.has_parking_sensors = vehicle.has_parking_sensors;
     if (category !== 'all') args.category = category;
     Products.list(args).then(data => {
       if (cancelled) return;
-      if (!Array.isArray(data?.items)) throw new Error('Invalid catalogue response');
+      // An older API may ignore unknown query parameters. Never fall back to its
+      // broad, unverified demo catalogue or filter only one page on the client.
+      if (!Array.isArray(data?.items) || data.fitment_scope !== 'verified_vehicle') throw new Error('Invalid vehicle catalogue response');
       setCatalogue({ loading: false, error: false, products: data.items, total: Number.isInteger(data.total) && data.total >= data.items.length ? data.total : data.items.length });
     }).catch(() => { if (!cancelled) setCatalogue({ loading: false, error: true, products: [], total: 0 }); });
     return () => { cancelled = true; };
-  }, [category, page, retry, selection.brand, selection.model, selection.generation, vehicle.year, vehicle.body_type]);
+  }, [category, page, retry, selection.brand, selection.model, selection.generation, vehicle.year, vehicle.body_type, vehicle.trim, vehicle.has_camera, vehicle.has_parking_sensors]);
 
   const remove = id => { if (!submitting.current) setItems(current => current.filter(item => item.product.id !== id)); };
   const select = async product => {

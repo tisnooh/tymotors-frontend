@@ -325,7 +325,7 @@
       "request_subject": "Automotive project compatibility review",
       "catalogue_error": "Equipment cannot be loaded right now.",
       "retry": "Try again",
-      "empty": "No references for this selection. Try another category or contact us to discuss the options.",
+      "empty": "No references with verified fitment for this vehicle in this category. Contact us to check the options.",
       "ask_help": "Ask for advice",
       "pagination": "Equipment pages",
       "previous": "Previous",
