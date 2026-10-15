@@ -1,5 +1,14 @@
 # Homepage photograph credits — TYMotors
 
+## Universe replacements — approved 15 October 2026
+
+The owner approved the displayed BMW widebody and rear-view Porsche night photographs. Only the Culture tuning and Sporting silhouette cards use them. The AMG wheel, brand cards, category cards, Hero and Storytelling keep their existing photographs. Original JPEG bytes are copied locally without image editing, watermark removal or AI generation. No commercial reuse permission is confirmed; no licence is asserted. These are independent inspiration photographs, not TYMotors builds or exact catalogue products.
+
+| Local file | Title / credit | Source | Rights status | Dimensions | SHA256 |
+| --- | --- | --- | --- | --- | --- |
+| [culture-bmw-m4-widebody.jpg](culture-bmw-m4-widebody.jpg) | BMW M4 — Kyle Fletcher, credited in u/testsubjectno999's post | [Reddit post](https://www.reddit.com/r/carporn/comments/1i6oezk/bmw_m4_3276x4096/) · [Original JPEG](https://i.redd.it/js0wf5nswdee1.jpeg) | Reuse rights not confirmed | 3276 × 4096 | `0fdd714e8a4446f5ea3f0397262aa0d354a0575a3fcf891d6b1fbff37f04f55c` |
+| [sport-porsche-gt3rs-night.jpg](sport-porsche-gt3rs-night.jpg) | GT3RS At Night — u/Exhibitions_of_Speed | [Reddit post](https://www.reddit.com/r/porsche911/comments/1r0h6kx/gt3rs_at_night/) · [Original JPEG](https://i.redd.it/jzj8a4eiejig1.jpg) | Reuse rights not confirmed | 5779 × 3853 | `a2b15649306cb0f707085dc7e1d94ef311b57744d590f8e8bcfef0af56224b8b` |
+
 ## Mercedes brand-card selection — requested 15 October 2026
 
 The owner selected the front three-quarter S63 photograph (option 2). Only the Mercedes-Benz brand card uses this replacement; the Universe gathering card keeps mercedes-amg-gtr-grey.jpg. Original JPEG bytes are hosted without retouching or watermark removal. Public Reddit provenance does not grant a reuse licence; commercial permission is unverified and no licence is asserted.

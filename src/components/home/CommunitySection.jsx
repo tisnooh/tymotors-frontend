@@ -7,9 +7,9 @@ import { HomeEditorialPhoto } from './HomeEditorialPhoto';
 import './CommunitySection.css';
 
 const PROJECTS = [
-  { id: 'gathering', image: HOME_PHOTOS.mercedes, to: '/customize' },
+  { id: 'gathering', image: HOME_PHOTOS.culture, to: '/customize' },
   { id: 'detail', image: HOME_PHOTOS.detail, to: '/category/performance' },
-  { id: 'silhouette', image: HOME_PHOTOS.porsche, to: '/customize' },
+  { id: 'silhouette', image: HOME_PHOTOS.sport, to: '/customize' },
 ];
 
 export function CommunitySection() {

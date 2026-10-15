@@ -192,7 +192,7 @@ test('inspiration keeps its three cards and links without the redundant closing 
 test('a failed inspiration image has a readable fallback instead of a broken image', () => {
   act(() => root.render(<CommunitySection />));
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
-  expect(host.querySelector('[role="status"]').textContent).toContain(fr.home_photos.alts.mercedes);
+  expect(host.querySelector('[role="status"]').textContent).toContain(fr.home_photos.alts.culture);
   expect(host.querySelectorAll('img')).toHaveLength(2);
 });
 test('reduced motion disconnects the observer, leaves content visible, and cleans up on unmount', () => {
@@ -290,7 +290,7 @@ test('published homepage photos exist locally and have a provenance record, with
   }
 });
 
-test('selected three-quarter Mercedes replaces only the brand card, preserving the Universe photo', async () => {
+test('selected three-quarter Mercedes remains confined to the brand card', async () => {
   const photo = HOME_BRAND_PHOTOS['mercedes-benz'];
   expect(photo).toBe(HOME_PHOTOS.mercedesBrand);
   expect(photo.src).toBe('/images/home/mercedes-s63-three-quarter-reddit.jpg');
@@ -304,7 +304,22 @@ test('selected three-quarter Mercedes replaces only the brand card, preserving t
   await act(async () => root.render(<><BrandsSection /><CommunitySection /></>));
   expect(host.querySelector('[data-testid="brand-card"]').getAttribute('href')).toBe('/brands/mercedes-benz');
   expect(host.querySelector('[data-testid="brand-card"] img').getAttribute('src')).toBe(photo.src);
-  expect(host.querySelector('.universe-card img').getAttribute('src')).toBe(HOME_PHOTOS.mercedes.src);
+  expect(host.querySelector('.universe-card img').getAttribute('src')).not.toBe(photo.src);
+});
+
+test('approved Universe replacements preserve the wheel, brand photos and shopping links', () => {
+  act(() => root.render(<CommunitySection />));
+  expect([...host.querySelectorAll('.universe-card img')].map(img => img.getAttribute('src'))).toEqual([
+    HOME_PHOTOS.culture.src, HOME_PHOTOS.detail.src, HOME_PHOTOS.sport.src,
+  ]);
+  expect([...host.querySelectorAll('.universe-card-link')].map(link => link.getAttribute('href'))).toEqual(['/customize', '/category/performance', '/customize']);
+  expect(HOME_BRAND_PHOTOS.bmw).toBe(HOME_PHOTOS.bmw);
+  expect(HOME_BRAND_PHOTOS.porsche).toBe(HOME_PHOTOS.porsche);
+  expect(HOME_CATEGORY_PHOTOS.performance).toBe(HOME_PHOTOS.bmw);
+  expect(HOME_PHOTOS.culture.src).not.toBe(HOME_PHOTOS.bmw.src);
+  expect(HOME_PHOTOS.sport.src).not.toBe(HOME_PHOTOS.porsche.src);
+  expect(fr.home_photos.alts.culture).toContain('BMW M4');
+  expect(fr.home_photos.alts.sport).toContain('arrière de nuit');
 });
 
 test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
