@@ -159,6 +159,7 @@ function LegalBar() {
         <Link to="/legal/withdrawal" className="hover:text-ty-textMid transition-colors">Rétractation</Link>
         <Link to="/legal/terms" className="hover:text-ty-textMid transition-colors">{t('footer.links.terms')}</Link>
         <Link to="/legal/cookies" className="hover:text-ty-textMid transition-colors">{t('footer.links.cookies')}</Link>
+        <Link to="/legal/photo-credits" className="hover:text-ty-textMid transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F2C94C]">{t('home_photos.footer_link')}</Link>
         <button onClick={openConsent} className="hover:text-ty-textMid transition-colors">Gérer mes cookies</button>
       </div>
     </div>

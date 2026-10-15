@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { Categories } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
 import { HOME_CATEGORY_PHOTOS } from '@/lib/homeEditorialPhotos';
-import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
+import { HomeEditorialPhoto } from './HomeEditorialPhoto';
 
 const HOME_CATEGORY_SLOTS = [
   { slug: 'performance', sourceSlugs: ['performance', 'exterior'], labelKey: 'nav.performance' },
@@ -68,10 +68,6 @@ export function CategoriesSection() {
             </Reveal>
           ))}
         </div>
-        {homeItems.length > 0 && <>
-          <p className="home-photo-note">{t('home_photos.disclaimer')}</p>
-          <HomePhotoCredits photos={homeItems.map(item => item.photo)} />
-        </>}
       </div>
     </section>
   );

@@ -8,6 +8,7 @@ import { StorytellingSection } from './StorytellingSection';
 import { BrandsSection } from './BrandsSection';
 import { CtaSection } from './CtaSection';
 import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
+import PhotoCredits from '@/pages/PhotoCredits';
 import { HOME_PHOTOS, HOME_CATEGORY_PHOTOS, HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
 import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
@@ -54,8 +55,8 @@ test('home categories retain backend routes but replace the unrelated category p
   expect(host.textContent).toContain('Performance. Intérieur. Technologie.');
   expect([...host.querySelectorAll('[data-testid="category-card"]')].map(link => link.getAttribute('href'))).toEqual(['/category/performance', '/category/interior', '/category/technology']);
   expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(Object.values(HOME_CATEGORY_PHOTOS).map(photo => photo.src));
-  expect(host.textContent).toContain('ne montrent pas les références exactes');
-  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(3);
+  expect(host.querySelector('.home-photo-note')).toBeNull();
+  expect(host.querySelector('.home-photo-credits')).toBeNull();
 });
 test('Hero keeps the selected photo, original animations and catalogue CTA', () => {
   act(() => root.render(<HeroSection />));
@@ -164,13 +165,14 @@ test('phone Hero has only one faint theme gradient on its background, never on t
   const photoRules = phoneRules.match(/\.hero-mobile-photo > img\s*\{([^}]+)\}/)?.[1];
   expect(photoRules).not.toMatch(/background|filter|opacity|transform/);
 });
-test('inspiration is default-visible without animation APIs, with useful links and honest attribution', () => {
+test('inspiration is default-visible without animation APIs and keeps useful links without inline credit blocks', () => {
   act(() => root.render(<CommunitySection />));
   expect(host.querySelectorAll('[data-testid="community-card"]')).toHaveLength(3);
-  expect(host.textContent).toContain('ne sont pas des réalisations TYMotors');
+  expect(host.querySelector('.universe-disclaimer')).toBeNull();
+  expect(host.querySelector('.home-photo-credits')).toBeNull();
   expect(host.querySelector('[data-testid="community-customize-cta"]').getAttribute('href')).toBe('/customize');
   expect(host.querySelectorAll('img[loading="lazy"]')).toHaveLength(3);
-  expect(host.querySelectorAll('a[rel="noopener noreferrer"]')).toHaveLength(6);
+  expect(host.querySelectorAll('a[rel="noopener noreferrer"]')).toHaveLength(0);
   expect([...host.querySelectorAll('img')].every(image => image.getAttribute('src').startsWith('/images/home/'))).toBe(true);
 });
 test('a failed inspiration image has a readable fallback instead of a broken image', () => {
@@ -211,7 +213,7 @@ test('home brand cards keep their photographic design and backend routes, but us
   await act(async () => root.render(<BrandsSection />));
   expect(host.querySelectorAll('img')).toHaveLength(6);
   expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(brands.map(brand => HOME_BRAND_PHOTOS[brand.slug].src));
-  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(6);
+  expect(host.querySelector('.home-photo-credits')).toBeNull();
   expect([...host.querySelectorAll('img')].every(image => image.getAttribute('loading') === 'lazy' && image.className.includes('object-cover'))).toBe(true);
   expect([...host.querySelectorAll('[data-testid="brand-card"]')].map(link => link.getAttribute('href'))).toEqual(brands.map(brand => `/brands/${brand.slug}`));
   expect(host.textContent).toContain('Volkswagen');
@@ -253,7 +255,7 @@ test('editorial photo errors never prevent navigation and a changed source reset
 test('photo credits deduplicate images, retain authors/titles and link to each licence', () => {
   act(() => root.render(<HomePhotoCredits photos={[HOME_PHOTOS.cockpit, HOME_PHOTOS.cockpit, HOME_PHOTOS.mercedes]} />));
   expect(host.querySelectorAll('li')).toHaveLength(2);
-  expect(host.textContent).toContain('Vauxford');
+  expect(host.textContent).toContain('Ethan Llamas');
   expect(host.textContent).toContain(HOME_PHOTOS.cockpit.title);
   expect(host.textContent).toContain('Mr.choppers');
   expect(host.querySelector(`a[href="${HOME_PHOTOS.cockpit.licenceUrl}"]`)).not.toBeNull();
@@ -278,11 +280,11 @@ test('published homepage photos exist locally and have a provenance record, with
   }
 });
 
-test('approved replacements exclude CONCAVO and preserve the exact Porsche and Technology image bytes', () => {
+test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
   const replacements = {
     bmw: 'bmw-m4cs-vr46', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-rs6-c8',
     volkswagen: 'volkswagen-golf-r-black', toyota: 'toyota-gr-supra-black',
-    cockpit: 'interior-audi-rs6', detail: 'detail-amg-gtr-wheel',
+    cockpit: 'technology-bmw-g81', technology: 'technology-android-auto', detail: 'detail-amg-gtr-wheel',
   };
   for (const [key, file] of Object.entries(replacements)) {
     expect(HOME_PHOTOS[key].src).toBe(`/images/home/${file}.jpg`);
@@ -292,12 +294,41 @@ test('approved replacements exclude CONCAVO and preserve the exact Porsche and T
   }
   const preserved = {
     porsche: ['porsche-manthey', '1d32bd08e5eea412833f424f219aca5b687bd3740f6918a4142708e5b9e8ad62'],
-    technology: ['technology-bmw-g81', '399d0278a8164ac4c373c68780ef5d2715fb956b6228121018b21b70fbf97137'],
+    cockpit: ['technology-bmw-g81', '399d0278a8164ac4c373c68780ef5d2715fb956b6228121018b21b70fbf97137'],
+    technology: ['technology-android-auto', 'a118d54e050b1cf5de0c17908b442d68f5a00c13bfedbe03e9e8f19a15f2c127'],
   };
   for (const [key, [file, hash]] of Object.entries(preserved)) {
     expect(HOME_PHOTOS[key].src).toBe(`/images/home/${file}.jpg`);
     expect(require('crypto').createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../../../public', HOME_PHOTOS[key].src))).digest('hex')).toBe(hash);
   }
+  expect(HOME_CATEGORY_PHOTOS.interior).toBe(HOME_PHOTOS.cockpit);
+  expect(HOME_CATEGORY_PHOTOS.technology).toBe(HOME_PHOTOS.technology);
+  expect(HOME_PHOTOS.cockpit.src).not.toBe(HOME_PHOTOS.technology.src);
+  expect(HOME_PHOTOS.technology.author).toBe('Mavila2');
+  expect(fr.home_photos.alts.technology).toContain('Android Auto');
+  expect(en.home_photos.alts.technology).toContain('Android Auto');
+  expect(fr.home_photos.alts.technology).not.toMatch(/CarPlay|sans fil/i);
+});
+
+test('dedicated photo credits page exposes all active attributions, licences and presentation notes', () => {
+  act(() => root.render(<PhotoCredits />));
+  expect(host.querySelector('h1').textContent).toBe(fr.home_photos.credits);
+  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(Object.keys(HOME_PHOTOS).length);
+  expect(host.querySelector('details')).toBeNull();
+  expect(host.textContent).toContain(fr.home_photos.disclaimer);
+  expect(host.textContent).toContain(fr.home_photos.presentation);
+  const creditLinks = [...host.querySelectorAll('a')].map(link => link.getAttribute('href'));
+  for (const photo of Object.values(HOME_PHOTOS)) {
+    expect(host.textContent).toContain(photo.author);
+    expect(host.textContent).toContain(photo.title);
+    expect(creditLinks).toContain(photo.source);
+    expect(creditLinks).toContain(photo.licenceUrl);
+  }
+  const app = fs.readFileSync(path.join(__dirname, '../../App.js'), 'utf8');
+  expect(app).toContain('<Route path="/legal/photo-credits" element={<PhotoCredits />} />');
+  const footer = fs.readFileSync(path.join(__dirname, '../layout/Footer.jsx'), 'utf8');
+  expect(footer).toContain('to="/legal/photo-credits"');
+  expect(footer).toContain("t('home_photos.footer_link')");
 });
 
 test('mobile inspiration selection enlarges only one card, toggles off, and never changes CTA destinations', () => {

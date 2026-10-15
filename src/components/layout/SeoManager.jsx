@@ -29,6 +29,7 @@ const ROUTES = {
   '/legal/privacy': ['Politique de confidentialité | TYMotors', 'Découvrez comment TYMotors traite et protège vos données personnelles.'],
   '/legal/terms': ['Conditions générales de vente | TYMotors', 'Consultez les conditions générales de vente et d’utilisation de TYMotors.'],
   '/legal/cookies': ['Gestion des cookies | TYMotors', 'Consultez et gérez vos préférences de cookies sur TYMotors.'],
+  '/legal/photo-credits': ['Crédits photographiques | TYMotors', 'Sources, auteurs et licences des photographies d’ambiance de l’accueil TYMotors.'],
 };
 
 function setMeta(selector, attributes, content) {

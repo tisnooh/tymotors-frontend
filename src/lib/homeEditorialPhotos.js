@@ -20,13 +20,8 @@ export const HOME_PHOTOS = {
   porsche: flickrPhoto('porsche', 'porsche-manthey', 1024, 683, 'Alexandre Prevot', 'Porsche 992 GT3 RS Manthey Racing', '54309097379', 'alexprevot', true),
   volkswagen: commonsPhoto('volkswagen', 'volkswagen-golf-r-black', 1280, 855, 'Alexander-93', 'Volkswagen Golf VIII R Black Edition Auto Zuerich 2024 DSC 6898', 'Volkswagen_Golf_VIII_R_Black_Edition_Auto_Zuerich_2024_DSC_6898.jpg'),
   toyota: commonsPhoto('toyota', 'toyota-gr-supra-black', 1280, 853, 'Ethan Llamas', 'Toyota GR Supra DB41 3.0L Turbo Black Metallic 01', 'Toyota_GR_Supra_DB41_3.0L_Turbo_Black_Metallic_01.jpg'),
-  cockpit: commonsPhoto('cockpit', 'interior-audi-rs6', 1280, 825, 'Vauxford', '2019 Audi RS6 Avant 4.0 Interior', '2019_Audi_RS6_Avant_4.0_Interior.jpg'),
-  technology: {
-    id: 'technology', src: '/images/home/technology-bmw-g81.jpg', width: 1280, height: 853,
-    altKey: 'home_photos.alts.technology', author: 'Ethan Llamas', title: 'BMW M3 Competition G81 xDrive Touring interior',
-    source: 'https://commons.wikimedia.org/wiki/File:BMW_M3_Competition_G81_xDrive_Touring_interior.jpg',
-    licence: 'CC BY-SA 4.0', licenceUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  },
+  cockpit: commonsPhoto('cockpit', 'technology-bmw-g81', 1280, 853, 'Ethan Llamas', 'BMW M3 Competition G81 xDrive Touring interior', 'BMW_M3_Competition_G81_xDrive_Touring_interior.jpg'),
+  technology: commonsPhoto('technology', 'technology-android-auto', 1280, 851, 'Mavila2', 'Android Auto in usage', 'Android_Auto_in_usage.jpg'),
   detail: commonsPhoto('detail', 'detail-amg-gtr-wheel', 1280, 925, 'Tokumeigakarinoaoshima', 'The tire wheel of Mercedes-AMG GT R (C190)', 'The_tire_wheel_of_Mercedes-AMG_GT_R_(C190).jpg'),
 };
 export const HOME_BRAND_PHOTOS = {

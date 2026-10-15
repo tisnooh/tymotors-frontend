@@ -6,7 +6,6 @@ import { Brands } from '@/lib/api';
 import { Reveal } from '@/components/shared/Reveal';
 import { responsiveImageProps } from '@/lib/image';
 import { HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
-import { HomePhotoCredits } from './HomeEditorialPhoto';
 import './HomeEditorial.css';
 
 export function BrandsSection() {
@@ -71,7 +70,6 @@ export function BrandsSection() {
             </Reveal>
           ); })}
         </div>
-        <HomePhotoCredits photos={items.map(brand => HOME_BRAND_PHOTOS[brand.slug]).filter(Boolean)} />
       </div>
     </section>
   );

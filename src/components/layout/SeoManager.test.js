@@ -7,7 +7,7 @@ process.env.REACT_APP_SITE_MODE = 'production';
 delete process.env.REACT_APP_SITE_URL;
 const { SeoManager } = require('./SeoManager');
 let root, host;
-beforeEach(() => { global.IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); root = createRoot(host); });
+beforeEach(() => { globalThis.IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); root = createRoot(host); });
 afterEach(() => act(() => root.unmount()));
 
 test.each([
@@ -26,7 +26,7 @@ test.each([
   expect(canonical).not.toContain('token=');
 });
 
-test.each(['/legal/mentions', '/legal/withdrawal'])('valid legal route %s is not mislabeled missing', pathname => {
+test.each(['/legal/mentions', '/legal/withdrawal', '/legal/photo-credits'])('valid legal route %s is not mislabeled missing', pathname => {
   useLocation.mockReturnValue({ pathname });
   act(() => root.render(<SeoManager />));
   expect(document.title).not.toContain('introuvable');

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { HOME_PHOTOS } from '@/lib/homeEditorialPhotos';
-import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
+import { HomeEditorialPhoto } from './HomeEditorialPhoto';
 import './CommunitySection.css';
 
 const PROJECTS = [
@@ -101,8 +101,6 @@ export function CommunitySection() {
         <div><p className="universe-kicker">{t('community.next')}</p><p className="universe-footer-title">{t('community.next_title')}</p></div>
         <Link to="/customize" data-testid="community-customize-cta" className="ty-btn-primary min-h-12 h-auto py-3">{t('community.cta')}<ArrowRight size={18} aria-hidden="true" /></Link>
       </div>
-      <p className="universe-disclaimer">{t('community.disclaimer')}</p>
-      <HomePhotoCredits photos={PROJECTS.map(project => project.image)} />
     </div>
   </section>;
 }

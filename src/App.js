@@ -41,6 +41,7 @@ const PrivacyPage = legalPage('PrivacyPage');
 const TermsPage = legalPage('TermsPage');
 const MentionsPage = legalPage('MentionsPage');
 const CookiesPage = React.lazy(() => import('@/pages/CookiePolicy'));
+const PhotoCredits = React.lazy(() => import('@/pages/PhotoCredits'));
 
 const TOASTER_STYLE = {
   background: 'rgba(10,11,14,0.95)',
@@ -101,6 +102,7 @@ function Shell() {
               <Route path="/legal/privacy" element={<PrivacyPage />} />
               <Route path="/legal/terms" element={<TermsPage />} />
               <Route path="/legal/cookies" element={<CookiesPage />} />
+              <Route path="/legal/photo-credits" element={<PhotoCredits />} />
               <Route path="/legal/mentions" element={<MentionsPage />} />
               <Route path="/legal/withdrawal" element={<ReturnsPage />} />
               <Route path="*" element={<NotFound />} />

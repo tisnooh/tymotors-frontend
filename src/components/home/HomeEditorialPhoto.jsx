@@ -18,13 +18,12 @@ function PhotoFrame({ photo, className = '' }) {
 export function HomePhotoCredits({ photos }) {
   const { t } = useTranslation();
   const unique = [...new Map(photos.map(photo => [photo.id, photo])).values()];
-  return <details className="home-photo-credits">
-    <summary>{t('home_photos.credits')}</summary>
+  return <section className="home-photo-credits" aria-label={t('home_photos.credits')}>
     <ul>{unique.map(photo => <li key={photo.id}>
       <span>{photo.author} — </span>
       <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.title}</a>
       {' · '}<a href={photo.licenceUrl} target="_blank" rel="noopener noreferrer">{photo.licence}</a>
     </li>)}</ul>
     <p>{t('home_photos.presentation')}</p>
-  </details>;
+  </section>;
 }

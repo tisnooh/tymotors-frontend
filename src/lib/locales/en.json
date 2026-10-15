@@ -161,6 +161,7 @@
     }
   },
   "home_photos": {
+    "footer_link": "Photo credits",
     "credits": "Photograph sources and licences",
     "disclaimer": "Independent, non-exclusive inspiration photographs: these do not depict the exact TYMotors product references. Check each product page for its photographs, package contents and compatibility.",
     "presentation": "Images scaled and presented in CSS frames, without product retouching or AI generation by TYMotors. These photographs are not TYMotors builds and do not imply any partnership with their authors or the brands shown. Each image retains its stated licence.",
@@ -172,8 +173,8 @@
       "porsche": "Porsche 992 GT3 RS Manthey, rear wing and diffuser, photograph by Alexandre Prevot",
       "volkswagen": "Black Volkswagen Golf VIII R Black Edition at a motor show, photograph by Alexander-93",
       "toyota": "Black Toyota GR Supra front three-quarter view, photograph by Ethan Llamas",
-      "cockpit": "Black Audi RS6 C8 cabin with a sports steering wheel and carbon trim, photograph by Vauxford",
-      "technology": "Digital cockpit and panoramic display in a BMW M3 G81, photograph by Ethan Llamas",
+      "cockpit": "Digital cockpit and panoramic display in a BMW M3 G81, photograph by Ethan Llamas",
+      "technology": "Android Auto navigation screen with a smartphone connected by cable, photograph by Mavila2",
       "detail": "Close-up of a black wheel and carbon-ceramic brake on a Mercedes-AMG GT R, photograph by Tokumeigakarinoaoshima"
     }
   },
