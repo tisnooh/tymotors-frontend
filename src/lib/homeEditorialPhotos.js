@@ -1,4 +1,4 @@
-// Independent inspiration, never product/cart images. Primary licences checked 2026-10-15.
+// Independent inspiration, never product/cart images. Provenance checked 2026-10-15.
 // Original bytes and provenance: public/images/home/CREDITS.md.
 const flickrPhoto = (id, file, width, height, author, title, sourceId, user, shareAlike = false) => ({
   id, src: `/images/home/${file}.jpg`, width, height, author, title,
@@ -13,8 +13,14 @@ const commonsPhoto = (id, file, width, height, author, title, sourceFile, versio
   source: `https://commons.wikimedia.org/wiki/File:${sourceFile}`,
   licence: `CC BY-SA ${version}`, licenceUrl: `https://creativecommons.org/licenses/by-sa/${version}/`,
 });
+// A public Reddit post is provenance, not a Creative Commons licence or permission.
+const redditPhoto = (id, file, width, height, author, title, source) => ({
+  id, src: `/images/home/${file}.jpg`, width, height, author, title, source,
+  altKey: `home_photos.alts.${id}`,
+  licence: null, licenceUrl: null, rightsStatus: 'unverified',
+});
 export const HOME_PHOTOS = {
-  bmw: commonsPhoto('bmw', 'bmw-m4cs-vr46', 1280, 853, 'Strubbl', 'BMW M4 CS Edition VR46 in der BMW Welt München Bild 1 2025-04-15', 'BMW_M4_CS_Edition_VR46_in_der_BMW_Welt_M%C3%BCnchen_Bild_1_2025-04-15.jpg'),
+  bmw: redditPhoto('bmw', 'bmw-430i-black-reddit', 2591, 3317, 'u/knrdv', 'Bleeding Black', 'https://www.reddit.com/r/carphotography/comments/1jk7zm5/bleeding_black/'),
   mercedes: commonsPhoto('mercedes', 'mercedes-amg-gtr-grey', 1280, 853, 'Mr.choppers', '2018 Mercedes-Benz AMG GT-R, designo matte Selenite Grey Magno, front right', '2018_Mercedes-Benz_AMG_GT-R,_designo_matte_Selenite_Grey_Magno,_front_right.jpg', '3.0'),
   audi: commonsPhoto('audi', 'audi-rs6-c8', 1280, 853, 'Sestmedia', 'Audi rs6 c8 2020-4', 'Audi_rs6_c8_2020-4.jpg'),
   porsche: flickrPhoto('porsche', 'porsche-manthey', 1024, 683, 'Alexandre Prevot', 'Porsche 992 GT3 RS Manthey Racing', '54309097379', 'alexprevot', true),
@@ -22,7 +28,7 @@ export const HOME_PHOTOS = {
   toyota: commonsPhoto('toyota', 'toyota-gr-supra-black', 1280, 853, 'Ethan Llamas', 'Toyota GR Supra DB41 3.0L Turbo Black Metallic 01', 'Toyota_GR_Supra_DB41_3.0L_Turbo_Black_Metallic_01.jpg'),
   cockpit: commonsPhoto('cockpit', 'technology-bmw-g81', 1280, 853, 'Ethan Llamas', 'BMW M3 Competition G81 xDrive Touring interior', 'BMW_M3_Competition_G81_xDrive_Touring_interior.jpg'),
   technology: commonsPhoto('technology', 'technology-android-auto', 1280, 851, 'Mavila2', 'Android Auto in usage', 'Android_Auto_in_usage.jpg'),
-  detail: commonsPhoto('detail', 'detail-amg-gtr-wheel', 1280, 925, 'Tokumeigakarinoaoshima', 'The tire wheel of Mercedes-AMG GT R (C190)', 'The_tire_wheel_of_Mercedes-AMG_GT_R_(C190).jpg'),
+  detail: redditPhoto('detail', 'detail-amg-red-caliper-reddit', 2541, 2737, null, 'Simple picture of extraordinary things', 'https://www.reddit.com/r/AMG/comments/lbrha9/simple_picture_of_extraordinary_things/'),
 };
 export const HOME_BRAND_PHOTOS = {
   bmw: HOME_PHOTOS.bmw, 'mercedes-benz': HOME_PHOTOS.mercedes, audi: HOME_PHOTOS.audi,

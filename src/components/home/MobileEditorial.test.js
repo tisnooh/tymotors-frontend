@@ -7,8 +7,7 @@ import { HeroSection } from './HeroSection';
 import { StorytellingSection } from './StorytellingSection';
 import { BrandsSection } from './BrandsSection';
 import { CtaSection } from './CtaSection';
-import { HomeEditorialPhoto, HomePhotoCredits } from './HomeEditorialPhoto';
-import PhotoCredits from '@/pages/PhotoCredits';
+import { HomeEditorialPhoto } from './HomeEditorialPhoto';
 import { HOME_PHOTOS, HOME_CATEGORY_PHOTOS, HOME_BRAND_PHOTOS } from '@/lib/homeEditorialPhotos';
 import BrandDetail from '@/pages/BrandDetail';
 import CategoryPage from '@/pages/CategoryPage';
@@ -207,7 +206,7 @@ test('French and English new editorial copy have matching complete keys', () => 
   expect(fr.categories.title).toBe('Performance. Intérieur. Technologie.');
 });
 
-test('home brand cards keep their photographic design and backend routes, but use the licensed local photos', async () => {
+test('home brand cards keep their photographic design and backend routes, but use the selected local photos', async () => {
   const brands = ['bmw', 'mercedes-benz', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug === 'volkswagen' ? 'Volkswagen' : slug, tagline: 'Équipements compatibles', image: `https://images.unsplash.com/photo-${slug}` }));
   Brands.list.mockResolvedValue(brands);
   await act(async () => root.render(<BrandsSection />));
@@ -252,23 +251,19 @@ test('editorial photo errors never prevent navigation and a changed source reset
   expect(host.querySelector('img').getAttribute('src')).toBe(HOME_PHOTOS.cockpit.src);
 });
 
-test('photo credits deduplicate images, retain authors/titles and link to each licence', () => {
-  act(() => root.render(<HomePhotoCredits photos={[HOME_PHOTOS.cockpit, HOME_PHOTOS.cockpit, HOME_PHOTOS.mercedes]} />));
-  expect(host.querySelectorAll('li')).toHaveLength(2);
-  expect(host.textContent).toContain('Ethan Llamas');
-  expect(host.textContent).toContain(HOME_PHOTOS.cockpit.title);
-  expect(host.textContent).toContain('Mr.choppers');
-  expect(host.querySelector(`a[href="${HOME_PHOTOS.cockpit.licenceUrl}"]`)).not.toBeNull();
-});
-
 test('published homepage photos exist locally and have a provenance record, without changing the shared storytelling map', () => {
   for (const photo of Object.values(HOME_PHOTOS)) {
     expect(fs.existsSync(path.join(__dirname, '../../../public', photo.src))).toBe(true);
     expect(photo.width).toBeGreaterThanOrEqual(1023);
     expect(photo.height).toBeGreaterThan(0);
-    expect(photo.source).toMatch(/^https:\/\/(?:www\.flickr\.com\/photos\/|www\.motor\.es\/|commons\.wikimedia\.org\/wiki\/File:)/);
+    expect(photo.source).toMatch(/^https:\/\/(?:www\.flickr\.com\/photos\/|www\.motor\.es\/|commons\.wikimedia\.org\/wiki\/File:|www\.reddit\.com\/r\/)/);
     expect(photo.source).not.toMatch(/unsplash|pexels/i);
-    expect(photo.licenceUrl).toMatch(/^https:\/\/creativecommons\.org\//);
+    if (photo.rightsStatus === 'unverified') {
+      expect(photo.licence).toBeNull();
+      expect(photo.licenceUrl).toBeNull();
+    } else {
+      expect(photo.licenceUrl).toMatch(/^https:\/\/creativecommons\.org\//);
+    }
   }
   const credits = fs.readFileSync(path.join(__dirname, '../../../public/images/home/CREDITS.md'), 'utf8');
   expect(credits).toContain('CC BY-SA 2.0');
@@ -282,9 +277,9 @@ test('published homepage photos exist locally and have a provenance record, with
 
 test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
   const replacements = {
-    bmw: 'bmw-m4cs-vr46', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-rs6-c8',
+    bmw: 'bmw-430i-black-reddit', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-rs6-c8',
     volkswagen: 'volkswagen-golf-r-black', toyota: 'toyota-gr-supra-black',
-    cockpit: 'technology-bmw-g81', technology: 'technology-android-auto', detail: 'detail-amg-gtr-wheel',
+    cockpit: 'technology-bmw-g81', technology: 'technology-android-auto', detail: 'detail-amg-red-caliper-reddit',
   };
   for (const [key, file] of Object.entries(replacements)) {
     expect(HOME_PHOTOS[key].src).toBe(`/images/home/${file}.jpg`);
@@ -310,25 +305,52 @@ test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW coc
   expect(fr.home_photos.alts.technology).not.toMatch(/CarPlay|sans fil/i);
 });
 
-test('dedicated photo credits page exposes all active attributions, licences and presentation notes', () => {
-  act(() => root.render(<PhotoCredits />));
-  expect(host.querySelector('h1').textContent).toBe(fr.home_photos.credits);
-  expect(host.querySelectorAll('.home-photo-credits li')).toHaveLength(Object.keys(HOME_PHOTOS).length);
-  expect(host.querySelector('details')).toBeNull();
-  expect(host.textContent).toContain(fr.home_photos.disclaimer);
-  expect(host.textContent).toContain(fr.home_photos.presentation);
-  const creditLinks = [...host.querySelectorAll('a')].map(link => link.getAttribute('href'));
-  for (const photo of Object.values(HOME_PHOTOS)) {
-    expect(host.textContent).toContain(photo.author);
-    expect(host.textContent).toContain(photo.title);
-    expect(creditLinks).toContain(photo.source);
-    expect(creditLinks).toContain(photo.licenceUrl);
-  }
+test('removed photo credits have no footer link or public page, and the old URL redirects home', async () => {
   const app = fs.readFileSync(path.join(__dirname, '../../App.js'), 'utf8');
-  expect(app).toContain('<Route path="/legal/photo-credits" element={<PhotoCredits />} />');
+  expect(app).toContain('<Route path="/legal/photo-credits" element={<Navigate to="/" replace />} />');
+  expect(app).not.toContain("import('@/pages/PhotoCredits')");
+  expect(fs.existsSync(path.join(__dirname, '../../pages/PhotoCredits.jsx'))).toBe(false);
   const footer = fs.readFileSync(path.join(__dirname, '../layout/Footer.jsx'), 'utf8');
-  expect(footer).toContain('to="/legal/photo-credits"');
-  expect(footer).toContain("t('home_photos.footer_link')");
+  expect(footer).not.toContain('photo-credits');
+  expect(footer).not.toContain('home_photos.footer_link');
+  const photos = fs.readFileSync(path.join(__dirname, 'HomeEditorialPhoto.jsx'), 'utf8');
+  expect(photos).not.toContain('HomePhotoCredits');
+  expect(photos).not.toContain('photo.source');
+  expect(photos).not.toContain('licenceUrl');
+  Brands.list.mockResolvedValue(['bmw', 'mercedes-benz', 'audi', 'porsche', 'volkswagen', 'toyota'].map(slug => ({ slug, name: slug })));
+  Categories.list.mockResolvedValue(['exterior', 'interior', 'multimedia-technology'].map(slug => ({ slug })));
+  await act(async () => root.render(<><BrandsSection /><CategoriesSection /><CommunitySection /></>));
+  expect(host.querySelectorAll('img')).toHaveLength(12);
+  expect(host.querySelector('details, .home-photo-credits, .home-photo-note, .universe-disclaimer, .universe-credits')).toBeNull();
+  expect(host.querySelector('a[href^="http"]')).toBeNull();
+  for (const photo of Object.values(HOME_PHOTOS)) {
+    expect(host.textContent).not.toContain(photo.title);
+    expect(host.querySelector(`a[href="${photo.source}"]`)).toBeNull();
+  }
+});
+
+test('approved Reddit originals replace only the shared BMW/Performance and AMG detail photos without inventing reuse rights', () => {
+  const selected = {
+    bmw: [2591, 3317, '5766d6d410e9168d20395b91f95317618ab0187dcd8523b643ec584fe3e848cc'],
+    detail: [2541, 2737, 'bfb1252aad9cb7a151a53d0c5d3616cd33735c4a47fd995defec0bb6620712ea'],
+  };
+  for (const [key, [width, height, hash]] of Object.entries(selected)) {
+    const photo = HOME_PHOTOS[key];
+    const bytes = fs.readFileSync(path.join(__dirname, '../../../public', photo.src));
+    expect(require('crypto').createHash('sha256').update(bytes).digest('hex')).toBe(hash);
+    expect(photo.width).toBe(width);
+    expect(photo.height).toBe(height);
+    expect(bytes.length).toBeLessThan(1000000);
+    expect(photo.rightsStatus).toBe('unverified');
+    expect(photo.licence).toBeNull();
+    expect(photo.licenceUrl).toBeNull();
+  }
+  expect(HOME_BRAND_PHOTOS.bmw).toBe(HOME_PHOTOS.bmw);
+  expect(HOME_CATEGORY_PHOTOS.performance).toBe(HOME_PHOTOS.bmw);
+  expect(HOME_PHOTOS.bmw.author).toBe('u/knrdv');
+  expect(HOME_PHOTOS.detail.author).toBeNull();
+  expect(fr.home_photos.alts.bmw).toContain('430i noire');
+  expect(fr.home_photos.alts.detail).toContain('étrier AMG rouge');
 });
 
 test('mobile inspiration selection enlarges only one card, toggles off, and never changes CTA destinations', () => {

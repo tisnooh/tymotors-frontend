@@ -1,6 +1,25 @@
 # Homepage photograph credits — TYMotors
 
-## Current selection — approved 15 October 2026
+## Public UI removal — requested 15 October 2026
+
+The owner requested removing the visible source/licence details and outbound photo-source links. The footer photo-credits link, dedicated page and credit-list renderer were removed. The old /legal/photo-credits URL redirects internally to the homepage instead of showing a broken link. Images, their alt descriptions, layouts and catalogue navigation were not changed by this follow-up.
+
+Provenance, original licence notices and rights-status metadata are retained in project files, including this document. Removing the UI does not alter or grant any reuse rights, and keeping this file is not a claim that attribution/licensing obligations are satisfied. The Reddit photographs still have no confirmed commercial reuse permission.
+
+## Current Reddit replacements — requested 15 October 2026
+
+The owner explicitly requested integrating the two visually approved Reddit photographs. These replace only the existing shared BMW brand/Performance category image and the Universe detail image. All other active images, layouts, styles, animation and shopping links are unchanged. Original JPEG bytes are hosted locally, without retouching, AI processing or watermark removal.
+
+Reddit provenance does not establish a reuse licence. No permission from either rights holder has been obtained or asserted, and no Creative Commons licence is assigned to these files. The wheel poster's account is deleted, so its author is not identified. The owner's instruction to integrate the photographs is not photographer permission. The dedicated photo credits page retains the source links and marks their reuse rights as unconfirmed.
+
+| Local file | Title / posting account | Source | Rights status | Dimensions | SHA256 |
+| --- | --- | --- | --- | --- | --- |
+| [bmw-430i-black-reddit.jpg](bmw-430i-black-reddit.jpg) | Bleeding Black — u/knrdv | [Reddit post](https://www.reddit.com/r/carphotography/comments/1jk7zm5/bleeding_black/) · [Original JPEG](https://i.redd.it/a18ga4n990re1.jpg) | Reuse rights not confirmed | 2591 × 3317 | `5766d6d410e9168d20395b91f95317618ab0187dcd8523b643ec584fe3e848cc` |
+| [detail-amg-red-caliper-reddit.jpg](detail-amg-red-caliper-reddit.jpg) | Simple picture of extraordinary things — deleted account, author unidentified | [Reddit post](https://www.reddit.com/r/AMG/comments/lbrha9/simple_picture_of_extraordinary_things/) · [Original JPEG](https://i.redd.it/qarst8cyhaf61.jpg) | Reuse rights not confirmed | 2541 × 2737 | `bfb1252aad9cb7a151a53d0c5d3616cd33735c4a47fd995defec0bb6620712ea` |
+
+The BMW post identifies a 430i, not an M4 or a claimed tuning-power result. The wheel image shows an anthracite Mercedes wheel, drilled brake disc and red AMG caliper. Neither image is claimed as a TYMotors build or an exact catalogue product. The earlier BMW M4 CS and AMG GT R wheel files below remain unchanged as historical assets, but are no longer active homepage images.
+
+## Previous selection — approved 15 October 2026 (all unchanged except the two replacements above)
 
 The owner approved the seven numbered proposals from the private preview, then requested moving the exact BMW cockpit photograph from Technology to Interior and selected option 2, Android Auto in usage, for Technology. No CONCAVO photographs are referenced by the active homepage map. The Porsche Manthey and BMW cockpit image bytes remain identical. The red Porsche Hero, Storytelling, Before/After, product/cart photos, card layout, CSS, animations and existing shopping destinations are unchanged. At the owner's request, inline credit/disclaimer blocks are now grouped on /legal/photo-credits, accessible through the footer's Photo credits link.
 

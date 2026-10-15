@@ -199,13 +199,9 @@
     }
   },
   "home_photos": {
-    "footer_link": "Crédits photos",
-    "credits": "Sources et licences des photographies",
-    "disclaimer": "Photographies d'ambiance indépendantes, non exclusives : elles ne montrent pas les références exactes des articles TYMotors. Retrouvez les photos, le contenu et les compatibilités dans chaque fiche produit.",
-    "presentation": "Images mises à l'échelle et présentées dans des cadres CSS, sans retouche de la pièce ni génération IA par TYMotors. Ces photographies ne sont pas des réalisations TYMotors et ne suggèrent aucun partenariat avec leurs auteurs ou les marques visibles. Les licences indiquées restent applicables à chaque image.",
     "unavailable": "Photographie momentanément indisponible.",
     "alts": {
-      "bmw": "BMW M4 CS VR46 bleu foncé vue de face à BMW Welt, photographie de Strubbl",
+      "bmw": "BMW 430i noire vue de face devant une façade graphique sombre, photographie publiée par knrdv",
       "mercedes": "Mercedes-AMG GT R gris mat avec jantes noires, vue de trois quarts avant, photographie de Mr.choppers",
       "audi": "Audi RS6 C8 noire vue de face, photographie de Sestmedia",
       "porsche": "Porsche 992 GT3 RS Manthey, aileron et diffuseur arrière, photographie d'Alexandre Prevot",
@@ -213,7 +209,7 @@
       "toyota": "Toyota GR Supra noire vue de trois quarts avant, photographie d'Ethan Llamas",
       "cockpit": "Cockpit numérique et écran panoramique d'une BMW M3 G81, photographie d'Ethan Llamas",
       "technology": "Écran Android Auto avec navigation et smartphone relié par câble, photographie de Mavila2",
-      "detail": "Gros plan d'une jante noire et du frein carbone-céramique d'une Mercedes-AMG GT R, photographie de Tokumeigakarinoaoshima"
+      "detail": "Gros plan d'une jante Mercedes anthracite, d'un disque de frein percé et d'un étrier AMG rouge"
     }
   },
   "cta": {
