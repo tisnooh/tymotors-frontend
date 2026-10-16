@@ -1,5 +1,17 @@
 # Visuels éditoriaux de l'accueil — 13 octobre 2026
 
+## Sélection — 16 octobre 2026 : Audi, Volkswagen et Supra précédente
+
+Audi et Volkswagen utilisent les deux propositions Reddit approuvées : S5
+Sportback noire en mouvement et Golf VII R anthracite devant une architecture
+sobre. Toyota reprend la première proposition, la Supra noire préparée en
+trois-quarts de nuit avec éclairage rouge, et non la proposition Reddit en
+parking. La carte d'accueil, l'index et la bannière de chaque marque partagent
+ces mêmes sources. Aucun composant, style, autre visuel ou produit n'est modifié.
+Les originaux sont conservés sans retouche ni retrait de signature. Provenance,
+dimensions, SHA256 et statut des droits non vérifiés sont enregistrés dans
+[CREDITS.md](../public/images/home/CREDITS.md), sans nouveau bloc de crédits visible.
+
 ## Mise à jour — 15 octobre 2026 : alternatives autorisées et Univers horizontal
 
 Le propriétaire autorise désormais le remplacement des pistes exigeant une

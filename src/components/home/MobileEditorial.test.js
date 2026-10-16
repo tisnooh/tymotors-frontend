@@ -271,7 +271,7 @@ test('published homepage photos exist locally and have a provenance record, with
     expect(fs.existsSync(path.join(__dirname, '../../../public', photo.src))).toBe(true);
     expect(photo.width).toBeGreaterThanOrEqual(1023);
     expect(photo.height).toBeGreaterThan(0);
-    expect(photo.source).toMatch(/^https:\/\/(?:www\.flickr\.com\/photos\/|www\.motor\.es\/|commons\.wikimedia\.org\/wiki\/File:|www\.reddit\.com\/r\/)/);
+    expect(photo.source).toMatch(/^https:\/\/(?:www\.flickr\.com\/photos\/|www\.motor\.es\/|commons\.wikimedia\.org\/wiki\/File:|www\.reddit\.com\/r\/|www\.garaget\.org\/\?car=)/);
     expect(photo.source).not.toMatch(/unsplash|pexels/i);
     if (photo.rightsStatus === 'unverified') {
       expect(photo.licence).toBeNull();
@@ -337,8 +337,8 @@ test('silver GT3 Touring is used only for Porsche branding, keeping the night Un
 
 test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW cockpit bytes to Interior', () => {
   const replacements = {
-    bmw: 'bmw-430i-black-reddit', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-rs6-c8',
-    volkswagen: 'volkswagen-golf-r-black', toyota: 'toyota-gr-supra-black',
+    bmw: 'bmw-430i-black-reddit', mercedes: 'mercedes-amg-gtr-grey', audi: 'audi-s5-black-reddit',
+    volkswagen: 'volkswagen-golf-r-anthracite-reddit', toyota: 'toyota-supra-levella-night',
     cockpit: 'technology-bmw-g81', technology: 'technology-android-auto', detail: 'detail-amg-red-caliper-reddit',
   };
   for (const [key, file] of Object.entries(replacements)) {
@@ -363,6 +363,35 @@ test('approved photos exclude CONCAVO, retain Porsche and move the exact BMW coc
   expect(fr.home_photos.alts.technology).toContain('Android Auto');
   expect(en.home_photos.alts.technology).toContain('Android Auto');
   expect(fr.home_photos.alts.technology).not.toMatch(/CarPlay|sans fil/i);
+});
+
+test('approved Audi and Volkswagen use the Reddit originals while Toyota uses the earlier night proposal', async () => {
+  const selected = {
+    audi: ['audi-s5-black-reddit', 3264, 4928, '59d41113039214713e15b81e78cefa74f0f63ccac0f86ac87191e51b7b0a76ab'],
+    volkswagen: ['volkswagen-golf-r-anthracite-reddit', 4000, 6000, 'f822257360b6edbd6373a791e2f3c8bba41952611a65f17e42ad11cddf12d762'],
+    toyota: ['toyota-supra-levella-night', 1280, 854, '65465e60e1e3a6d4cef3d784f6ac282cce738f783b070ea5aaf345e5dc50f519'],
+  };
+  Brands.list.mockResolvedValue(Object.keys(selected).map(slug => ({ slug, name: slug })));
+  await act(async () => root.render(<BrandsSection />));
+  for (const [slug, [file, width, height, hash]] of Object.entries(selected)) {
+    const photo = HOME_BRAND_PHOTOS[slug];
+    expect(photo).toBe(HOME_PHOTOS[slug]);
+    expect(photo.src).toBe(`/images/home/${file}.jpg`);
+    expect([photo.width, photo.height]).toEqual([width, height]);
+    expect(photo.rightsStatus).toBe('unverified');
+    expect(photo.licence).toBeNull();
+    expect(photo.licenceUrl).toBeNull();
+    const bytes = fs.readFileSync(path.join(__dirname, '../../../public', photo.src));
+    expect(require('crypto').createHash('sha256').update(bytes).digest('hex')).toBe(hash);
+    const card = host.querySelector(`a[href="/brands/${slug}"]`);
+    expect(card.querySelector('img').getAttribute('src')).toBe(photo.src);
+    expect(card.querySelector('img').alt).toBe(fr.home_photos.alts[slug]);
+  }
+  expect(HOME_PHOTOS.toyota.source).toBe('https://www.garaget.org/?car=426889&image=4015280');
+  expect(HOME_PHOTOS.toyota.src).not.toContain('reddit-toyota');
+  expect(fr.home_photos.alts.audi).toContain('S5 Sportback');
+  expect(fr.home_photos.alts.volkswagen).toContain('Golf VII R anthracite');
+  expect(fr.home_photos.alts.toyota).toContain('de nuit');
 });
 
 test('removed photo credits have no footer link or public page, and the old URL redirects home', async () => {

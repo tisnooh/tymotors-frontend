@@ -1,5 +1,15 @@
 # Homepage photograph credits — TYMotors
 
+## Audi, Volkswagen and Toyota selection — 16 October 2026
+
+The owner approved the Reddit Audi S5 and anthracite Golf R proposals, rejecting the Reddit Supra in favour of the earlier black Supra front three-quarter night photograph from Garaget. These replace only the shared Audi, Volkswagen and Toyota brand photographs (homepage cards, brand index and brand banners). Other photographs, layout, shopping links and product images are unchanged. Original JPEG bytes, including the Volkswagen photographer signature and existing vehicle markings, are retained without retouching. Public provenance is not permission; no commercial reuse licence is confirmed or asserted. The former Commons assets and their original notices remain below as historical records.
+
+| Local file | Title / posting account | Source | Rights status | Dimensions | SHA256 |
+| --- | --- | --- | --- | --- | --- |
+| [audi-s5-black-reddit.jpg](audi-s5-black-reddit.jpg) | S5 Sportback I shot — u/_Quality_Content_ (posting account) | [Reddit post](https://www.reddit.com/r/Audi/comments/18gkxhn/s5_sportback_i_shot_i_love_black_on_these_cars_it/) · [Original JPEG](https://i.redd.it/z228822kzu5c1.jpg) | Reuse rights not confirmed | 3264 × 4928 | `59d41113039214713e15b81e78cefa74f0f63ccac0f86ac87191e51b7b0a76ab` |
+| [volkswagen-golf-r-anthracite-reddit.jpg](volkswagen-golf-r-anthracite-reddit.jpg) | A quick photoshoot with my Buddy's golf — u/ninjaxmist1 (posting account; photographer signature retained) | [Reddit post, second photograph](https://www.reddit.com/r/GolfGTI/comments/u65t96/a_quick_photoshoot_with_my_buddys_golf/?i=1) · [Original JPEG](https://i.redd.it/swi9rql768u81.jpg) | Reuse rights not confirmed | 4000 × 6000 | `f822257360b6edbd6373a791e2f3c8bba41952611a65f17e42ad11cddf12d762` |
+| [toyota-supra-levella-night.jpg](toyota-supra-levella-night.jpg) | Toyota GR Supra LEVELLA-MANSORY 1 of 1 — photographer unconfirmed | [Garaget photograph](https://www.garaget.org/?car=426889&image=4015280) · [Original JPEG](https://www1.garaget.org/archive/32/31987/426889/426889-4015280-y3gjusbnRLk72z2Y.jpg) | Reuse rights not confirmed | 1280 × 854 | `65465e60e1e3a6d4cef3d784f6ac282cce738f783b070ea5aaf345e5dc50f519` |
+
 ## Porsche brand selection — option 1 approved 15 October 2026
 
 The owner selected the square silver GT3 Touring front three-quarter photograph for the Porsche brand card and brand pages. The shared brand map uses porscheBrand; the red Hero Porsche, Universe night Porsche and historical Manthey asset remain unchanged. Original JPEG bytes are copied without retouching or watermark removal. u/demoralising is the posting account, not a confirmed photographer credit. No commercial reuse permission or licence is confirmed or asserted.
