@@ -9,6 +9,7 @@ import { Heart, ShoppingBag, Truck, ShieldCheck, BadgeCheck, ArrowLeft, AlertTri
 import { toast } from 'sonner';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 import LoadedImage from '@/components/shared/LoadedImage';
+import { productGallery } from '@/lib/productGallery';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -24,7 +25,7 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
   return (
     <div>
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#0F1115] border border-[#151A23]">
-        <LoadedImage src={images?.[activeImg]} alt={`${name} — photo ${activeImg + 1}`} className="absolute inset-0 h-full w-full"/>
+        <LoadedImage src={images?.[activeImg]} alt={`${name} — photo ${activeImg + 1}`} className="absolute inset-0 h-full w-full" imageClassName={activeImg === 1 ? 'object-contain' : 'object-cover'}/>
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60 pointer-events-none" />
         <div className="absolute top-4 left-4 flex flex-wrap gap-1.5">
           {badges?.map((b) => <span key={b} className={`ty-chip ${redBadges.has(b) ? 'ty-chip-red' : ''}`}>{b}</span>)}
@@ -42,7 +43,7 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
               onClick={() => setActiveImg(i)}
               className={`relative aspect-square overflow-hidden rounded-xl border transition-colors ${activeImg === i ? 'border-[#E10600]' : 'border-[#232B3A] hover:border-[#2E394D]'}`}
             >
-              <LoadedImage src={img} alt="" className="h-full w-full" loading="lazy" retry={false}/>
+              <LoadedImage src={img} alt="" className="h-full w-full" imageClassName={i === 1 ? 'object-contain' : 'object-cover'} loading="lazy" retry={false}/>
             </button>
           ))}
         </div>
@@ -299,7 +300,7 @@ export default function ProductDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-7">
-            <Gallery images={product.images} name={product.name} activeImg={activeImg} setActiveImg={setActiveImg} badges={product.badges} />
+            <Gallery images={productGallery(product)} name={product.name} activeImg={activeImg} setActiveImg={setActiveImg} badges={product.badges} />
           </div>
 
           <div className="lg:col-span-5">

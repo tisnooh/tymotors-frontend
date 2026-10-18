@@ -2,6 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import ProductDetail from './ProductDetail';
 import { Products } from '@/lib/api';
+import secondPhotos from '@/data/productSecondPhotos.json';
 jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'fixture' }), useNavigate: () => jest.fn(), Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
@@ -10,6 +11,22 @@ jest.mock('@/components/shared/ProductCard', () => ({ ProductCard: () => null })
 let root, host;
 beforeEach(() => { global.IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); root = createRoot(host); jest.clearAllMocks(); });
 afterEach(() => { act(() => root.unmount()); });
+
+test('seller photo 2 changes without replacing the first product photo', async () => {
+  const slug = 'mercedes-w205-rear-spoiler';
+  const replacement = secondPhotos[slug];
+  Products.get.mockResolvedValue({ id: slug, slug, name: 'Spoiler W205', description: 'Description', status: 'draft', price: 139, stock: 0, images: ['/unchanged-main.png', replacement.previousImage], currency: 'EUR', specs: {} });
+  Products.list.mockResolvedValue({ items: [] });
+  await act(async () => root.render(<ProductDetail/>));
+  const thumbs = host.querySelectorAll('[data-testid="product-image-thumb"]');
+  expect(thumbs[0].querySelector('img').getAttribute('src')).toBe('/unchanged-main.png');
+  expect(thumbs[1].querySelector('img').getAttribute('src')).toBe(replacement.image);
+  act(() => thumbs[1].click());
+  const selected = host.querySelector('img[alt="Spoiler W205 — photo 2"]');
+  expect(selected.getAttribute('src')).toBe(replacement.image);
+  expect(selected.className).toContain('object-contain');
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
+});
 test('product lookup failure is not an endless loading screen', async () => {
   Products.get.mockRejectedValue({ response: { status: 404 } });
   await act(async () => root.render(<ProductDetail/>));

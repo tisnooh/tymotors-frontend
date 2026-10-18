@@ -1,0 +1,211 @@
+{
+  "status": "rejected-by-user-archived-outside-public",
+  "date": "2026-10-17",
+  "tool": "built-in imagegen",
+  "styleReference": "backend/assets/ai-catalogue/mercedes-w205-rear-spoiler.png",
+  "assets": [
+    {
+      "slug": "bmw-f30-double-slat-grille",
+      "source": "public/images/products/seller-second/bmw-f30-double-slat-grille.webp",
+      "output": "public/images/products/seller-second-studio/bmw-f30-double-slat-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve both black kidney grilles and every vertical slat exactly, front view, side by side.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-f30-f32-mirror-caps",
+      "source": "public/images/products/seller-second/bmw-f30-f32-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/bmw-f30-f32-mirror-caps-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve both glossy black mirror covers, pointed inner tips and angular lower notches, same outward surfaces facing camera.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-f30-m-performance-spoiler",
+      "source": "public/images/products/seller-second/bmw-f30-m-performance-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/bmw-f30-m-performance-spoiler-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no added text, cars or props.  Keep carbon fibre finish as it is in input 1, not glossy plain black. Keep exact swept curve, top-facing angle and logo.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-f30-m-sport-rear-diffuser",
+      "source": "public/images/products/seller-second/bmw-f30-m-sport-rear-diffuser.webp",
+      "output": "public/images/products/seller-second-studio/bmw-f30-m-sport-rear-diffuser-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no added text, cars or props.  Keep the exact rear-facing diffuser profile: two wide cutouts, mounting holes and four narrow central fins. Do not add fins or alter holes.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-g20-gloss-black-grille",
+      "source": "public/images/products/seller-second/bmw-g20-gloss-black-grille.webp",
+      "output": "public/images/products/seller-second-studio/bmw-g20-gloss-black-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no added text, cars or props.  Keep exact joined twin grille, same slat counts, mesh inserts, centre round opening and upper blocks. Do not redesign it.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-g20-m-performance-spoiler",
+      "source": "public/images/products/seller-second/bmw-g20-m-performance-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/bmw-g20-m-performance-spoiler-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no added text, cars or props.  Keep original carbon fibre finish and exact long rising curve and upturned right tip. Do not change to plain glossy black.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "bmw-g20-mirror-caps",
+      "source": "public/images/products/seller-second/bmw-g20-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/bmw-g20-mirror-caps-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve both mirror caps' sharp outer fins and narrow lower clear strips. No new cutouts.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "mercedes-w205-amg-grille",
+      "source": "public/images/products/seller-second/mercedes-w205-amg-grille.webp",
+      "output": "public/images/products/seller-second-studio/mercedes-w205-amg-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve two distinct grille variants shown side-by-side, left silver horizontal bar and right black horizontal bar, empty round centre apertures, same mesh and mounts. Do not add a star badge.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "mercedes-w205-rear-spoiler",
+      "source": "public/images/products/seller-second/mercedes-w205-rear-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/mercedes-w205-rear-spoiler-studio-v1.webp",
+      "prompt": "Edit input 1 (seller's second product photograph); input 2 is ONLY a background and lighting STYLE reference, NOT a replacement product or viewpoint. Create a premium dark studio catalogue image matching input 2. Replace the white background of input 1 with a seamless charcoal / near-black studio background, a soft neutral grey spotlight halo behind the product and subtle grounding shadow. Preserve input 1's exact glossy black Mercedes W205 spoiler, full silhouette, curvature, end tips, shoulders, seams, proportions, number of pieces and opposite-diagonal orientation from upper left to lower right. Do not copy input 2's lower-left-to-upper-right viewpoint. Keep the whole product visible in a square composition with comfortable margins. Refined soft highlights must reveal the black gloss surface against the dark background. Background and lighting edit only: no invented underside, clips, fixings or technical details; no carbon-fibre texture; no added car, props, text, logo or watermark. Photorealistic, sober, premium, coherent with the existing first photograph.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "vw-logo-door-projectors",
+      "source": "public/images/products/seller-second/vw-logo-door-projectors.webp",
+      "output": "public/images/products/seller-second-studio/vw-logo-door-projectors-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve these exact two VW door projector housings: left clear prismatic cover with round lens, right exposed black back with rectangular connector and original ribs. Preserve all connector pin layout and red gasket. Do not invent a projected logo or change wiring.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "vw-golf7-mirror-caps",
+      "source": "public/images/products/seller-second/vw-golf7-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/vw-golf7-mirror-caps-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve both glossy black curved mirror covers, upper-left/lower-right diagonal arrangement, exact lips and notches.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "toyota-supra-diffuser",
+      "source": "public/images/products/seller-second/toyota-supra-diffuser.webp",
+      "output": "public/images/products/seller-second-studio/toyota-supra-diffuser-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve exact oblique low-angle view, central recess, two round apertures and two long horizontal slots, all fins, same glossy black plastic. No extra holes or fins.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "toyota-gr-yaris-grille",
+      "source": "public/images/products/seller-second/toyota-gr-yaris-grille.webp",
+      "output": "public/images/products/seller-second-studio/toyota-gr-yaris-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. This is a cropped close-up, NOT an isolated whole grille. Preserve that exact crop and hexagonal mesh, GR badge, surface texture. Replace only tan cardboard visible behind mesh with charcoal studio. Keep LAMSPEED RACING footer logo readable unchanged; do not zoom out or invent full grille.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "tire-inflator-pro",
+      "source": "public/images/products/seller-second/tire-inflator-pro.webp",
+      "output": "public/images/products/seller-second-studio/tire-inflator-pro-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve exact dark grey inflator, handle, upper-left silver switch, blank blue LCD surround, R mark, minus and plus buttons and coiled bottom hose. Do not turn on display, invent specs or accessories.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "audi-a4-b9-rs4-grille",
+      "source": "public/images/products/seller-second/audi-a4-b9-rs4-grille.webp",
+      "output": "public/images/products/seller-second-studio/audi-a4-b9-rs4-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve the exact oblique close-up viewpoint of black honeycomb grille, chrome four-ring badge, black number plate holder, circular sensor opening at lower-right and visible outer mounting edge. No invented mounts.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "audi-a5-rear-spoiler",
+      "source": "public/images/products/seller-second/audi-a5-rear-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/audi-a5-rear-spoiler-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve the exact front/top view of this long slightly curved thin black spoiler, raised ends, horizontal composition, no extra depth or supports.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "audi-gloss-black-mirror-caps",
+      "source": "public/images/products/seller-second/audi-gloss-black-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/audi-gloss-black-mirror-caps-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve both glossy black mirror covers, exact paired arrangement, bottom rim and small notches, no added indicator strip.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "mercedes-w177-amg-side-vents",
+      "source": "public/images/products/seller-second/mercedes-w177-amg-side-vents.webp",
+      "output": "public/images/products/seller-second-studio/mercedes-w177-amg-side-vents-studio-v1.webp",
+      "prompt": "STRICT background edit of input 1; input 2 only style. Preserve the CENTRAL rectangular crop from input 1 without zooming out: the upper black vent is PARTIALLY CUT OFF by the top edge of that crop, with its top edge outside the photo. Keep it cut off. Preserve lower black vent's FIVE visible fins, exact arrangement, no new fins or hidden product areas. Replace only white background around/between parts and original white top/bottom padding with charcoal studio. Do NOT complete the upper vent into a whole isolated product. Soft grey background glow as input2, black gloss detail legible. Square total canvas like input1. No added props or text.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "porsche-cayenne-front-grille",
+      "source": "public/images/products/seller-second/porsche-cayenne-front-grille.webp",
+      "output": "public/images/products/seller-second-studio/porsche-cayenne-front-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve exact CROPPED close-up of back/side mounting frame, all ribs and holes visible, no zoom-out or added unseen geometry. Preserve ALL repeated translucent GABPARTS.COM / GERMAN AUTO BODY PARTS watermarks, same text and placement. Change only background to charcoal and lighting softer.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "dashcam-4k-pro",
+      "source": "public/images/products/seller-second/dashcam-4k-pro.webp",
+      "output": "public/images/products/seller-second-studio/dashcam-4k-pro-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve exact VIMEL dual-lens dashcam, screen off, all markings including 2CH FULL HD 1080P and buttons unchanged. Do not change printed resolution to 4K, do not add capabilities or accessories.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "mercedes-w205-panamericana-grille",
+      "source": "public/images/products/seller-second/mercedes-w205-panamericana-grille.webp",
+      "output": "public/images/products/seller-second-studio/mercedes-w205-panamericana-grille-studio-v1.webp",
+      "prompt": "Background/lighting edit. Input 1 is the exact seller second photo to edit; input 2 is ONLY the first-photo studio style reference. Replace white backdrop with premium seamless charcoal studio, soft neutral grey halo and subtle grounding shadow matching input 2. Preserve exact product geometry, number of parts, material, all details, viewpoint, orientation and relative arrangement of input 1. Keep original seller logo in its original corner and legible; do not remove or replace it. Square catalogue composition, whole items visible, soft refined highlights. No new parts, no unseen fixings, no carbon weave, no added text, cars or props. Preserve exact diagonal grille rising from bottom-left to top-right, empty round aperture, original AMG mark on right and every vertical chrome bar, outer tabs. Do not add Mercedes star or mounts.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "audi-a3-8v-rear-spoiler",
+      "source": "public/images/products/seller-second/audi-a3-8v-rear-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/audi-a3-8v-rear-spoiler-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact tight crop of white Audi rear-right quarter, black roof spoiler and support, rear glass and wiper, fuel door and rear lamp. Only road/background and illumination change.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "vw-golf7-gti-r-spoiler",
+      "source": "public/images/products/seller-second/vw-golf7-gti-r-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/vw-golf7-gti-r-spoiler-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact tall close crop of grey Golf rear-right quarter, large black roof spoiler, rear wiper, quarter-window louvres, wheel and red caliper. Do not invent extensions or supports.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "mercedes-w205-mirror-caps",
+      "source": "public/images/products/seller-second/mercedes-w205-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/mercedes-w205-mirror-caps-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact cropped upper front of white Mercedes, black mirror caps on both sides, windshield, white hood and black roof, no front bumper visible. Replace asphalt with studio only. Do not zoom out.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "toyota-gr86-mirror-caps",
+      "source": "public/images/products/seller-second/toyota-gr86-mirror-caps.webp",
+      "output": "public/images/products/seller-second-studio/toyota-gr86-mirror-caps-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact blue GR86 front three-quarter photo with tilted camera, black mirrors, original wheels and body kit. Preserve IKON Motorsports watermark at upper left exactly. No vehicle redesign.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "toyota-gr-supra-rear-spoiler",
+      "source": "public/images/products/seller-second/toyota-gr-supra-rear-spoiler.webp",
+      "output": "public/images/products/seller-second-studio/toyota-gr-supra-rear-spoiler-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact close-up of red Supra rear-left quarter, black trunk lip spoiler, lamp, bumper and wheel crop. Change shelving, garage wall and floor only to charcoal seamless studio. No body redesign.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "vw-golf7-r-rear-diffuser",
+      "source": "public/images/products/seller-second/vw-golf7-r-rear-diffuser.webp",
+      "output": "public/images/products/seller-second-studio/vw-golf7-r-rear-diffuser-studio-v1.webp",
+      "prompt": "Background and lighting edit only. Input 1 is seller's second photograph, showing a part ALREADY MOUNTED on a vehicle. Keep this SAME vehicle, paint colour, product, precise geometry, viewpoint, camera tilt, crop and all visible details. Do not isolate, redesign or recreate the accessory; do not fill in any hidden body or product area. Input 2 is ONLY a charcoal studio lighting/background style reference, NOT product reference. Replace visible environment with a quiet premium seamless charcoal studio and soft neutral lighting and subtle shadows. Do not change wheels, panels, badges, seams or glass. Preserve original watermarks and text. Match the source composition and aspect ratio; no zooming out, no added technical features or text. Retain exact blue Golf rear three-quarter crop, four exhaust tips, black rear diffuser, same alloy wheel and MAXTON design plate. Preserve all body geometry. Replace factory yard background and pavement with charcoal studio.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "toyota-logo-door-projectors",
+      "source": "public/images/products/seller-second/toyota-logo-door-projectors.webp",
+      "output": "public/images/products/seller-second-studio/toyota-logo-door-projectors-studio-v1.webp",
+      "prompt": "Product compositing edit. Input 1 is seller's collage; extract ONLY the exact pair of clear/white rectangular door projector lights seen together in lower-left of the TOP-LEFT panel (panel 1/6). Use precisely that view and their arrangement. Input 2 is ONLY charcoal studio style. Put this same pair on seamless charcoal studio, soft gray halo and subtle shadows, square composition. Remove surrounding marketing panels, captions, icons, vehicle and projected logos; they are advertising layout not product features. Preserve housings, prismatic clear lids, round black lenses and visible white bases exactly. Do not invent back sides, wiring, connectors, accessories or technical details. No new text or logos. Whole pair visible.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    },
+    {
+      "slug": "carplay-screen-10",
+      "source": "public/images/products/seller-second/carplay-screen-10.webp",
+      "output": "public/images/products/seller-second-studio/carplay-screen-10-studio-v1.webp",
+      "prompt": "Product compositing edit. Input 1 is seller's advertising collage; use ONLY the actual wide rectangular CarPlay display and its already visible stand/base from the central photo. Input 2 is ONLY charcoal studio style. Isolate that exact display plus stand/base and place on seamless charcoal studio with soft grey halo and subtle shadows, square composition. Preserve same camera angle, screen shape, bezel, stand and base geometry and every on-screen icon/label exactly. Remove surrounding header/advertising tiles, road, dashboard, hand, phone and wireless icons; do NOT remove anything on the product itself. Do not invent ports, cables or backside. No new specs or text.",
+      "review": "visually-reviewed-illustrative-not-technical-validation"
+    }
+  ]
+}
