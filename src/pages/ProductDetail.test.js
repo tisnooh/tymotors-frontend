@@ -26,6 +26,12 @@ test('seller photo 2 changes without replacing the first product photo', async (
   expect(selected.getAttribute('src')).toBe(replacement.image);
   expect(selected.className).toContain('object-contain');
   expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
+  expect(thumbs.length).toBe(9);
+  act(() => thumbs[8].click());
+  const last = host.querySelector('img[alt="Spoiler W205 — photo 9"]');
+  expect(last.getAttribute('src')).toContain('/seller-gallery-natural/mercedes-w205-rear-spoiler--09');
+  expect(last.className).toContain('object-contain');
+  expect(thumbs[8].getAttribute('aria-pressed')).toBe('true');
 });
 test('product lookup failure is not an endless loading screen', async () => {
   Products.get.mockRejectedValue({ response: { status: 404 } });
