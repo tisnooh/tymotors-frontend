@@ -19,6 +19,8 @@ test('seller photo 2 changes without replacing the first product photo', async (
   Products.list.mockResolvedValue({ items: [] });
   await act(async () => root.render(<ProductDetail/>));
   const thumbs = host.querySelectorAll('[data-testid="product-image-thumb"]');
+  expect(host.querySelector('[data-testid="product-gallery-image-frame"]').className).toContain('aspect-square');
+  expect(host.querySelector('img').className).toContain('object-contain');
   expect(thumbs[0].querySelector('img').getAttribute('src')).toBe('/unchanged-main.png');
   expect(thumbs[1].querySelector('img').getAttribute('src')).toBe(replacement.image);
   act(() => thumbs[1].click());

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Heart, ShoppingBag } from 'lucide-react';
@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/format';
 import { toast } from 'sonner';
 import { responsiveImageProps } from '@/lib/image';
 import { productCardPhotos } from '@/lib/productGallery';
+import PhotoBackdrop from './PhotoBackdrop';
 
 const RED_BADGES = new Set(['New', 'Best Seller']);
 
@@ -55,14 +56,24 @@ function QuickAddButton({ onClick, label, disabled = false }) {
 }
 
 function ProductImages({ img, imgHover, alt }) {
+  const [letterboxed, setLetterboxed] = useState([]);
+  function loaded(event, source) {
+    const photo = event.currentTarget;
+    if (photo.naturalWidth !== photo.naturalHeight) {
+      setLetterboxed(previous => previous.includes(source) ? previous : [...previous, source]);
+    }
+  }
   return (
     <>
+      {letterboxed.includes(img) && <PhotoBackdrop src={img} className={imgHover ? 'group-hover:opacity-0' : ''} />}
+      {letterboxed.includes(imgHover) && <PhotoBackdrop src={imgHover} className="opacity-0 group-hover:opacity-100" />}
       {img && (
         <img
           {...responsiveImageProps(img, [320, 480, 720], '(max-width: 1023px) 50vw, 25vw')}
           alt={alt}
           loading="lazy"
           decoding="async"
+          onLoad={event => loaded(event, img)}
           className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${imgHover ? 'group-hover:opacity-0' : ''}`}
         />
       )}
@@ -73,6 +84,7 @@ function ProductImages({ img, imgHover, alt }) {
           aria-hidden="true"
           loading="lazy"
           decoding="async"
+          onLoad={event => loaded(event, imgHover)}
           className="absolute inset-0 h-full w-full object-contain transition-opacity duration-700 opacity-0 group-hover:opacity-100"
         />
       )}
@@ -139,7 +151,7 @@ export function ProductCard({ product, index = 0 }) {
       className="group relative block bg-[#0F1115] border border-[#151A23] rounded-2xl overflow-hidden hover:border-[#2E394D] transition-colors"
       style={{ transitionDelay: `${(index % 8) * 30}ms` }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden ty-sweep">
+      <div data-testid="product-card-image-frame" className="relative aspect-square overflow-hidden ty-sweep">
         <ProductImages img={img} imgHover={imgHover} alt={product.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-80 pointer-events-none" />
         <ProductBadges badges={product.badges} />

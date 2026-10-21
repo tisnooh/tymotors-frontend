@@ -33,6 +33,7 @@ test.each(Object.entries(secondPhotos))('%s uses the approved second photo in th
   const product = { ...draft, slug, images };
   act(() => root.render(<ProductCard product={product}/>));
   const rendered = host.querySelectorAll('img');
+  expect(host.querySelector('[data-testid="product-card-image-frame"]').className).toContain('aspect-square');
   expect(rendered).toHaveLength(2);
   expect(rendered[0].getAttribute('src')).toBe(images[0]);
   expect(rendered[1].getAttribute('src')).toBe(photo.image);
@@ -68,6 +69,7 @@ test.each(Object.entries(unreviewedPhotos))('%s retains the main presentation in
   const product = { ...draft, slug, images };
   act(() => root.render(<ProductCard product={product}/>));
   const rendered = host.querySelectorAll('img');
+  expect(host.querySelector('[data-testid="product-card-image-frame"]').className).toContain('aspect-square');
   expect(rendered).toHaveLength(1);
   expect(rendered[0].getAttribute('src')).toBe(images[0]);
   expect(rendered[0].className).toContain('object-contain');
@@ -87,4 +89,32 @@ test('all 40 current product presentations are explicitly covered without overla
   expect(Object.keys(secondPhotos)).toHaveLength(30);
   expect(Object.keys(unreviewedPhotos)).toHaveLength(10);
   expect(new Set([...Object.keys(secondPhotos), ...Object.keys(unreviewedPhotos)]).size).toBe(40);
+});
+
+test.each([[800, 800, false], [600, 900, true], [1200, 800, true]])('a %sx%s card photo fills the edges without cropping the product', (width, height, backdrop) => {
+  act(() => root.render(<ProductCard product={{ ...draft, images: ['/actual-photo.jpg', '/other-view.jpg'] }}/>));
+  expect(host.querySelector('[data-testid="photo-backdrop"]')).toBeNull();
+  const img = host.querySelector('img');
+  Object.defineProperties(img, { naturalWidth: { value: width }, naturalHeight: { value: height } });
+  act(() => img.dispatchEvent(new Event('load')));
+  expect(Boolean(host.querySelector('[data-testid="photo-backdrop"]'))).toBe(backdrop);
+  expect(host.querySelectorAll('img')).toHaveLength(2);
+  expect(img.className).toContain('object-contain');
+  if (backdrop) {
+    const edge = host.querySelector('[data-testid="photo-backdrop"]');
+    expect(edge.getAttribute('aria-hidden')).toBe('true');
+    expect(edge.className).toContain('group-hover:opacity-0');
+    expect(edge.firstChild.style.backgroundImage).toContain('/actual-photo.jpg');
+  }
+});
+
+test('hover edge fill follows the same second photo and does not replace the main source', () => {
+  act(() => root.render(<ProductCard product={{ ...draft, images: ['/main.jpg', '/portrait.jpg'] }}/>));
+  const photo = host.querySelectorAll('img')[1];
+  Object.defineProperties(photo, { naturalWidth: { value: 600 }, naturalHeight: { value: 900 } });
+  act(() => photo.dispatchEvent(new Event('load')));
+  const edge = host.querySelector('[data-testid="photo-backdrop"]');
+  expect(edge.className).toContain('opacity-0 group-hover:opacity-100');
+  expect(edge.firstChild.style.backgroundImage).toContain('/portrait.jpg');
+  expect(host.querySelector('img').getAttribute('src')).toBe('/main.jpg');
 });

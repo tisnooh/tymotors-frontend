@@ -9,7 +9,7 @@ import { Heart, ShoppingBag, Truck, ShieldCheck, BadgeCheck, ArrowLeft, AlertTri
 import { toast } from 'sonner';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 import LoadedImage from '@/components/shared/LoadedImage';
-import { productGallery, productPhotoFit } from '@/lib/productGallery';
+import { productGallery } from '@/lib/productGallery';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -24,8 +24,8 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
   const redBadges = new Set(['New', 'Best Seller']);
   return (
     <div>
-      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#0F1115] border border-[#151A23]">
-        <LoadedImage src={images?.[activeImg]} alt={`${name} — photo ${activeImg + 1}`} className="absolute inset-0 h-full w-full" imageClassName={productPhotoFit(images?.[activeImg], activeImg)}/>
+      <div data-testid="product-gallery-image-frame" className="relative aspect-square rounded-2xl overflow-hidden bg-[#0F1115] border border-[#151A23]">
+        <LoadedImage src={images?.[activeImg]} alt={`${name} — photo ${activeImg + 1}`} className="absolute inset-0 h-full w-full" imageClassName="object-contain" fillBackground/>
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60 pointer-events-none" />
         <div className="absolute top-4 left-4 flex flex-wrap gap-1.5">
           {badges?.map((b) => <span key={b} className={`ty-chip ${redBadges.has(b) ? 'ty-chip-red' : ''}`}>{b}</span>)}
@@ -43,7 +43,7 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
               onClick={() => setActiveImg(i)}
               className={`relative aspect-square overflow-hidden rounded-xl border transition-colors ${activeImg === i ? 'border-[#E10600]' : 'border-[#232B3A] hover:border-[#2E394D]'}`}
             >
-              <LoadedImage src={img} alt="" className="h-full w-full" imageClassName={productPhotoFit(img, i)} loading="lazy" retry={false}/>
+              <LoadedImage src={img} alt="" className="h-full w-full" imageClassName="object-contain" loading="lazy" retry={false} fillBackground/>
             </button>
           ))}
         </div>

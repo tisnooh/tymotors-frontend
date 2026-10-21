@@ -53,7 +53,7 @@ export default function Cart() {
                   const lineTotal = it.line_total ?? ((it.price || 0) * it.quantity);
                   return (
                   <li key={it.product_id} data-testid="cart-item" className="py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                    <Link to={`/product/${it.slug}`} className="h-24 w-32 rounded-xl overflow-hidden bg-[#0F1115] border border-[#151A23] shrink-0">
+                    <Link to={`/product/${it.slug}`} className="h-24 w-24 rounded-xl overflow-hidden bg-[#0F1115] border border-[#151A23] shrink-0">
                       <CartImage key={it.images?.[0] || it.image || it.product_id} item={it} />
                     </Link>
                     <div className="flex-1 min-w-0">

@@ -20,6 +20,7 @@ test('cart uses the API images array and leaves prices and the product destinati
   act(() => root.render(<Cart />));
   expect(host.querySelector('img').getAttribute('src')).toBe('/actual-spoiler.jpg');
   expect(host.querySelector('img').className).toContain('object-contain');
+  expect(host.querySelector('img').closest('a').className).toContain('h-24 w-24');
   expect(host.querySelector('img').closest('a').getAttribute('href')).toBe('/product/spoiler');
   expect(host.querySelector('[data-testid="cart-total"]').textContent).toContain('293');
 });
