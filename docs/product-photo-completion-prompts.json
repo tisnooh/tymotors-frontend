@@ -1,0 +1,23 @@
+[
+  {
+    "id": "audi-a3-8v-rs3-grille--02",
+    "prompt": "Use case: precise-object-edit. Asset: real supplier photo 2 for an Audi A3 grille product gallery. Input is the real seller mounted photograph, not a design reference. Preserve the ENTIRE exact Audi, grille honeycomb, rings, headlights, sensor, plate holder, paint reflections, tyres, camera position and framing. Only remove the separate orange MARS Performance overlay in the bottom right by extending the already present concrete floor. Subdue only the distant background very slightly for natural premium photography. Keep original ground, daylight, car exposure and imperfect photographic texture. Do not isolate the grille, invent a new car, relight, recolour or add any logo. One photograph, no panels or text. No CGI look.",
+    "image": "/images/products/seller-second-natural/audi-a3-8v-rs3-grille-natural-v2.webp",
+    "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787859801/tymotors/products/hx7ny1ovsmzsannhh8th.png",
+    "sellerPhotoNumber": 2,
+    "source": "https://marsperformance.com.au/products/gloss-black-honeycomb-rs3-style-front-bumper-bar-grille-grill-bodykit-audi-a3-s3-8v-2017",
+    "sourceImage": "https://cdn.shopify.com/s/files/1/0643/0008/9559/files/A3-8V-S2-17-RS-FG-GB-XFY-9.jpg?v=1753331603",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "afa6a089c4dc75c7fbf625375485d2f7839685423b8ed68f2261776b422130a5",
+    "sellerOriginalImage": "/images/products/seller-second/audi-a3-8v-rs3-grille.webp",
+    "processing": {
+      "kind": "ai-background-edit-natural-v2",
+      "tool": "built-in imagegen",
+      "date": "2026-10-21",
+      "visualReview": "source-compared-not-technical-validation",
+      "styleReference": "user-approved-w205-v2",
+      "context": "real seller mounted photo; original vehicle and daylight preserved"
+    }
+  }
+]

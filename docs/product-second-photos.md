@@ -1,4 +1,14 @@
-# Secondes photographies vendeurs — rendu naturel v2 du 17 octobre 2026
+# Secondes photographies vendeurs — rendu naturel v2
+
+## Complement du 21 octobre 2026
+
+30 secondes vues sont maintenant integrees : les 29 validees precedemment et la
+photo numero 2 de la fiche Mars Performance retrouvee pour la calandre Audi A3.
+Cette vue reelle montee conserve le vehicule, la lumiere naturelle et le sol ;
+seul le logo publicitaire separe a ete retire et le fond lointain attenue.
+Source, prompt exact, hash et traitement : `product-photo-completion-prompts.json`.
+Les 10 articles encore sans photo fiable gardent leur photo principale dans les
+cartes ; leur galerie detaillee n'est pas supprimee. Voir `product-photo-completion.md`.
 
 ## Etat
 
@@ -18,12 +28,11 @@ Aucun nouveau domaine CSP ni hotlink vers les vendeurs. Aucun lien vendeur ajout
 
 Cette verification de photos ne valide pas les compatibilites, l'identite du fournisseur commercial ni les droits de diffusion. Les statuts existants de preparation du catalogue restent inchanges. Le resultat du push et du deploiement est communique separement : les controles locaux ne prouvent pas une publication en ligne.
 
-## 11 articles encore sans remplacement confirme
+## 10 articles encore sans remplacement confirme
 
 | Article | Observation / element manquant |
 | --- | --- |
 | `bmw-logo-door-projectors` | Fiche SCP lisible par la recherche, mais une seule image distincte extraite ; pas de deuxieme photo confirmee. Navigation navigateur infructueuse. |
-| `audi-a3-8v-rs3-grille` | Ancienne source = collection. Le lien produit retrouve depuis le blog Mars Performance renvoie 404. Fiche actuelle exacte necessaire. |
 | `audi-logo-door-projectors` | Mercado Livre redirige vers la verification de compte. Aucune connexion ni contournement tente. |
 | `mercedes-logo-door-projectors` | Fiche Walmart chargee ; seules les copies de la photo principale ont ete identifiees pour cet article. Images de recommandations exclues. |
 | `vw-golf7-gti-grille` | Ceneo demande un CAPTCHA. Non contourne. |

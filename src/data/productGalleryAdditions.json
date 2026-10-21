@@ -201,6 +201,96 @@
         "styleReference": "user-approved-w205-v2",
         "visualReview": "source-compared-not-technical-validation"
       }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/audi-gloss-black-mirror-caps--08-natural-v2.webp",
+      "sellerPhotoNumber": 8,
+      "source": "https://divisionautomotive.co.uk/products/gloss-black-wing-mirror-cover-caps-a4-s4-a5-s5-rs5-b9-replacement-pair-for-audi",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0680/7404/5731/files/10_e044439c-0614-461e-a187-5ab7bc7f23d1.jpg?v=1752140194",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/audi-gloss-black-mirror-caps--08.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "9bbeaa3a90d7e7d7906640bdec57e98a54092ab75cccc250c6ffcb822e4ee79b",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/audi-gloss-black-mirror-caps--09-natural-v2.webp",
+      "sellerPhotoNumber": 9,
+      "source": "https://divisionautomotive.co.uk/products/gloss-black-wing-mirror-cover-caps-a4-s4-a5-s5-rs5-b9-replacement-pair-for-audi",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0680/7404/5731/files/10_980d13fb-ee80-4f44-87ec-d76276bcabed.png?v=1752140194",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/audi-gloss-black-mirror-caps--09.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "defb7f2d10116278692b16e7bdad9a0d16e53bc0f2cbf425f41bb5b6f12aa579",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/audi-gloss-black-mirror-caps--10-natural-v2.webp",
+      "sellerPhotoNumber": 10,
+      "source": "https://divisionautomotive.co.uk/products/gloss-black-wing-mirror-cover-caps-a4-s4-a5-s5-rs5-b9-replacement-pair-for-audi",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0680/7404/5731/files/10_918af258-5fee-4557-bcbb-72154a7216f9.png?v=1752140194",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/audi-gloss-black-mirror-caps--10.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "a2f9a47bbe1847377ec866b50bf98a3a8c81210a196427479b6f09ec809c864d",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/audi-gloss-black-mirror-caps--11-natural-v2.webp",
+      "sellerPhotoNumber": 11,
+      "source": "https://divisionautomotive.co.uk/products/gloss-black-wing-mirror-cover-caps-a4-s4-a5-s5-rs5-b9-replacement-pair-for-audi",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0680/7404/5731/files/10_bcdd493b-cf16-41d7-8e45-a5ab96b24d6f.png?v=1752140196",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/audi-gloss-black-mirror-caps--11.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "65b9404d65a494fc9d752622434a780cc6e4f6e3117b2801df8fd3127ee67c8b",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/audi-gloss-black-mirror-caps--12-natural-v2.webp",
+      "sellerPhotoNumber": 12,
+      "source": "https://divisionautomotive.co.uk/products/gloss-black-wing-mirror-cover-caps-a4-s4-a5-s5-rs5-b9-replacement-pair-for-audi",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0680/7404/5731/files/10_a4c57c34-1260-411c-b347-955207968393.png?v=1752140195",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/audi-gloss-black-mirror-caps--12.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "f1f9e31975fdbdb7f1949b39fc72b9aa2f178f40f884a473a7f83b1ffc8eed37",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
     }
   ],
   "bmw-f30-f32-mirror-caps": [
@@ -503,6 +593,24 @@
       }
     },
     {
+      "image": "/images/products/seller-gallery-natural/bmw-g20-mirror-caps--04-natural-v2.webp",
+      "sellerPhotoNumber": 4,
+      "source": "https://www.alibaba.com/product-detail/2-Pcs-ABS-Glossy-Black-Side_1600727145118.html",
+      "sourceImage": "https://s.alicdn.com/@sc04/kf/H151454cb9c6e4ce491280141bf5734093.jpg_960x960q80.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/bmw-g20-mirror-caps--04.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "2f1a0ab30c0ce793b99254bc3e15ba6a5f5aa7f280493202e08a460702f024f7",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
       "image": "/images/products/seller-gallery-natural/bmw-g20-mirror-caps--05-natural-v1.webp",
       "sellerPhotoNumber": 5,
       "source": "https://www.alibaba.com/product-detail/2-Pcs-ABS-Glossy-Black-Side_1600727145118.html",
@@ -554,6 +662,24 @@
         "kind": "ai-background-edit-natural-additional-view",
         "tool": "built-in imagegen",
         "date": "2026-10-18",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/mercedes-w205-amg-grille--05-natural-v2.webp",
+      "sellerPhotoNumber": 5,
+      "source": "https://www.alibaba.com/product-detail/Car-Front-Upper-Grille-Grill-AMG_1600995787850.html",
+      "sourceImage": "https://s.alicdn.com/@sc04/kf/Hce81951f6f7c444da4e0f7c74bc61d8c2.jpg_960x960q80.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/mercedes-w205-amg-grille--05.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "db9abb427df33da18b0928784661cbaf4ed4fd6c62fcf38d86d0d2420dcbebd0",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
         "styleReference": "user-approved-w205-v2",
         "visualReview": "source-compared-not-technical-validation"
       }
@@ -931,6 +1057,24 @@
   ],
   "toyota-supra-diffuser": [
     {
+      "image": "/images/products/seller-gallery-natural/toyota-supra-diffuser--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://www.thecarbonindustries.com/products/gloss-black-rear-diffuser-20-24-toyota-gr-supra-a90",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0675/3570/0182/files/s-l1600_a07a1b8b-0375-4242-9d08-8e96a56ed153.webp?v=1738646269",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/toyota-supra-diffuser--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "43afe7f0bddd7f13ef9b55aa76ba56b50a9f49f67783fc3b81917064804b6212",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
       "image": "/images/products/seller-gallery-natural/toyota-supra-diffuser--04-natural-v1.webp",
       "sellerPhotoNumber": 4,
       "source": "https://www.thecarbonindustries.com/products/gloss-black-rear-diffuser-20-24-toyota-gr-supra-a90",
@@ -1074,6 +1218,362 @@
         "kind": "ai-background-edit-natural-additional-view",
         "tool": "built-in imagegen",
         "date": "2026-10-18",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "porsche-cayenne-front-grille": [
+    {
+      "image": "/images/products/seller-gallery-natural/porsche-cayenne-front-grille--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://gabparts.com/collections/cayenne-2019-current-bumper-elements/products/porsche-cayenne-2019-23-front-bumper-grille-base-s-coupe-w-o-acc-9y0807683pok1",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0601/0798/0951/products/front-bumper-upper-center-grille-porsche-cayenne-2019-2020-2021-2022-9y0807683pok1-9y0807683bok1-843641.jpg?v=1743612551",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/porsche-cayenne-front-grille--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "6af5f76a4b5d9f93300d6e8bb94ed8db01fee755e8754f6ddabe19d889d1daec",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "mercedes-w205-panamericana-grille": [
+    {
+      "image": "/images/products/seller-gallery-natural/mercedes-w205-panamericana-grille--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://www.carsmatic.be/products/calandre-style-gtr-panamericana-mercedes-classe-c-w205-pre-facelift-15-18-sans-camera",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0601/1879/4488/products/image_2be78b6e-74d0-48ec-b5ba-4ef13f2baf68.jpg?v=1647885133",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/mercedes-w205-panamericana-grille--03.webp",
+      "width": 1280,
+      "height": 1229,
+      "sha256": "9c19f193c7fb75d0fe3604d9e40fbadc5821eb3d42dcfaf31c3fb215e3da5a82",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/mercedes-w205-panamericana-grille--04-natural-v2.webp",
+      "sellerPhotoNumber": 4,
+      "source": "https://www.carsmatic.be/products/calandre-style-gtr-panamericana-mercedes-classe-c-w205-pre-facelift-15-18-sans-camera",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0601/1879/4488/products/image_425fc9d1-2e40-47e8-81a3-563ae20b9e48.jpg?v=1647885136",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/mercedes-w205-panamericana-grille--04.webp",
+      "width": 1268,
+      "height": 1241,
+      "sha256": "f24dab0176f9bb8caac2f0aebfc14bf50f1a31e501970f99160fefcd88e710e8",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/mercedes-w205-panamericana-grille--05-natural-v2.webp",
+      "sellerPhotoNumber": 5,
+      "source": "https://www.carsmatic.be/products/calandre-style-gtr-panamericana-mercedes-classe-c-w205-pre-facelift-15-18-sans-camera",
+      "sourceImage": "https://cdn.shopify.com/s/files/1/0601/1879/4488/products/image_6e97759f-b9a0-488d-9a3e-77ece7458878.jpg?v=1647885137",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/mercedes-w205-panamericana-grille--05.webp",
+      "width": 1617,
+      "height": 973,
+      "sha256": "177918708e2c2d011585aadd0b10a8c0b2ec6ebd8640376baec32f3bf9624ad7",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "tire-inflator-pro": [
+    {
+      "image": "/images/products/seller-gallery-natural/tire-inflator-pro--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://www.tophopeauto.com/plastic-pump/inflator-tyre-compressor.html",
+      "sourceImage": "https://www.tophopeauto.com/uploads/202339688/inflator-tyre-compressor72bec313-982e-4f0f-8ae0-63bdd17960b9.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/tire-inflator-pro--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "2b21d483344eaa14b85cdde487b7974137d5167126a4d5cdfdadf73500c7dd20",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "toyota-logo-door-projectors": [
+    {
+      "image": "/images/products/seller-gallery-natural/toyota-logo-door-projectors--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://luxor-auto.com.ua/ua/p1615785443-shtatnaya-led-podsvetka.html",
+      "sourceImage": "https://images.prom.ua/3781051351_w640_h640_3781051351.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/toyota-logo-door-projectors--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "73d156410af0201989007fc82f8129eb52dda5a583f209f34ac1b28fa78b0901",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/toyota-logo-door-projectors--04-natural-v2.webp",
+      "sellerPhotoNumber": 4,
+      "source": "https://luxor-auto.com.ua/ua/p1615785443-shtatnaya-led-podsvetka.html",
+      "sourceImage": "https://images.prom.ua/3775722170_w640_h640_3775722170.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/toyota-logo-door-projectors--04.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "0f65fc599057226f1b8af6c14a1925187051428a1837bccb98a802e56c6d8814",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/toyota-logo-door-projectors--05-natural-v2.webp",
+      "sellerPhotoNumber": 5,
+      "source": "https://luxor-auto.com.ua/ua/p1615785443-shtatnaya-led-podsvetka.html",
+      "sourceImage": "https://images.prom.ua/3775722619_w640_h640_3775722619.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/toyota-logo-door-projectors--05.webp",
+      "width": 1387,
+      "height": 1134,
+      "sha256": "e1044a32482d37b9bed7ea8d6be84b2753289994dabaaa5ef779310fec2a9aff",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "mercedes-w177-amg-side-vents": [
+    {
+      "image": "/images/products/seller-gallery-natural/mercedes-w177-amg-side-vents--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://bless.lv/en/car-body-parts/10407--side-vents-front-bumper-suitable-for-mercedes-a-class-w177-hatchback-042018-up-v177-sedan-042018-up-piano-black",
+      "sourceImage": "https://bless.lv/45057-large_default/side-vents-front-bumper-suitable-for-mercedes-a-class-w177-hatchback-042018-up-v177-sedan-042018-up-piano-black.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/mercedes-w177-amg-side-vents--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "634c9b18dff74de93407b4fcc66b2939489e5fcf48620b12ad5d39a1f699b7b6",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "vw-golf7-r-rear-diffuser": [
+    {
+      "image": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://www.artcardetail.ch/maxton-design/p/diffuseur-arrire-complet-v3-vw-golf-7-r-facelift-noir-brillant",
+      "sourceImage": "https://images.squarespace-cdn.com/content/v1/60774913fa807306308911ae/1704203748934-993QOSITDKUZV1LRAOEA/eng_pm_Rear-Valance-V-3-VW-Golf-7-R-Facelift-10753_2.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/vw-golf7-r-rear-diffuser--03.webp",
+      "width": 1535,
+      "height": 1024,
+      "sha256": "40f46398605125a1533626afd1d3478f082975a01f36c87e9743f0781804010b",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--04-natural-v2.webp",
+      "sellerPhotoNumber": 4,
+      "source": "https://www.artcardetail.ch/maxton-design/p/diffuseur-arrire-complet-v3-vw-golf-7-r-facelift-noir-brillant",
+      "sourceImage": "https://images.squarespace-cdn.com/content/v1/60774913fa807306308911ae/1704203749030-S0L93L40VDMJZF9W8D3E/eng_pm_Rear-Valance-V-3-VW-Golf-7-R-Facelift-10753_3.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/vw-golf7-r-rear-diffuser--04.webp",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "6174cbb6174bfdf0913664993bcf1c102a18ca96851ff90e25cd46142b2a8ea2",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--05-natural-v2.webp",
+      "sellerPhotoNumber": 5,
+      "source": "https://www.artcardetail.ch/maxton-design/p/diffuseur-arrire-complet-v3-vw-golf-7-r-facelift-noir-brillant",
+      "sourceImage": "https://images.squarespace-cdn.com/content/v1/60774913fa807306308911ae/1704203749060-GKBJ3SB94GPVWG5U6LN7/eng_pm_Rear-Valance-V-3-VW-Golf-7-R-Facelift-10753_4.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/vw-golf7-r-rear-diffuser--05.webp",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "5a57171dff15b236169f10edfcf5a6a81d0f9f225d6f94506fcea34bf1392b29",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--06-natural-v2.webp",
+      "sellerPhotoNumber": 6,
+      "source": "https://www.artcardetail.ch/maxton-design/p/diffuseur-arrire-complet-v3-vw-golf-7-r-facelift-noir-brillant",
+      "sourceImage": "https://images.squarespace-cdn.com/content/v1/60774913fa807306308911ae/1704203749149-1RD27SF2YKRCZHQWFE17/eng_pm_Rear-Valance-V-3-VW-Golf-7-R-Facelift-10753_5.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/vw-golf7-r-rear-diffuser--06.webp",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "54e24c6649efca8e314f5e784c5e54b08a61b15082f9ace62019f3ece852c8fe",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    }
+  ],
+  "dashcam-4k-pro": [
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--03-natural-v2.webp",
+      "sellerPhotoNumber": 3,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-night-vision-motion-detection-most-amazi%20ng-easy-to-use-dash-camera-excellent-quality-170-degree-lens-view-wifi-internet-gps-full-hd-hdr-1920-1080p-resolution-mobile-phone-ios-android-display-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--03.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "e14e197d443728277fb4d531537414f6f2b4a94d2916a157f66b24a2ab92c861",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--04-natural-v2.webp",
+      "sellerPhotoNumber": 4,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-170-degree-camera-dash-car-camera-dual-rear-camera-hdr-full-hd-1080p-wifi-internet-gps-night-vision-motion-detection-ios-android-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--04.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "89359b0bdb5e4d49bbabcbd7d6b1d925abd5a4e52ff45a38c53ffda0ee838201",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--05-natural-v2.webp",
+      "sellerPhotoNumber": 5,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-most-amazi%20ng-easy-to-use-dash-camera-excellent-quality-170-degree-lens-view-wifi-internet-gps-full-hd-hdr-1920-1080p-resolution-mobile-phone-ios-android-display-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--05.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "1dd737607bf797463118335bbdaa4374dec6d6d735405d44203e4740873f2e4b",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--06-natural-v2.webp",
+      "sellerPhotoNumber": 6,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-sony-exmor-sensor-full-hdr-1080p-amazing-quality-excellent-easy-use-wifi-internet-gps-night-vision-motion-detection-dual-rear-camera-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--06.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "c9eba8146769b9e4f5b8628f0fed6a890f5a51ed55345335b9f227308fa75970",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--07-natural-v2.webp",
+      "sellerPhotoNumber": 7,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-mobile-australia-best-phone-wireless-proof-evidence-truck-van-uber-170-degree-camera-dash-car-camera-dual-rear-camera-hdr-full-hd-1080p-wifi-internet-gps-night-vision-motion-detection-ios-android-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--07.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "da56c361798e56f52e61b882bb776b4dd3155e056b883b7b9bec7bcc377b1a36",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
+        "styleReference": "user-approved-w205-v2",
+        "visualReview": "source-compared-not-technical-validation"
+      }
+    },
+    {
+      "image": "/images/products/seller-gallery-natural/dashcam-4k-pro--08-natural-v2.webp",
+      "sellerPhotoNumber": 8,
+      "source": "https://www.securitylab.com.au/vimel-dual-dash-gps-wifi-4k-car-camera",
+      "sourceImage": "https://www.securitylab.com.au/image/cache/catalog/2019-4/VIM-LUXX7S/vimel-most-amazi%20ng-easy-to-use-dash-camera-excellent-quality-170-degree-lens-view-wifi-internet-gps-full-hd-hdr-1080p-550x550w.jpg",
+      "sellerOriginalImage": "/images/products/seller-gallery-originals/dashcam-4k-pro--08.webp",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "2e7c9f17d8793ef49e50a1be9fb540da25b08b2e5a4f9306fe8eb31c65e643d2",
+      "review": "visually-compared-to-source",
+      "processing": {
+        "kind": "ai-background-edit-natural-additional-view",
+        "tool": "built-in imagegen",
+        "date": "2026-10-21",
         "styleReference": "user-approved-w205-v2",
         "visualReview": "source-compared-not-technical-validation"
       }

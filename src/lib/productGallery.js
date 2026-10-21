@@ -1,5 +1,6 @@
 import secondPhotos from '@/data/productSecondPhotos.json';
 import galleryAdditions from '@/data/productGalleryAdditions.json';
+import unreviewedCardPhotos from '@/data/productCardUnreviewedPhotos.json';
 
 // Restrict this photo refresh to the reviewed, legacy second images. A later
 // catalogue edit takes precedence. Append every reviewed seller view without a
@@ -23,6 +24,16 @@ export function productGallery(product) {
     }
   }
   return refreshed;
+}
+
+// Presentation cards must never swap to a known unreviewed legacy image. Keep
+// the dark main image until a matching replacement exists, without deleting the
+// gallery photo or overriding a later catalogue edit.
+export function productCardPhotos(product) {
+  const images = productGallery(product);
+  if (!Array.isArray(images)) return images;
+  const unreviewed = unreviewedCardPhotos[product?.slug];
+  return images.slice(0, unreviewed && images[1] === unreviewed.previousImage ? 1 : 2);
 }
 
 export function productPhotoFit(image, index) {

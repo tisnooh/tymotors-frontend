@@ -23,8 +23,8 @@ test.each(Object.entries(secondPhotos))('%s replaces only the reviewed second ph
   expect(createHash('sha256').update(edited).digest('hex')).toBe(photo.sha256);
 });
 
-test('the approved natural refresh covers only the 29 reviewed seller views', () => {
-  expect(Object.keys(secondPhotos)).toHaveLength(29);
+test('the approved natural refresh covers the 30 reviewed seller views', () => {
+  expect(Object.keys(secondPhotos)).toHaveLength(30);
   expect(secondPhotos['reverse-cam-hd']).toBeUndefined();
 });
 
@@ -78,20 +78,22 @@ test('existing reviewed gallery views are reused rather than appended twice', ()
 });
 
 test('all additional views are preserved while main and custom photos keep their original fit', () => {
-  expect(Object.keys(additions)).toHaveLength(18);
-  expect(Object.values(additions).flat()).toHaveLength(58);
+  expect(Object.keys(additions)).toHaveLength(25);
+  expect(Object.values(additions).flat()).toHaveLength(85);
   expect(productPhotoFit('/main.png', 0)).toBe('object-cover');
   expect(productPhotoFit('/custom.png', 4)).toBe('object-cover');
   expect(productPhotoFit('/second.png', 1)).toBe('object-contain');
 });
 
-test('unfinished background edits are excluded and seller views remain ordered', () => {
-  const excluded = ['bmw-g20-mirror-caps--04', 'mercedes-w205-amg-grille--05', 'toyota-supra-diffuser--03'];
+test('the three corrected apertures use newly reviewed v2 assets and seller views remain ordered', () => {
+  const corrected = ['bmw-g20-mirror-caps--04', 'mercedes-w205-amg-grille--05', 'toyota-supra-diffuser--03'];
+  for (const id of corrected) {
+    const photo = Object.values(additions).flat().find(p => p.image.includes(id));
+    expect(photo.image).toContain('-natural-v2.webp');
+    expect(photo.processing.date).toBe('2026-10-21');
+  }
   for (const photos of Object.values(additions)) {
     const numbers = photos.map((photo) => photo.sellerPhotoNumber);
     expect(numbers).toEqual([...numbers].sort((a, b) => a - b));
-    for (const photo of photos) {
-      expect(excluded.some((id) => photo.image.includes(id))).toBe(false);
-    }
   }
 });

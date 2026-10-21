@@ -6,7 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { toast } from 'sonner';
 import { responsiveImageProps } from '@/lib/image';
-import { productGallery } from '@/lib/productGallery';
+import { productCardPhotos } from '@/lib/productGallery';
 
 const RED_BADGES = new Set(['New', 'Best Seller']);
 
@@ -86,9 +86,9 @@ export function ProductCard({ product, index = 0 }) {
   const inWishlist = isInWishlist(product.id);
   const isPreview = product.status !== 'active' && !product.test_purchase;
 
-  // Cards and detail pages must use the same reviewed seller photos. Preserve
-  // the original main photo and any later catalogue edits via productGallery.
-  const images = productGallery(product);
+  // Use reviewed seller photos, retaining the main presentation when the legacy
+  // hover photo is still unreviewed. Catalogue edits continue to take priority.
+  const images = productCardPhotos(product);
   const img = images?.[0];
   const imgHover = images?.[1];
 

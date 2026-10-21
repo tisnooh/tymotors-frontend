@@ -2,6 +2,8 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ProductCard } from './ProductCard';
 import secondPhotos from '@/data/productSecondPhotos.json';
+import unreviewedPhotos from '@/data/productCardUnreviewedPhotos.json';
+import { productGallery } from '@/lib/productGallery';
 const mockAdd = jest.fn();
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: mockAdd, toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
@@ -59,4 +61,30 @@ test('a product with only one photo stays visible on hover', () => {
   const images = host.querySelectorAll('img');
   expect(images).toHaveLength(1);
   expect(images[0].className).not.toContain('group-hover:opacity-0');
+});
+
+test.each(Object.entries(unreviewedPhotos))('%s retains the main presentation instead of the unreviewed hover photo', (slug, photo) => {
+  const images = ['/unchanged-main.jpg', photo.previousImage];
+  const product = { ...draft, slug, images };
+  act(() => root.render(<ProductCard product={product}/>));
+  const rendered = host.querySelectorAll('img');
+  expect(rendered).toHaveLength(1);
+  expect(rendered[0].getAttribute('src')).toBe(images[0]);
+  expect(rendered[0].className).toContain('object-contain');
+  expect(rendered[0].className).not.toContain('group-hover:opacity-0');
+  expect(productGallery(product)).toBe(images);
+  expect(product.images).toEqual(['/unchanged-main.jpg', photo.previousImage]);
+  expect(host.querySelector('[data-testid="product-card"]').getAttribute('href')).toBe(`/product/${slug}`);
+});
+
+test.each(Object.keys(unreviewedPhotos))('%s permits a later replacement photo instead of permanently disabling hover', slug => {
+  const images = ['/main.jpg', '/new-reviewed-catalogue-photo.jpg'];
+  act(() => root.render(<ProductCard product={{ ...draft, slug, images }}/>));
+  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(images);
+});
+
+test('all 40 current product presentations are explicitly covered without overlapping selections', () => {
+  expect(Object.keys(secondPhotos)).toHaveLength(30);
+  expect(Object.keys(unreviewedPhotos)).toHaveLength(10);
+  expect(new Set([...Object.keys(secondPhotos), ...Object.keys(unreviewedPhotos)]).size).toBe(40);
 });

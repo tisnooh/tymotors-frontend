@@ -1,7 +1,8 @@
-# Additional seller gallery views — ready release, 2026-10-18
+# Additional seller gallery views — completion, 2026-10-21
 
-58 additional views across 18 products. No numerical gallery cap. Product photo 1
-and the 29 previously approved photo 2 edits are unchanged. Prices, stock,
+85 additional views across 25 products (58 previously packaged, 27 completed now).
+No numerical gallery cap. Product photo 1 and the 29 previously approved photo 2
+edits are unchanged; Audi A3 now has a newly confirmed second view. Prices, stock,
 compatibility, draft status and database records are not modified.
 
 ## Preparation and review
@@ -34,33 +35,40 @@ views are reused without duplication.
 | BMW F30 M Sport rear diffuser | 3 |
 | BMW G20 gloss black grille | 2 |
 | BMW G20 M Performance spoiler | 2 |
-| BMW G20 mirror caps | 3 |
-| Mercedes W205 AMG grille | 1 |
+| BMW G20 mirror caps | 4 |
+| Mercedes W205 AMG grille | 2 |
 | Mercedes W205 mirror caps | 2 |
 | Mercedes W205 rear spoiler | 7 |
 | Audi A3 8V rear spoiler | 2 |
 | Audi A4 B9 RS4 grille | 4 |
-| Audi gloss black mirror caps | 5 |
+| Audi gloss black mirror caps | 10 |
 | VW Golf 7 GTI/R spoiler | 4 |
 | VW Golf 7 mirror caps | 3 |
 | Toyota GR86 mirror caps | 6 |
 | Toyota GR Supra rear spoiler | 4 |
-| Toyota Supra diffuser | 1 |
+| Toyota Supra diffuser | 2 |
 | Toyota GR Yaris grille | 1 |
+| Porsche Cayenne grille | 1 |
+| Mercedes W205 Panamericana grille | 3 |
+| Tire inflator | 1 |
+| Toyota door projectors | 3 |
+| Mercedes W177 side vents | 1 |
+| VW Golf 7 R rear diffuser | 4 |
+| Dashcam | 6 |
 
-## Deliberately not included
+## Completion and exclusions
 
-27 of the 85 selected candidate views are not ready for this release:
-
-- BMW G20 mirror caps view 4, W205 AMG grille view 5, and Supra diffuser view 3
-  need their background inside openings corrected.
-- The remaining 24 selected views have not completed generation and review.
+All 85 selected candidate views are now packaged. The 27 completion views use
+versioned v2 files; all were viewed against their source, including the three
+regenerated aperture corrections. The original 58 files were not overwritten.
 
 The carbon mounted F30 diffuser view and other nonmatching material/variant
 photos were excluded. Carbon views for the F30/G20 spoilers are included only
 because the user explicitly accepted those seller photos previously.
 Unconfirmed supplier references and products with no additional verified useful
-view are unchanged. This release does not claim all products are finished.
+view are unchanged. Ten products still require exact supplier evidence for a
+new second photo: see `product-photo-completion.md`. This release does not claim
+their supplier validation is finished.
 
 ## Verification boundary
 
