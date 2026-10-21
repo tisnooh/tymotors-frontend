@@ -16,7 +16,8 @@
 .universe-image-frame { position: relative; overflow: hidden; aspect-ratio: 3/2; }
 .universe-card-featured .universe-image-frame { aspect-ratio: 16/10; }
 .universe-photo { position: absolute; inset: 0; background: #12171e; overflow: hidden; }
-.universe-photo img { width: 100%; height: 100%; object-fit: contain; }
+.universe-image-frame .universe-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.universe-card[data-project="gathering"] .universe-photo img { object-position: 50% 70%; }
 .universe-photo-shade { position: absolute; inset: 0; background: linear-gradient(#05060866, transparent 35%); pointer-events: none; }
 .universe-image-label { position: absolute; top: 1.1rem; left: 1.1rem; display: flex; align-items: center; gap: .8rem; font: 10px/1.4 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .15em; color: white; text-shadow: 0 1px 10px #000; }
 .universe-image-label span { padding: .35rem .45rem; border: 1px solid #ffffff55; border-radius: .3rem; }

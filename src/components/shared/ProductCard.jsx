@@ -6,6 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { toast } from 'sonner';
 import { responsiveImageProps } from '@/lib/image';
+import { productGallery } from '@/lib/productGallery';
 
 const RED_BADGES = new Set(['New', 'Best Seller']);
 
@@ -62,16 +63,17 @@ function ProductImages({ img, imgHover, alt }) {
           alt={alt}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.05] group-hover:opacity-0"
+          className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-700 ${imgHover ? 'group-hover:opacity-0' : ''}`}
         />
       )}
       {imgHover && (
         <img
           {...responsiveImageProps(imgHover, [320, 480, 720], '(max-width: 1023px) 50vw, 25vw')}
-          alt={alt}
+          alt=""
+          aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-all duration-700 scale-[1.05] opacity-0 group-hover:opacity-100 group-hover:scale-100"
+          className="absolute inset-0 h-full w-full object-contain transition-opacity duration-700 opacity-0 group-hover:opacity-100"
         />
       )}
     </>
@@ -84,8 +86,11 @@ export function ProductCard({ product, index = 0 }) {
   const inWishlist = isInWishlist(product.id);
   const isPreview = product.status !== 'active' && !product.test_purchase;
 
-  const img = product.images?.[0];
-  const imgHover = product.images?.[1];
+  // Cards and detail pages must use the same reviewed seller photos. Preserve
+  // the original main photo and any later catalogue edits via productGallery.
+  const images = productGallery(product);
+  const img = images?.[0];
+  const imgHover = images?.[1];
 
   const onAdd = useCallback(
     async (e) => {

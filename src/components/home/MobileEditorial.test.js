@@ -479,7 +479,7 @@ test('mobile inspiration has a native horizontal rail, compact cards, focus and 
   expect(css).toContain('.universe-card { transition: none; }');
 });
 
-test('mobile inspiration removes stretched empty bodies and letterboxing without changing desktop framing', () => {
+test('inspiration fills desktop and mobile frames while retaining compact mobile cards', () => {
   const css = fs.readFileSync(path.join(__dirname, 'CommunitySection.css'), 'utf8');
   const mobile = css.slice(css.indexOf('@media (max-width: 767px)'), css.indexOf('@media (prefers-reduced-motion'));
   const desktop = css.slice(0, css.indexOf('@media (max-width: 767px)'));
@@ -489,7 +489,9 @@ test('mobile inspiration removes stretched empty bodies and letterboxing without
   expect(mobile).not.toContain('margin-top: auto');
   expect(mobile).toContain('.universe-image-frame .universe-photo img { object-fit: cover; object-position: 50% 50%; }');
   expect(mobile).toContain('object-position: 50% 70%');
-  expect(desktop).toContain('object-fit: contain');
+  expect(desktop).not.toContain('object-fit: contain');
+  expect(desktop).toContain('.universe-image-frame .universe-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }');
+  expect(desktop).toContain('.universe-card[data-project="gathering"] .universe-photo img { object-position: 50% 70%; }');
   act(() => root.render(<CommunitySection />));
   expect([...host.querySelectorAll('[data-testid="community-card"]')].map(card => card.dataset.project)).toEqual(['gathering', 'detail', 'silhouette']);
 });

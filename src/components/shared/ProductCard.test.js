@@ -1,6 +1,7 @@
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ProductCard } from './ProductCard';
+import secondPhotos from '@/data/productSecondPhotos.json';
 const mockAdd = jest.fn();
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: mockAdd, toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
@@ -23,4 +24,39 @@ test('read-only draft keeps quick add disabled', () => {
   expect(host.querySelector('[data-testid="product-card-add-to-cart-button"]').disabled).toBe(true);
   expect(host.textContent).toContain('Bientôt disponible');
   expect(mockAdd).not.toHaveBeenCalled();
+});
+
+test.each(Object.entries(secondPhotos))('%s uses the approved second photo in the presentation card too', (slug, photo) => {
+  const images = ['/unchanged-main.jpg', photo.previousImage];
+  const product = { ...draft, slug, images };
+  act(() => root.render(<ProductCard product={product}/>));
+  const rendered = host.querySelectorAll('img');
+  expect(rendered).toHaveLength(2);
+  expect(rendered[0].getAttribute('src')).toBe(images[0]);
+  expect(rendered[1].getAttribute('src')).toBe(photo.image);
+  for (const image of rendered) {
+    expect(image.className).toContain('object-contain');
+    expect(image.className).not.toContain('object-cover');
+    expect(image.className).not.toContain('scale-');
+  }
+  expect(rendered[0].className).toContain('group-hover:opacity-0');
+  expect(rendered[1].className).toContain('group-hover:opacity-100');
+  expect(rendered[1].getAttribute('aria-hidden')).toBe('true');
+  expect(host.querySelector('[data-testid="product-card"]').getAttribute('href')).toBe(`/product/${slug}`);
+  expect(product.images).toEqual(['/unchanged-main.jpg', photo.previousImage]);
+  expect(host.querySelector('[data-testid="product-card-add-to-cart-button"]').disabled).toBe(true);
+});
+
+test('a later catalogue photo is never overridden in a card', () => {
+  const slug = 'mercedes-w177-amg-side-vents';
+  const images = ['/main.jpg', '/new-catalogue-photo.jpg'];
+  act(() => root.render(<ProductCard product={{ ...draft, slug, images }}/>));
+  expect([...host.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual(images);
+});
+
+test('a product with only one photo stays visible on hover', () => {
+  act(() => root.render(<ProductCard product={{ ...draft, images: ['/single.jpg'] }}/>));
+  const images = host.querySelectorAll('img');
+  expect(images).toHaveLength(1);
+  expect(images[0].className).not.toContain('group-hover:opacity-0');
 });
