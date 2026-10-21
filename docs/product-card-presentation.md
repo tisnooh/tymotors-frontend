@@ -1,12 +1,18 @@
 # Product card presentation coverage
 
+Historical card-only policy below. Superseded on 2026-10-21: the ten visually
+confirmed legacy framed photos are now excluded from detail galleries as well,
+using `src/data/productLegacyFramedPhotos.json`. See
+`product-legacy-frame-removal.md` for the complete 40-product image audit.
+
 The current 40-product catalogue has two explicit presentation policies:
 
 - 30 products reuse the reviewed photo 2 selected by `productGallery` (natural-dark
   product shots or the preserved real mounted photographic context).
 - 10 products still have an unreviewed legacy photo 2. Their cards retain photo 1
   rather than crossfading to that unreviewed image. These exact legacy URLs are
-  recorded in `src/data/productCardUnreviewedPhotos.json`.
+  recorded at the time in `src/data/productCardUnreviewedPhotos.json` (now renamed
+  to `productLegacyFramedPhotos.json`).
 
 This is an interim presentation fallback, not 10 new photo edits or a completed
 supplier-photo validation. No image is deleted or replaced in the product gallery.

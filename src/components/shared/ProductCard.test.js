@@ -2,7 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ProductCard } from './ProductCard';
 import secondPhotos from '@/data/productSecondPhotos.json';
-import unreviewedPhotos from '@/data/productCardUnreviewedPhotos.json';
+import unreviewedPhotos from '@/data/productLegacyFramedPhotos.json';
 import { productGallery } from '@/lib/productGallery';
 const mockAdd = jest.fn();
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: mockAdd, toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
@@ -74,7 +74,7 @@ test.each(Object.entries(unreviewedPhotos))('%s retains the main presentation in
   expect(rendered[0].getAttribute('src')).toBe(images[0]);
   expect(rendered[0].className).toContain('object-contain');
   expect(rendered[0].className).not.toContain('group-hover:opacity-0');
-  expect(productGallery(product)).toBe(images);
+  expect(productGallery(product)).toEqual(['/unchanged-main.jpg']);
   expect(product.images).toEqual(['/unchanged-main.jpg', photo.previousImage]);
   expect(host.querySelector('[data-testid="product-card"]').getAttribute('href')).toBe(`/product/${slug}`);
 });

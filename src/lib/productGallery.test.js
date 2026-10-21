@@ -1,6 +1,8 @@
-import { productGallery, productPhotoFit } from './productGallery';
+import { productGallery, productCardPhotos, productPhotoFit } from './productGallery';
 import secondPhotos from '@/data/productSecondPhotos.json';
 import additions from '@/data/productGalleryAdditions.json';
+import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
+import catalogueAudit from './__fixtures__/productGalleryAudit.json';
 import fs from 'fs';
 import path from 'path';
 import { createHash } from 'crypto';
@@ -96,4 +98,50 @@ test('the three corrected apertures use newly reviewed v2 assets and seller view
     const numbers = photos.map((photo) => photo.sellerPhotoNumber);
     expect(numbers).toEqual([...numbers].sort((a, b) => a - b));
   }
+});
+
+test.each(Object.entries(legacyPhotos))('%s excludes the framed photo from every gallery position without mutating the catalogue', (slug, photo) => {
+  const images = ['/main.png', '/new-seller-view.png', photo.previousImage, '/last-view.png', photo.previousImage];
+  const product = { slug, images };
+  expect(productGallery(product)).toEqual(['/main.png', '/new-seller-view.png', '/last-view.png']);
+  expect(productCardPhotos(product)).toEqual(['/main.png', '/new-seller-view.png']);
+  expect(product.images).toEqual(images);
+  expect(product.images).toHaveLength(5);
+  expect(photo.reason).toContain('Visually reviewed 2026-10-21');
+});
+
+test('exclusions follow the exact asset, not the product slug or photo index', () => {
+  const photo = legacyPhotos['porsche-911-rear-spoiler'].previousImage;
+  expect(productGallery({ slug: 'another-product', images: [photo, '/main.png', photo] })).toEqual(['/main.png']);
+  expect(productGallery({ slug: 'porsche-911-rear-spoiler', images: [photo] })).toEqual([]);
+  const replaced = ['/main.png', `${photo}?new-version`];
+  expect(productGallery({ slug: 'porsche-911-rear-spoiler', images: replaced })).toBe(replaced);
+});
+
+test('approved second-view refresh still removes a legacy frame later in its gallery', () => {
+  const slug = 'mercedes-w205-rear-spoiler';
+  const legacy = legacyPhotos['porsche-911-rear-spoiler'].previousImage;
+  const result = productGallery({ slug, images: ['/main.png', secondPhotos[slug].previousImage, legacy] });
+  expect(result).toEqual(['/main.png', secondPhotos[slug].image, ...additions[slug].map(photo => photo.image)]);
+});
+
+test('the 40-product audit preserves all 155 retained views and removes exactly ten legacy frames', () => {
+  expect(catalogueAudit).toHaveLength(40);
+  const excluded = new Set(Object.values(legacyPhotos).map(photo => photo.previousImage));
+  let retained = 0;
+  let removed = 0;
+  for (const product of catalogueAudit) {
+    const before = [...product.images];
+    const gallery = productGallery(product);
+    expect(gallery[0]).toBe(product.images[0]);
+    expect(gallery.some(src => excluded.has(src))).toBe(false);
+    expect(product.images).toEqual(before);
+    retained += gallery.length;
+    removed += product.images.filter(src => excluded.has(src)).length;
+    const replacement = secondPhotos[product.slug];
+    if (replacement) expect(gallery[1]).toBe(replacement.image);
+    for (const view of additions[product.slug] || []) expect(gallery).toContain(view.image);
+  }
+  expect(retained).toBe(155);
+  expect(removed).toBe(10);
 });

@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client';
 import ProductDetail from './ProductDetail';
 import { Products } from '@/lib/api';
 import secondPhotos from '@/data/productSecondPhotos.json';
+import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
+import catalogueAudit from '@/lib/__fixtures__/productGalleryAudit.json';
+import { productGallery } from '@/lib/productGallery';
 jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'fixture' }), useNavigate: () => jest.fn(), Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
@@ -71,4 +74,21 @@ test('draft remains disabled when sandbox availability is not granted by API', a
   await act(async () => root.render(<ProductDetail/>));
   expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
   expect(host.textContent).toContain('Bientôt disponible');
+});
+
+test.each(catalogueAudit.map(product => [product.slug, product]))('%s renders only retained photos throughout the detail gallery', async (slug, product) => {
+  Products.get.mockResolvedValue({ ...product, id: slug, name: slug, price: 99, stock: 0, status: 'draft', currency: 'EUR', specs: {} });
+  Products.list.mockResolvedValue({ items: [] });
+  await act(async () => root.render(<ProductDetail/>));
+  const gallery = productGallery(product);
+  expect(host.querySelector('img').getAttribute('src')).toBe(product.images[0]);
+  const thumbs = [...host.querySelectorAll('[data-testid="product-image-thumb"]')];
+  expect(thumbs).toHaveLength(gallery.length > 1 ? gallery.length : 0);
+  for (const [index, thumb] of thumbs.entries()) {
+    expect(thumb.querySelector('img').getAttribute('src')).toBe(gallery[index]);
+    act(() => thumb.click());
+    expect(host.querySelector('img').getAttribute('src')).toBe(gallery[index]);
+  }
+  const legacy = legacyPhotos[slug]?.previousImage;
+  expect([...host.querySelectorAll('img')].some(image => image.getAttribute('src') === legacy)).toBe(false);
 });
