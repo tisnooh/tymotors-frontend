@@ -6,6 +6,7 @@ import { Armchair, ArrowRight, CarFront, ChevronRight, Monitor, PackageSearch, S
 import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
 import { responsiveImageProps } from '@/lib/image';
+import { productPhoto } from '@/lib/productPhoto';
 import { normalizeSearchQuery, searchCatalogueUrl, SEARCH_MAX_LENGTH, SEARCH_MIN_LENGTH } from '@/lib/search';
 import { useSearchResults } from './useSearchResults';
 import { useSearchViewport } from './useSearchViewport';
@@ -53,7 +54,7 @@ function ResultPhoto({ src, name, unavailable }) {
 }
 
 function SearchResult({ product, onSelect, language, t }) {
-  const image = product.images?.[0];
+  const image = productPhoto(product.images?.[0]);
   return <li><Link to={`/product/${product.slug}`} onClick={onSelect} className="search-result-link" data-testid="search-result-link">
     <ResultPhoto key={`${product.id}:${image || ''}`} src={image} name={product.name} unavailable={t('search.photo_unavailable')} />
     <span className="search-result-details">

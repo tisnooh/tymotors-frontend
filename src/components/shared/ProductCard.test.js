@@ -4,6 +4,7 @@ import { ProductCard } from './ProductCard';
 import secondPhotos from '@/data/productSecondPhotos.json';
 import unreviewedPhotos from '@/data/productLegacyFramedPhotos.json';
 import { productGallery } from '@/lib/productGallery';
+import { productPhoto } from '@/lib/productPhoto';
 const mockAdd = jest.fn();
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: mockAdd, toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
@@ -36,7 +37,7 @@ test.each(Object.entries(secondPhotos))('%s uses the approved second photo in th
   expect(host.querySelector('[data-testid="product-card-image-frame"]').className).toContain('aspect-square');
   expect(rendered).toHaveLength(2);
   expect(rendered[0].getAttribute('src')).toBe(images[0]);
-  expect(rendered[1].getAttribute('src')).toBe(photo.image);
+  expect(rendered[1].getAttribute('src')).toBe(productPhoto(photo.image));
   for (const image of rendered) {
     expect(image.className).toContain('object-contain');
     expect(image.className).not.toContain('object-cover');

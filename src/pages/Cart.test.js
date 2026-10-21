@@ -2,6 +2,7 @@ import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import Cart from './Cart';
 import { useApp } from '@/contexts/AppContext';
+import edits from '@/data/productPhotoEdits.json';
 jest.mock('@/contexts/AppContext', () => ({ useApp: jest.fn() }));
 jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
@@ -28,6 +29,14 @@ test('legacy image field is still supported', () => {
   cart.items[0].image = '/legacy.jpg';
   act(() => root.render(<Cart />));
   expect(host.querySelector('img').getAttribute('src')).toBe('/legacy.jpg');
+});
+
+test.each(['images', 'image'])('the Golf neutral main photo is used from the %s field without changing totals', field => {
+  const [source, edit] = Object.entries(edits)[0];
+  cart.items[0][field] = field === 'images' ? [source] : source;
+  act(() => root.render(<Cart />));
+  expect(host.querySelector('img').getAttribute('src')).toBe(edit.image);
+  expect(host.querySelector('[data-testid="cart-total"]').textContent).toContain('293');
 });
 test('missing or broken image uses a readable fallback, not a different product', () => {
   act(() => root.render(<Cart />));

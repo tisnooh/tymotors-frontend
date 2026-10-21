@@ -6,6 +6,7 @@ import { Products } from '@/lib/api';
 import { useApp } from '@/contexts/AppContext';
 import LoadedImage from '@/components/shared/LoadedImage';
 import { formatPrice } from '@/lib/format';
+import { productPhoto } from '@/lib/productPhoto';
 import { availableForProject, checkedFit, projectTotals, vehiclePayload } from './project';
 import { catalogueCategory } from './vehicleViews';
 
@@ -17,7 +18,7 @@ function EquipmentCard({ product, entry, busy, onSelect, onRemove }) {
   const selected = Boolean(entry);
   return <article className={`customize-equipment ${selected ? 'is-selected' : ''}`} data-testid="customize-equipment">
     <Link to={`/product/${product.slug}`} aria-label={product.name}>
-      <LoadedImage src={product.images?.[0]} alt={product.name} className="customize-equipment-image" loading="lazy" />
+      <LoadedImage src={productPhoto(product.images?.[0])} alt={product.name} className="customize-equipment-image" loading="lazy" />
     </Link>
     <div className="customize-equipment-copy">
       <h3><Link to={`/product/${product.slug}`}>{product.name}</Link></h3>

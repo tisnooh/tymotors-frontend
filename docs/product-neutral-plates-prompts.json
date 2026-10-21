@@ -1,0 +1,67 @@
+[
+  {
+    "number": 1,
+    "source": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871934/tymotors/products/miosmu0iblk9dzvrbt3f.png",
+    "original": "C:/Users/utilisateur/Documents/ChatGPT/TyMotors/assets/golf-neutral-plates-2026-10-21/main-original.png",
+    "generated": "C:/Users/utilisateur/.codex/generated_images/01a08f4a-18ce-7221-a393-8d6d4537a373/exec-568241fc-d674-4751-8faf-a5d13ba62870.png",
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--01-neutral-v1.webp",
+    "prompt": "Use case: precise-object-edit. Input image 1 is the exact photograph to edit, not a reference. Asset: existing automotive accessory product photograph. Change ONLY the advertising license plate and its plate-holder lettering: remove all MAXTON design graphics, colored stripes, names and small dealership text from the rectangular plate and its frame. Replace the lettering with a realistic plain blank satin-black license plate, retaining the exact plate shape, perspective, screws, subtle reflections and shading. Do not put any text or logo on the plate. Preserve EVERYTHING outside the plate/plate-frame area: identical blue Volkswagen Golf R, VW and R badges, blue paint and reflections, rear bumper, exact diffuser geometry, its little physical emblem, four exhaust tips, tail lamps, wheels, ground and background, lighting, composition and existing crop. Do not repaint, beautify, relight or redesign any car or product surface. No new objects, no extra words, no collage. Same aspect ratio and same photographic camera view as input.",
+    "sha256": "7be9aa3f07f35b852cdf61410ae49b74f07f0c18735518f9bb4dab179ac16ed1",
+    "width": 1254,
+    "height": 1254,
+    "processing": "built-in-imagegen-license-plate-neutralization",
+    "review": "visually-compared-with-source"
+  },
+  {
+    "number": 2,
+    "source": "/images/products/seller-second-natural/vw-golf7-r-rear-diffuser-natural-v2.webp",
+    "original": "C:/Users/utilisateur/Documents/ChatGPT/TyMotors/frontend/public/images/products/seller-second-natural/vw-golf7-r-rear-diffuser-natural-v2.webp",
+    "generated": "C:/Users/utilisateur/.codex/generated_images/01a08f4a-18ce-7221-a393-8d6d4537a373/exec-2dcb9be7-dece-4952-a062-30c47dc6d968.png",
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--02-neutral-v1.webp",
+    "prompt": "Use case: precise-object-edit. Input image 1 is the exact photograph to edit, not a reference. Asset: existing automotive accessory product photograph. Change ONLY the advertising license plate and its plate-holder lettering: remove all MAXTON design graphics, colored stripes, names and small dealership text from the rectangular plate and its frame. Replace the lettering with a realistic plain blank satin-black license plate, retaining the exact plate shape, perspective, screws, subtle reflections and shading. Do not put any text or logo on the plate. Preserve EVERYTHING outside the plate/plate-frame area: identical blue Volkswagen Golf R, VW and R badges, blue paint and reflections, rear bumper, exact diffuser geometry, its little physical emblem, four exhaust tips, tail lamps, wheels, ground and background, lighting, composition and existing crop. Do not repaint, beautify, relight or redesign any car or product surface. No new objects, no extra words, no collage. Same aspect ratio and same photographic camera view as input.",
+    "sha256": "a643798f5964e6ebc7a9ceaf662149ff4e76800208c3370356cbef29765df159",
+    "width": 1536,
+    "height": 1024,
+    "processing": "built-in-imagegen-license-plate-neutralization",
+    "review": "visually-compared-with-source"
+  },
+  {
+    "number": 3,
+    "source": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--03-natural-v2.webp",
+    "original": "C:/Users/utilisateur/Documents/ChatGPT/TyMotors/frontend/public/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--03-natural-v2.webp",
+    "generated": "C:/Users/utilisateur/.codex/generated_images/01a08f4a-18ce-7221-a393-8d6d4537a373/exec-511eb8d9-e94c-43cb-b020-18b918400c15.png",
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--03-neutral-v1.webp",
+    "prompt": "Use case: precise-object-edit. Input image 1 is the exact photograph to edit, not a reference. Asset: existing automotive accessory product photograph. Change ONLY the advertising license plate and its plate-holder lettering: remove all MAXTON design graphics, colored stripes, names and small dealership text from the rectangular plate and its frame. Replace the lettering with a realistic plain blank satin-black license plate, retaining the exact plate shape, perspective, screws, subtle reflections and shading. Do not put any text or logo on the plate. Preserve EVERYTHING outside the plate/plate-frame area: identical blue Volkswagen Golf R, VW and R badges, blue paint and reflections, rear bumper, exact diffuser geometry, its little physical emblem, four exhaust tips, tail lamps, wheels, ground and background, lighting, composition and existing crop. Do not repaint, beautify, relight or redesign any car or product surface. No new objects, no extra words, no collage. Same aspect ratio and same photographic camera view as input.",
+    "sha256": "3606e205e744f707674655b6a51850a7501bb3e692d9da3d115dc59399845b12",
+    "width": 1535,
+    "height": 1024,
+    "processing": "built-in-imagegen-license-plate-neutralization",
+    "review": "visually-compared-with-source"
+  },
+  {
+    "number": 4,
+    "source": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--04-natural-v2.webp",
+    "original": "C:/Users/utilisateur/Documents/ChatGPT/TyMotors/frontend/public/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--04-natural-v2.webp",
+    "generated": "C:/Users/utilisateur/.codex/generated_images/01a08f4a-18ce-7221-a393-8d6d4537a373/exec-479efcfc-1f19-4ec1-bcbb-7be99a3efea2.png",
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--04-neutral-v1.webp",
+    "prompt": "Use case: precise-object-edit. Input image 1 is the exact photograph to edit, not a reference. Asset: existing automotive accessory product photograph. Change ONLY the advertising license plate and its plate-holder lettering: remove all MAXTON design graphics, colored stripes, names and small dealership text from the rectangular plate and its frame. Replace the lettering with a realistic plain blank satin-black license plate, retaining the exact plate shape, perspective, screws, subtle reflections and shading. Do not put any text or logo on the plate. Preserve EVERYTHING outside the plate/plate-frame area: identical blue Volkswagen Golf R, VW and R badges, blue paint and reflections, rear bumper, exact diffuser geometry, its little physical emblem, four exhaust tips, tail lamps, wheels, ground and background, lighting, composition and existing crop. Do not repaint, beautify, relight or redesign any car or product surface. No new objects, no extra words, no collage. Same aspect ratio and same photographic camera view as input.",
+    "sha256": "73b0e56ddd583c0f1ce30db18e1e837389c6a8fe1ccd746d88688cc0b61a7e44",
+    "width": 1536,
+    "height": 1024,
+    "processing": "built-in-imagegen-license-plate-neutralization",
+    "review": "visually-compared-with-source"
+  },
+  {
+    "number": 6,
+    "source": "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--06-natural-v2.webp",
+    "original": "C:/Users/utilisateur/Documents/ChatGPT/TyMotors/frontend/public/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--06-natural-v2.webp",
+    "generated": "C:/Users/utilisateur/.codex/generated_images/01a08f4a-18ce-7221-a393-8d6d4537a373/exec-b32ce06c-7472-4e52-a408-5609104f025a.png",
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--06-neutral-v1.webp",
+    "prompt": "Use case: precise-object-edit. Input image 1 is the exact photograph to edit, not a reference. Asset: existing automotive accessory product photograph. Change ONLY the advertising license plate and its plate-holder lettering: remove all MAXTON design graphics, colored stripes, names and small dealership text from the rectangular plate and its frame. Replace the lettering with a realistic plain blank satin-black license plate, retaining the exact plate shape, perspective, screws, subtle reflections and shading. Do not put any text or logo on the plate. Preserve EVERYTHING outside the plate/plate-frame area: identical blue Volkswagen Golf R, VW and R badges, blue paint and reflections, rear bumper, exact diffuser geometry, its little physical emblem, four exhaust tips, tail lamps, wheels, ground and background, lighting, composition and existing crop. Do not repaint, beautify, relight or redesign any car or product surface. No new objects, no extra words, no collage. Same aspect ratio and same photographic camera view as input.",
+    "sha256": "c45854337a713ab842d6a3d99388836b10a11ea5e836d03e89fd2aa51404b3c3",
+    "width": 1536,
+    "height": 1024,
+    "processing": "built-in-imagegen-license-plate-neutralization",
+    "review": "visually-compared-with-source"
+  }
+]

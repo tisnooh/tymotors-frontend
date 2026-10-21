@@ -3,13 +3,14 @@ import secondPhotos from '@/data/productSecondPhotos.json';
 import additions from '@/data/productGalleryAdditions.json';
 import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
 import catalogueAudit from './__fixtures__/productGalleryAudit.json';
+import { productPhoto } from './productPhoto';
 import fs from 'fs';
 import path from 'path';
 import { createHash } from 'crypto';
 
 test.each(Object.entries(secondPhotos))('%s replaces only the reviewed second photo', (slug, photo) => {
   const product = { slug, images: ['/main.png', photo.previousImage, '/third.png'] };
-  expect(productGallery(product)).toEqual(['/main.png', photo.image, '/third.png', ...(additions[slug] || []).map((p) => p.image)]);
+  expect(productGallery(product)).toEqual(['/main.png', photo.image, '/third.png', ...(additions[slug] || []).map((p) => p.image)].map(productPhoto));
   expect(product.images[1]).toBe(photo.previousImage);
   expect(photo.sellerPhotoNumber).toBe(2);
   expect(fs.existsSync(path.join(process.cwd(), 'public', photo.image))).toBe(true);
@@ -55,8 +56,8 @@ test('unknown products and incomplete galleries remain untouched', () => {
 test.each(Object.entries(additions))('%s appends every reviewed view without a cap', (slug, photos) => {
   const product = { slug, images: ['/main.png', secondPhotos[slug].previousImage, '/custom-view.png'] };
   const result = productGallery(product);
-  expect(result.slice(0, 3)).toEqual(['/main.png', secondPhotos[slug].image, '/custom-view.png']);
-  expect(result.slice(3)).toEqual(photos.map((p) => p.image));
+  expect(result.slice(0, 3)).toEqual(['/main.png', secondPhotos[slug].image, '/custom-view.png'].map(productPhoto));
+  expect(result.slice(3)).toEqual(photos.map((p) => productPhoto(p.image)));
   expect(new Set(result).size).toBe(result.length);
   expect(product.images).toHaveLength(3);
   for (const photo of photos) {
@@ -133,14 +134,14 @@ test('the 40-product audit preserves all 155 retained views and removes exactly 
   for (const product of catalogueAudit) {
     const before = [...product.images];
     const gallery = productGallery(product);
-    expect(gallery[0]).toBe(product.images[0]);
+    expect(gallery[0]).toBe(productPhoto(product.images[0]));
     expect(gallery.some(src => excluded.has(src))).toBe(false);
     expect(product.images).toEqual(before);
     retained += gallery.length;
     removed += product.images.filter(src => excluded.has(src)).length;
     const replacement = secondPhotos[product.slug];
-    if (replacement) expect(gallery[1]).toBe(replacement.image);
-    for (const view of additions[product.slug] || []) expect(gallery).toContain(view.image);
+    if (replacement) expect(gallery[1]).toBe(productPhoto(replacement.image));
+    for (const view of additions[product.slug] || []) expect(gallery).toContain(productPhoto(view.image));
   }
   expect(retained).toBe(155);
   expect(removed).toBe(10);

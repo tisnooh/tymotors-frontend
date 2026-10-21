@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 import LoadedImage from '@/components/shared/LoadedImage';
 import { productGallery } from '@/lib/productGallery';
+import { productPhoto } from '@/lib/productPhoto';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -204,7 +205,8 @@ export default function ProductDetail() {
     upsertMeta('meta[name="description"]', { name: 'description' }, description);
     upsertMeta('meta[property="og:title"]', { property: 'og:title' }, `${product.name} | TYMotors`);
     upsertMeta('meta[property="og:description"]', { property: 'og:description' }, description);
-    upsertMeta('meta[property="og:image"]', { property: 'og:image' }, product.images?.[0] || '');
+    const mainPhoto = productPhoto(product.images?.[0]);
+    upsertMeta('meta[property="og:image"]', { property: 'og:image' }, mainPhoto ? new URL(mainPhoto, window.location.origin).href : '');
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
     upsertMeta('meta[property="og:type"]', { property: 'og:type' }, 'product');
     upsertMeta(

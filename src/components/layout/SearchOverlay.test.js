@@ -9,6 +9,7 @@ import { Products } from '@/lib/api';
 import { normalizeSearchQuery, searchCatalogueUrl, SEARCH_DEBOUNCE_MS } from '@/lib/search';
 import fr from '@/lib/locales/fr.json';
 import en from '@/lib/locales/en.json';
+import edits from '@/data/productPhotoEdits.json';
 
 let mockLanguage = 'fr';
 const mockNavigate = jest.fn();
@@ -102,6 +103,17 @@ test('example chips use the actual catalogue vocabulary and focus the field', as
   await open(); await click(query('search-example-wheel')); await advance();
   expect(Products.list).toHaveBeenCalledWith({ q: 'volant', limit: 8 }); expect(query('search-overlay-input').value).toBe('volant');
   expect(document.activeElement).toBe(query('search-overlay-input'));
+});
+
+test('search presents the neutral Golf photo without altering the API product or link', async () => {
+  const [source, edit] = Object.entries(edits)[0];
+  const golf = { ...part, slug: 'vw-golf7-r-rear-diffuser', images: [source] };
+  Products.list.mockResolvedValue({ items: [golf], total: 1 });
+  await open(); await type('diffuseur'); await advance();
+  const result = query('search-result-link');
+  expect(result.querySelector('img').getAttribute('src')).toBe(edit.image);
+  expect(result.getAttribute('href')).toBe('/product/vw-golf7-r-rear-diffuser');
+  expect(golf.images).toEqual([source]);
 });
 
 test('without a server total, only the visible item count is announced', async () => {

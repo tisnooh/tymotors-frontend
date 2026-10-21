@@ -1,14 +1,16 @@
 import secondPhotos from '@/data/productSecondPhotos.json';
 import galleryAdditions from '@/data/productGalleryAdditions.json';
 import legacyFramedPhotos from '@/data/productLegacyFramedPhotos.json';
+import { productPhoto } from './productPhoto';
 
 const legacyFramedImages = new Set(Object.values(legacyFramedPhotos).map(photo => photo.previousImage));
 
 // Exclude only exact, visually reviewed legacy assets, wherever they appear.
 // Preserve the catalogue and source files, as well as future replacement URLs.
-function withoutLegacyFrames(images) {
-  if (!Array.isArray(images) || !images.some(src => legacyFramedImages.has(src))) return images;
-  return images.filter(src => !legacyFramedImages.has(src));
+function presentedImages(images) {
+  if (!Array.isArray(images)) return images;
+  const presented = images.filter(src => !legacyFramedImages.has(src)).map(productPhoto);
+  return presented.length === images.length && presented.every((src, index) => src === images[index]) ? images : presented;
 }
 
 // Restrict this photo refresh to the reviewed, legacy second images. A later
@@ -18,7 +20,7 @@ export function productGallery(product) {
   const images = product?.images;
   const replacement = secondPhotos[product?.slug];
   if (!replacement || !Array.isArray(images) || images.length < 2
-    || images[1] !== replacement.previousImage) return withoutLegacyFrames(images);
+    || images[1] !== replacement.previousImage) return presentedImages(images);
   const additions = galleryAdditions[product.slug] || [];
   const refreshed = [images[0], replacement.image];
   for (const src of images.slice(2)) {
@@ -32,7 +34,7 @@ export function productGallery(product) {
       seen.add(photo.image);
     }
   }
-  return withoutLegacyFrames(refreshed);
+  return presentedImages(refreshed);
 }
 
 // Cards and detail galleries share the same exclusions.

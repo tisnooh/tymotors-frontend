@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/AppContext';
 import { formatPrice } from '@/lib/format';
+import { productPhoto } from '@/lib/productPhoto';
 import { Trash2, ArrowRight, Truck, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
 import { Checkout } from '@/lib/api';
@@ -123,7 +124,7 @@ export default function Cart() {
 function CartImage({ item }) {
   const { i18n } = useTranslation();
   const [failed, setFailed] = useState(false);
-  const source = item.images?.[0] || item.image;
+  const source = productPhoto(item.images?.[0] || item.image);
   if (!source || failed) {
     return <span role="img" aria-label={item.name} className="flex h-full w-full items-center justify-center p-3 text-center text-xs text-ty-textLow">{i18n.language?.startsWith('fr') ? 'Image indisponible' : 'Image unavailable'}</span>;
   }

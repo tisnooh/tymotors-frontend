@@ -6,6 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 import { availableForProject, checkedFit, projectTotals, vehiclePayload } from './project';
 import fr from '@/lib/locales/fr.json';
 import en from '@/lib/locales/en.json';
+import edits from '@/data/productPhotoEdits.json';
 
 let mockLinkState;
 jest.mock('react-router-dom', () => ({ Link: ({ to, state, ...props }) => { if (state) mockLinkState = state; return <a href={to} {...props} />; } }), { virtual: true });
@@ -46,6 +47,16 @@ test('equipment appears without hotspots and filtering, paging and retry use rea
   expect(Products.list.mock.calls.at(-1)[0].page).toBe(2);
   await act(async () => host.querySelectorAll('.customize-filters button')[1].click());
   expect(Products.list.mock.calls.at(-1)[0]).toMatchObject({ page: 1, category: 'performance' });
+});
+
+test('equipment cards reuse the neutral Golf photo without changing the product record', async () => {
+  const [source, edit] = Object.entries(edits)[0];
+  const golf = { ...part, slug: 'vw-golf7-r-rear-diffuser', images: [source] };
+  Products.list.mockResolvedValue({ items: [golf], total: 1, fitment_scope: 'verified_vehicle' });
+  await render();
+  expect(host.querySelector('img').getAttribute('src')).toBe(edit.image);
+  expect(golf.images).toEqual([source]);
+  expect(addToCart).not.toHaveBeenCalled();
 });
 
 test('select, total, removal and cart revalidation preserve the exact selected vehicle', async () => {

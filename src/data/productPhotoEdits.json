@@ -1,0 +1,32 @@
+{
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871934/tymotors/products/miosmu0iblk9dzvrbt3f.png": {
+    "image": "/images/products/product-only/vw-golf7-r-rear-diffuser-isolated-v1.webp",
+    "sha256": "93a51a70db72da3e0b3e067630368e6e1c5e5724b7d6250a2f0d28317abdec8a",
+    "width": 1254,
+    "height": 1254
+  },
+  "/images/products/seller-second-natural/vw-golf7-r-rear-diffuser-natural-v2.webp": {
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--02-neutral-v1.webp",
+    "sha256": "a643798f5964e6ebc7a9ceaf662149ff4e76800208c3370356cbef29765df159",
+    "width": 1536,
+    "height": 1024
+  },
+  "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--03-natural-v2.webp": {
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--03-neutral-v1.webp",
+    "sha256": "3606e205e744f707674655b6a51850a7501bb3e692d9da3d115dc59399845b12",
+    "width": 1535,
+    "height": 1024
+  },
+  "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--04-natural-v2.webp": {
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--04-neutral-v1.webp",
+    "sha256": "73b0e56ddd583c0f1ce30db18e1e837389c6a8fe1ccd746d88688cc0b61a7e44",
+    "width": 1536,
+    "height": 1024
+  },
+  "/images/products/seller-gallery-natural/vw-golf7-r-rear-diffuser--06-natural-v2.webp": {
+    "image": "/images/products/neutral-plates/vw-golf7-r-rear-diffuser--06-neutral-v1.webp",
+    "sha256": "c45854337a713ab842d6a3d99388836b10a11ea5e836d03e89fd2aa51404b3c3",
+    "width": 1536,
+    "height": 1024
+  }
+}

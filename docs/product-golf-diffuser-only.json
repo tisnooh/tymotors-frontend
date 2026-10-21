@@ -1,0 +1,17 @@
+{
+  "image": "/images/products/product-only/vw-golf7-r-rear-diffuser-isolated-v1.webp",
+  "sha256": "93a51a70db72da3e0b3e067630368e6e1c5e5724b7d6250a2f0d28317abdec8a",
+  "width": 1254,
+  "height": 1254,
+  "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871934/tymotors/products/miosmu0iblk9dzvrbt3f.png",
+  "source": "https://www.maxtondesign.co.uk/body-kits/volkswagen/vw-golf/vw-golf-mk7-facelift/vw-golf-mk7-facelift-r/vw-golf-mk7-facelift-r-hatchback/rear-valance-v.3-volkswagen-golf-r-mk7-facelift",
+  "sourceImage": "https://www.maxtondesign.co.uk/image/cache/catalog/product/20251229/20251229194345_6952d9f1d5b00-1000x750.jpg",
+  "supplierReference": "VW-GO-7F-R-RS3G",
+  "supplierGalleryNumber": 7,
+  "generatedFile": "C:\\Users\\utilisateur\\.codex\\generated_images\\01a08f4a-18ce-7221-a393-8d6d4537a373\\exec-f73d8de3-18c4-4510-a2d0-c99161f1b1b7.png",
+  "sourceFile": "C:\\Users\\utilisateur\\Documents\\ChatGPT\\TyMotors\\assets\\golf-diffuser-only-2026-10-21\\supplier-view-7.jpg",
+  "prompt": "Use case: precise-object-edit. Asset: square e-commerce presentation image of the exact standalone rear diffuser in input image 1. Input image 1 is the edit target from the supplier, NOT inspiration for a different design. Replace ONLY the white backdrop with a restrained dark charcoal grey (#292b2e) studio background with a very soft grey gradient and subtle natural contact shadow. Remove the separate promotional footer wording and three-stripe graphic. Keep the single exact glossy black rear diffuser fully visible, its precise existing diagonal camera view and orientation, silhouette, end wings, two broad exhaust clearances, all four central vertical fins, curvature, thickness, surface, small existing physical markings and reflections. Do not redesign, reshape, recolor, rotate, mirror, embellish or invent attachment parts. Square composition with the whole object centered and occupying about 85% of the width, no clipped edges. No vehicle, bumper, wheels, exhaust pipes, license plate, extra objects or added logo/text. No added carbon weave. No bright spotlight, neon, pedestal or decorative frame. Preserve the real appearance of the supplied object; no artificially exaggerated render gloss.\n",
+  "tool": "built-in imagegen",
+  "review": "visually-compared-to-standalone-supplier-view",
+  "date": "2026-10-21"
+}
