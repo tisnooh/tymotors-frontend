@@ -50,7 +50,9 @@ test('the visual audit covers every current gallery selection, not just the edit
     slug: product.slug, number: index + 1, image,
   })));
   expect(selected).toHaveLength(156);
-  expect(imageAudit.images.map(({ slug, number, image }) => ({ slug, number, image }))).toEqual(selected);
+  // The audit is a historical visual snapshot; later supplier-rights restrictions
+  // also apply to its delivery URLs, without rewriting the original evidence.
+  expect(imageAudit.images.map(({ slug, number, image }) => ({ slug, number, image: productPhoto(image) }))).toEqual(selected);
   expect(imageAudit.images.every(image => image.width > 0 && image.height > 0)).toBe(true);
 });
 

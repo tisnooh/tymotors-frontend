@@ -1,0 +1,24 @@
+{
+  "reviewedOn": "2026-10-22",
+  "placeholder": "/images/products/photo-pending.svg",
+  "restrictions": [
+    {
+      "supplier": "SCP Automotive",
+      "slug": "bmw-logo-door-projectors",
+      "reason": "Supplier explicitly refused photo/content reproduction in reply 1a162a07affa4767 on 2026-10-22. Quarantine existing source-derived assets pending separately documented replacement rights.",
+      "images": [
+        "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842804/tymotors/products/hvtqoa2mfv40mn2gy1ww.png",
+        "https://res.cloudinary.com/dwsyixjux/image/upload/v1787859837/tymotors/products/ckvfckn89wcdd9fzaegj.png",
+        "https://res.cloudinary.com/dwsyixjux/image/upload/v1787812274/tymotors/products/o5ylil1cryn4uertnc89.webp",
+        "https://scpautomotive.co.uk/cdn/shop/files/BMW-LED-Door-Projector-_Pair_-BMW-Logo-SCP-Automotive-90141840.jpg?v=1736672443&width=2048"
+      ],
+      "cloudinaryPublicIds": [
+        "tymotors/products/hvtqoa2mfv40mn2gy1ww",
+        "tymotors/products/ckvfckn89wcdd9fzaegj",
+        "tymotors/products/o5ylil1cryn4uertnc89"
+      ],
+      "sourceHosts": ["scpautomotive.co.uk", "www.scpautomotive.co.uk"],
+      "sourceFileMarkers": ["BMW-LED-Door-Projector-_Pair_-BMW-Logo-SCP-Automotive-90141840"]
+    }
+  ]
+}

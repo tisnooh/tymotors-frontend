@@ -1,6 +1,7 @@
 import secondPhotos from '@/data/productSecondPhotos.json';
 import galleryAdditions from '@/data/productGalleryAdditions.json';
 import legacyFramedPhotos from '@/data/productLegacyFramedPhotos.json';
+import photoRestrictions from '@/data/productPhotoRestrictions.json';
 import { productPhoto, productPhotoContext } from './productPhoto';
 
 const legacyFramedImages = new Set(Object.values(legacyFramedPhotos).map(photo => photo.previousImage));
@@ -20,6 +21,12 @@ function presentedImages(images) {
 // numerical cap, preserving image 1 and unrelated catalogue images.
 export function productGallery(product) {
   const images = product?.images;
+  // A cleaned API response intentionally contains no declined photo URL.
+  // Keep its known pending-photo state visible without reviving the old asset.
+  if (Array.isArray(images) && images.length === 0
+    && photoRestrictions.restrictions.some(entry => entry.slug === product?.slug)) {
+    return [photoRestrictions.placeholder];
+  }
   const replacement = secondPhotos[product?.slug];
   if (!replacement || !Array.isArray(images) || images.length < 2
     || images[1] !== replacement.previousImage) return presentedImages(images);
