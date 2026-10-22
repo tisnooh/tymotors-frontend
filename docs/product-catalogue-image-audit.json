@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-21",
+  "date": "2026-10-22",
   "scope": "All currently selected public product-gallery images, including main photos, approved seller views and additions; not homepage editorial photos or vehicle-selector assets.",
   "status": "incomplete",
   "catalogueProducts": 40,
-  "selectedViews": 155,
-  "standaloneMainPhotos": 39,
+  "selectedViews": 156,
+  "standaloneMainPhotos": 40,
   "outstanding": [
-    "porsche-911-rear-spoiler needs a verified standalone source image of the exact 992GT3RW assembly. Its plate-frame lettering is cleaned, but the current image still shows the car. Browser/device layout QA remains unverified because acquisition of the local browser tab was rejected by browser policy. Changes were local at the 2026-10-21 audit snapshot; publication was authorized on 2026-10-22 and is reported separately."
+    "Porsche main now uses a reviewed generative extraction of the visible assembly, with the mounted source retained as view 2. This is not a photographed demounted supplier part or technical identity/fitment approval. Exact supplier evidence remains missing for this assembly and all six door projectors. Browser/device QA and publication of the new six-image repair are not claimed."
   ],
   "criteria": [
     "Main image shows the part or complete actual kit alone on a dark background; retain useful mounted photos as secondary views.",
@@ -18,10 +18,10 @@
   "evidence": {
     "catalogue": "GET https://tymotors-backend-eu.onrender.com/api/products?preview=true&limit=100&page=N; 40 products",
     "selection": "Actual productGallery/productPhoto modules loaded by assets/catalogue-image-audit-2026-10-21/catalogue.cjs",
-    "files": "155 files loaded and decoded, no errors; before and after contact sheets in assets/catalogue-image-audit-2026-10-21/",
-    "visual": "All 8 gallery sheets and 2 main-only sheets reviewed; mounted/suspicious views enlarged; five final WebP edits inspected full size.",
-    "prompts": "product-presentation-cleanup-prompts.json",
-    "verificationBoundary": "No current browser/mobile render verification or deployment claim."
+    "files": "Historical 155-view baseline retained; 40 live main images freshly downloaded and decoded on 2026-10-22, six new WebP files checked in public and build, one installed-source context added for 156 current local views.",
+    "visual": "Historical gallery review plus fresh 40-source comparison across eight sheets; six new outputs and two final WebP sheets reviewed. Evidence: assets/main-photo-recheck-2026-10-22/.",
+    "prompts": "product-presentation-cleanup-prompts.json; product-source-fidelity-2026-10-22.json",
+    "verificationBoundary": "317 tests in 11 suites and optimized build passed locally. No current browser/mobile render verification or publication of these six new repairs is claimed."
   },
   "knownSourceLimitations": [
     "CarPlay 12 title currently uses an 11.3-inch historical representative image. Removing its red promotional overlay does not validate or change the physical dimensions; an exact supplier reference remains required, as previously tracked in product-photo-completion.md.",
@@ -213,12 +213,14 @@
       "slug": "vw-golf7-gti-r-spoiler",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842866/tymotors/products/kw6jsvqplw6eetu4rp33.png",
-      "image": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842866/tymotors/products/kw6jsvqplw6eetu4rp33.png",
+      "image": "/images/products/source-fidelity/vw-golf7-gti-r-spoiler-source-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "retained-no-visible-extraneous-advertising",
-      "inspection": "contact-sheet",
-      "mainComposition": "part-or-complete-kit-only"
+      "review": "visually-compared-to-original-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "mainComposition": "part-or-complete-kit-only",
+      "sha256": "1b721cb573d37a315829b5074a894eb023a1982354f53a7a831ecd854e4b228f",
+      "technicalVerification": false
     },
     {
       "id": 18,
@@ -415,13 +417,28 @@
       "slug": "porsche-911-rear-spoiler",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871928/tymotors/products/il4hozpi5u14vqclnhya.png",
+      "image": "/images/products/source-fidelity/porsche-911-rear-spoiler-cutout-v2.webp",
+      "width": 1254,
+      "height": 1254,
+      "review": "visually-compared-to-mounted-source-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "sha256": "7b536ee9bf906240f42ebe6c330b4249f2819b5161067bf79d6259412b6e8552",
+      "mainComposition": "part-or-complete-kit-only",
+      "technicalVerification": false,
+      "sourceComposition": "retouched-visible-assembly-from-mounted-source"
+    },
+    {
+      "id": 156,
+      "slug": "porsche-911-rear-spoiler",
+      "number": 2,
+      "previousImage": "/images/products/presentation-clean/porsche-911-rear-spoiler-clean-v1.webp",
       "image": "/images/products/presentation-clean/porsche-911-rear-spoiler-clean-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "edited-and-visually-compared-to-input",
-      "inspection": "contact-sheet-and-full-size",
       "sha256": "96835c408ca62b9704f0d6951802cc18556a64d1c0cfe65821dbfe80e6d5c5fe",
-      "mainComposition": "mounted-vehicle-pending-standalone-source"
+      "review": "retained-installed-source-context-not-technical-validation",
+      "inspection": "full-size",
+      "technicalVerification": false
     },
     {
       "id": 36,
@@ -553,12 +570,14 @@
       "slug": "toyota-gr-yaris-grille",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842854/tymotors/products/c6k5nxojmm0bff2cgwe4.png",
-      "image": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842854/tymotors/products/c6k5nxojmm0bff2cgwe4.png",
+      "image": "/images/products/source-fidelity/toyota-gr-yaris-grille-source-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "retained-no-visible-extraneous-advertising",
-      "inspection": "contact-sheet",
-      "mainComposition": "part-or-complete-kit-only"
+      "review": "visually-compared-to-original-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "mainComposition": "part-or-complete-kit-only",
+      "sha256": "a7f484bc3d79fe79f5276bbfe975c5cf6a30847fcbfe0f5e6efd46e30086af41",
+      "technicalVerification": false
     },
     {
       "id": 48,
@@ -632,12 +651,14 @@
       "slug": "mercedes-w205-panamericana-grille",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842825/tymotors/products/da2ufsypznbc4thycrf4.png",
-      "image": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842825/tymotors/products/da2ufsypznbc4thycrf4.png",
+      "image": "/images/products/source-fidelity/mercedes-w205-panamericana-grille-source-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "retained-no-visible-extraneous-advertising",
-      "inspection": "contact-sheet",
-      "mainComposition": "part-or-complete-kit-only"
+      "review": "visually-compared-to-original-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "mainComposition": "part-or-complete-kit-only",
+      "sha256": "7f16254104a88af82d77426c78e2ec7d0e000ccbea16b9f369a6d690ff42306e",
+      "technicalVerification": false
     },
     {
       "id": 55,
@@ -970,12 +991,14 @@
       "slug": "audi-a4-b9-rs4-grille",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842772/tymotors/products/oia1nvtcvyv1jnznlwk8.png",
-      "image": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842772/tymotors/products/oia1nvtcvyv1jnznlwk8.png",
+      "image": "/images/products/source-fidelity/audi-a4-b9-rs4-grille-source-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "retained-no-visible-extraneous-advertising",
-      "inspection": "contact-sheet",
-      "mainComposition": "part-or-complete-kit-only"
+      "review": "visually-compared-to-original-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "mainComposition": "part-or-complete-kit-only",
+      "sha256": "030b71371eda727afacd291e2b0ecc9035b844182ce563526c4bfe7dfb3ca4c1",
+      "technicalVerification": false
     },
     {
       "id": 85,
@@ -1692,12 +1715,14 @@
       "slug": "tire-inflator-pro",
       "number": 1,
       "previousImage": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842848/tymotors/products/docw8k5am9g6lu9to32o.png",
-      "image": "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842848/tymotors/products/docw8k5am9g6lu9to32o.png",
+      "image": "/images/products/source-fidelity/tire-inflator-pro-source-v1.webp",
       "width": 1254,
       "height": 1254,
-      "review": "retained-no-visible-extraneous-advertising",
-      "inspection": "contact-sheet",
-      "mainComposition": "part-or-complete-kit-only"
+      "review": "visually-compared-to-original-not-technical-validation",
+      "inspection": "original-source-and-full-size-output",
+      "mainComposition": "part-or-complete-kit-only",
+      "sha256": "3e39f9c2035fd2c09391d5579fab5e2b07baaef12e1ff0b2615750fefa997098",
+      "technicalVerification": false
     },
     {
       "id": 149,

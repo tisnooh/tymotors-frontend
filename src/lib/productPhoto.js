@@ -5,3 +5,9 @@ import edits from '@/data/productPhotoEdits.json';
 export function productPhoto(source) {
   return edits[source]?.image || source;
 }
+
+// A reviewed cutout may keep the real installed photograph as a secondary view.
+// Match the original URL exactly so later catalogue edits always take priority.
+export function productPhotoContext(source) {
+  return edits[source]?.contextImage;
+}

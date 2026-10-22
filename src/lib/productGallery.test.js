@@ -126,7 +126,7 @@ test('approved second-view refresh still removes a legacy frame later in its gal
   expect(result).toEqual(['/main.png', secondPhotos[slug].image, ...additions[slug].map(photo => photo.image)]);
 });
 
-test('the 40-product audit preserves all 155 retained views and removes exactly ten legacy frames', () => {
+test('the 40-product audit preserves 155 retained views plus the installed Porsche context, excluding ten legacy frames', () => {
   expect(catalogueAudit).toHaveLength(40);
   const excluded = new Set(Object.values(legacyPhotos).map(photo => photo.previousImage));
   let retained = 0;
@@ -143,6 +143,6 @@ test('the 40-product audit preserves all 155 retained views and removes exactly 
     if (replacement) expect(gallery[1]).toBe(productPhoto(replacement.image));
     for (const view of additions[product.slug] || []) expect(gallery).toContain(productPhoto(view.image));
   }
-  expect(retained).toBe(155);
+  expect(retained).toBe(156);
   expect(removed).toBe(10);
 });

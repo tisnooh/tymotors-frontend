@@ -1,9 +1,11 @@
 {
   "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871928/tymotors/products/il4hozpi5u14vqclnhya.png": {
-    "image": "/images/products/presentation-clean/porsche-911-rear-spoiler-clean-v1.webp",
-    "sha256": "96835c408ca62b9704f0d6951802cc18556a64d1c0cfe65821dbfe80e6d5c5fe",
+    "image": "/images/products/source-fidelity/porsche-911-rear-spoiler-cutout-v2.webp",
+    "sha256": "7b536ee9bf906240f42ebe6c330b4249f2819b5161067bf79d6259412b6e8552",
     "width": 1254,
-    "height": 1254
+    "height": 1254,
+    "contextImage": "/images/products/presentation-clean/porsche-911-rear-spoiler-clean-v1.webp",
+    "contextSha256": "96835c408ca62b9704f0d6951802cc18556a64d1c0cfe65821dbfe80e6d5c5fe"
   },
   "https://res.cloudinary.com/dwsyixjux/image/upload/v1787871921/tymotors/products/bgrz6vprhzayzlyhfvhv.png": {
     "image": "/images/products/presentation-clean/dashcam-4k-pro-clean-v1.webp",
@@ -58,5 +60,35 @@
     "sha256": "c45854337a713ab842d6a3d99388836b10a11ea5e836d03e89fd2aa51404b3c3",
     "width": 1536,
     "height": 1024
+  },
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842772/tymotors/products/oia1nvtcvyv1jnznlwk8.png": {
+    "image": "/images/products/source-fidelity/audi-a4-b9-rs4-grille-source-v1.webp",
+    "sha256": "030b71371eda727afacd291e2b0ecc9035b844182ce563526c4bfe7dfb3ca4c1",
+    "width": 1254,
+    "height": 1254
+  },
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842825/tymotors/products/da2ufsypznbc4thycrf4.png": {
+    "image": "/images/products/source-fidelity/mercedes-w205-panamericana-grille-source-v1.webp",
+    "sha256": "7f16254104a88af82d77426c78e2ec7d0e000ccbea16b9f369a6d690ff42306e",
+    "width": 1254,
+    "height": 1254
+  },
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842854/tymotors/products/c6k5nxojmm0bff2cgwe4.png": {
+    "image": "/images/products/source-fidelity/toyota-gr-yaris-grille-source-v1.webp",
+    "sha256": "a7f484bc3d79fe79f5276bbfe975c5cf6a30847fcbfe0f5e6efd46e30086af41",
+    "width": 1254,
+    "height": 1254
+  },
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842848/tymotors/products/docw8k5am9g6lu9to32o.png": {
+    "image": "/images/products/source-fidelity/tire-inflator-pro-source-v1.webp",
+    "sha256": "3e39f9c2035fd2c09391d5579fab5e2b07baaef12e1ff0b2615750fefa997098",
+    "width": 1254,
+    "height": 1254
+  },
+  "https://res.cloudinary.com/dwsyixjux/image/upload/v1787842866/tymotors/products/kw6jsvqplw6eetu4rp33.png": {
+    "image": "/images/products/source-fidelity/vw-golf7-gti-r-spoiler-source-v1.webp",
+    "sha256": "1b721cb573d37a315829b5074a894eb023a1982354f53a7a831ecd854e4b228f",
+    "width": 1254,
+    "height": 1254
   }
 }

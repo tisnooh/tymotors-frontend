@@ -1,7 +1,7 @@
 import secondPhotos from '@/data/productSecondPhotos.json';
 import galleryAdditions from '@/data/productGalleryAdditions.json';
 import legacyFramedPhotos from '@/data/productLegacyFramedPhotos.json';
-import { productPhoto } from './productPhoto';
+import { productPhoto, productPhotoContext } from './productPhoto';
 
 const legacyFramedImages = new Set(Object.values(legacyFramedPhotos).map(photo => photo.previousImage));
 
@@ -10,6 +10,8 @@ const legacyFramedImages = new Set(Object.values(legacyFramedPhotos).map(photo =
 function presentedImages(images) {
   if (!Array.isArray(images)) return images;
   const presented = images.filter(src => !legacyFramedImages.has(src)).map(productPhoto);
+  const context = productPhotoContext(images[0]);
+  if (context && presented.length && !presented.includes(context)) presented.push(context);
   return presented.length === images.length && presented.every((src, index) => src === images[index]) ? images : presented;
 }
 

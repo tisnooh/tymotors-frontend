@@ -1,5 +1,10 @@
 # Catalogue image audit - 2026-10-21
 
+Historical snapshot. The subsequent source-by-source recheck and six local
+repairs are documented in `source-fidelity-repair-2026-10-22.md`. The adjacent
+JSON now follows the current local selection; this text preserves the earlier
+155-view / 39-part-only baseline, not a current completion claim.
+
 Scope: every currently selected public product-gallery image, not only the Golf.
 The public API returned 40 products; the actual runtime gallery helpers selected
 155 images. Every file loaded and decoded successfully. All eight contact sheets
