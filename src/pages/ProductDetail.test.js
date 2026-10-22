@@ -83,6 +83,10 @@ test.each(catalogueAudit.map(product => [product.slug, product]))('%s renders on
   await act(async () => root.render(<ProductDetail/>));
   const gallery = productGallery(product);
   expect(host.querySelector('img').getAttribute('src')).toBe(productPhoto(product.images[0]));
+  expect(document.head.querySelector('meta[property="og:image"]').getAttribute('content'))
+    .toBe(new URL(gallery[0], window.location.origin).href);
+  const schema = JSON.parse(document.head.querySelector('script[data-tymotors-product="true"]').textContent);
+  expect(schema.image).toEqual(gallery.map(photo => new URL(photo, window.location.origin).href));
   const thumbs = [...host.querySelectorAll('[data-testid="product-image-thumb"]')];
   expect(thumbs).toHaveLength(gallery.length > 1 ? gallery.length : 0);
   for (const [index, thumb] of thumbs.entries()) {

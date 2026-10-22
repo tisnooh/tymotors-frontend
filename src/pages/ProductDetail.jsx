@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 import LoadedImage from '@/components/shared/LoadedImage';
 import { productGallery } from '@/lib/productGallery';
-import { productPhoto } from '@/lib/productPhoto';
 
 function Trust({ icon, title, sub }) {
   return (
@@ -205,7 +204,8 @@ export default function ProductDetail() {
     upsertMeta('meta[name="description"]', { name: 'description' }, description);
     upsertMeta('meta[property="og:title"]', { property: 'og:title' }, `${product.name} | TYMotors`);
     upsertMeta('meta[property="og:description"]', { property: 'og:description' }, description);
-    const mainPhoto = productPhoto(product.images?.[0]);
+    const presentedPhotos = productGallery(product) || [];
+    const mainPhoto = presentedPhotos[0];
     upsertMeta('meta[property="og:image"]', { property: 'og:image' }, mainPhoto ? new URL(mainPhoto, window.location.origin).href : '');
     upsertMeta('meta[property="og:url"]', { property: 'og:url' }, canonicalUrl);
     upsertMeta('meta[property="og:type"]', { property: 'og:type' }, 'product');
@@ -233,7 +233,7 @@ export default function ProductDetail() {
       '@type': 'Product',
       name: product.name,
       description: product.description,
-      image: product.images || [],
+      image: presentedPhotos.map(photo => new URL(photo, window.location.origin).href),
       sku: product.sku,
       brand: { '@type': 'Brand', name: 'TYMotors' },
       offers: {
