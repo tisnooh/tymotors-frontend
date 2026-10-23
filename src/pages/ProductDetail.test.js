@@ -7,7 +7,7 @@ import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
 import catalogueAudit from '@/lib/__fixtures__/productGalleryAudit.json';
 import { productGallery } from '@/lib/productGallery';
 import { productPhoto } from '@/lib/productPhoto';
-jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn() } }));
+jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn(), checkCompatibility: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'fixture' }), useNavigate: () => jest.fn(), Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: jest.fn(), toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
@@ -75,6 +75,56 @@ test('draft remains disabled when sandbox availability is not granted by API', a
   await act(async () => root.render(<ProductDetail/>));
   expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
   expect(host.textContent).toContain('Bientôt disponible');
+});
+
+const setField = (label, value) => act(() => {
+  const element = host.querySelector(`[aria-label="${label}"]`);
+  const prototype = element.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+  Object.getOwnPropertyDescriptor(prototype, 'value').set.call(element, value);
+  element.dispatchEvent(new Event('change', { bubbles: true }));
+  if (element.tagName === 'INPUT') element.dispatchEvent(new Event('input', { bubbles: true }));
+});
+
+async function renderFitmentFixture() {
+  Products.get.mockResolvedValue({ id: 'fixture', slug: 'fixture', name: 'Pièce test', description: 'Montage à confirmer', status: 'draft', test_purchase: true, max_order_quantity: 20, stock: 0, price: 99, images: [], currency: 'EUR', compatible_brands: ['bmw'], compatibilities: [{
+    brand_slug: 'bmw', model: 'Série 3', chassis: 'F30', year_from: 2013, year_to: 2019,
+    body_types: ['Berline'], required_trim: ['M Sport'], excluded_trims: [],
+    facelift: 'lci', camera_compatible: false, parking_sensor_compatible: true, is_verified: false,
+  }] });
+  Products.list.mockResolvedValue({ items: [] });
+  await act(async () => root.render(<ProductDetail/>));
+  setField('Marque du véhicule', 'bmw');
+  setField('Modèle du véhicule', 'Série 3');
+  setField('Châssis du véhicule', 'F30');
+}
+
+test('collects constrained vehicle details without claiming brand-wide fitment', async () => {
+  await renderFitmentFixture();
+  expect(host.textContent).toContain('Marques concernées');
+  expect(host.textContent).toContain('ne constituent pas une compatibilité avec tous leurs modèles');
+  setField('Année du véhicule', '2016');
+  setField('Carrosserie du véhicule', 'Berline');
+  setField('Finition du véhicule', 'M Sport');
+  setField('Phase du véhicule', 'lci');
+  setField('Caméra du véhicule', 'no');
+  setField('Capteurs de stationnement', 'yes');
+  Products.checkCompatibility.mockResolvedValue({ status: 'confirm', reason: 'Référence à confirmer' });
+  await act(async () => [...host.querySelectorAll('button')].find(button => button.textContent.includes('Vérifier la compatibilité')).click());
+  expect(Products.checkCompatibility).toHaveBeenCalledWith('fixture', expect.objectContaining({
+    year: 2016, chassis: 'F30', body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: true,
+  }));
+  expect(host.textContent).toContain('Compatibilité à confirmer');
+});
+
+test('does not apply a late compatible response after the vehicle selection changes', async () => {
+  await renderFitmentFixture();
+  let resolve;
+  Products.checkCompatibility.mockImplementation(() => new Promise(done => { resolve = done; }));
+  act(() => [...host.querySelectorAll('button')].find(button => button.textContent.includes('Vérifier la compatibilité')).click());
+  setField('Châssis du véhicule', '');
+  await act(async () => resolve({ status: 'compatible', reason: 'STALE FITMENT RESPONSE' }));
+  expect(host.textContent).not.toContain('STALE FITMENT RESPONSE');
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
 });
 
 test.each(catalogueAudit.map(product => [product.slug, product]))('%s renders only retained photos throughout the detail gallery', async (slug, product) => {

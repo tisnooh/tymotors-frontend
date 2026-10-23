@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Products } from '@/lib/api';
@@ -54,6 +54,8 @@ function Gallery({ images, name, activeImg, setActiveImg, badges }) {
 
 function CompatibilityChecker({ product, onSelection }) {
   const detailed = product.compatibilities || [];
+  const selectionVersion = useRef(0);
+  useEffect(() => () => { selectionVersion.current += 1; }, []);
   const brands = [...new Set([...detailed.map((item) => item.brand_slug), ...(product.compatible_brands || [])])];
   const [vehicle, setVehicle] = useState(() => {
     const saved = readVehicleSelection();
@@ -61,14 +63,19 @@ function CompatibilityChecker({ product, onSelection }) {
     const model = detailed.some((item) => item.brand_slug === brand_slug && item.model === saved.model) ? saved.model : '';
     const chassis = detailed.some((item) => item.brand_slug === brand_slug && item.model === model
       && [item.chassis, item.generation].includes(saved.generation)) ? saved.generation : '';
-    return { brand_slug, model, chassis, year: chassis ? saved.year : '' };
+    return { brand_slug, model, chassis, year: chassis ? saved.year : '', body_type: '', trim: '', facelift: '', has_camera: '', has_parking_sensors: '' };
   });
   const [result, setResult] = useState(null);
   const [checking, setChecking] = useState(false);
-  const models = [...new Set(detailed.filter((item) => item.brand_slug === vehicle.brand_slug).map((item) => item.model))];
-  const chassis = [...new Set(detailed.filter((item) => item.brand_slug === vehicle.brand_slug && item.model === vehicle.model).map((item) => item.chassis))];
+  const models = [...new Set(detailed.filter((item) => item.brand_slug === vehicle.brand_slug).map((item) => item.model).filter(Boolean))];
+  const chassis = [...new Set(detailed.filter((item) => item.brand_slug === vehicle.brand_slug && item.model === vehicle.model).map((item) => item.chassis).filter(Boolean))];
+  const selectedRules = detailed.filter(item => item.brand_slug === vehicle.brand_slug && item.model === vehicle.model && item.chassis === vehicle.chassis);
+  const bodyTypes = [...new Set(selectedRules.flatMap(item => item.body_types || []))];
+  const needsTrim = selectedRules.some(item => item.required_trim?.length || item.excluded_trims?.length);
+  const needsPhase = selectedRules.some(item => ['pre-lci', 'lci'].includes(item.facelift));
 
   const update = (key, value) => {
+    selectionVersion.current += 1;
     setResult(null);
     onSelection?.(null, null);
     setVehicle((current) => {
@@ -77,6 +84,7 @@ function CompatibilityChecker({ product, onSelection }) {
       [key]: value,
       ...(key === 'brand_slug' ? { model: '', chassis: '', year: '' } : {}),
       ...(key === 'model' ? { chassis: '', year: '' } : {}),
+      ...(['brand_slug', 'model', 'chassis'].includes(key) ? { body_type: '', trim: '', facelift: '', has_camera: '', has_parking_sensors: '' } : {}),
       };
       saveVehicleSelection({ brand: next.brand_slug, model: next.model, generation: next.chassis, year: next.year });
       return next;
@@ -85,16 +93,25 @@ function CompatibilityChecker({ product, onSelection }) {
 
   const check = async () => {
     if (!vehicle.brand_slug) return;
+    const version = selectionVersion.current;
+    const selection = {
+      ...vehicle,
+      year: vehicle.year ? Number(vehicle.year) : null,
+      body_type: vehicle.body_type || null,
+      trim: vehicle.trim || null,
+      facelift: vehicle.facelift || null,
+      has_camera: vehicle.has_camera === '' ? null : vehicle.has_camera === 'yes',
+      has_parking_sensors: vehicle.has_parking_sensors === '' ? null : vehicle.has_parking_sensors === 'yes',
+    };
     setChecking(true);
     try {
-      const data = await Products.checkCompatibility(product.slug, {
-        ...vehicle,
-        year: vehicle.year ? Number(vehicle.year) : null,
-      });
+      const data = await Products.checkCompatibility(product.slug, selection);
+      if (version !== selectionVersion.current) return;
       setResult(data);
       saveVehicleSelection({ brand: vehicle.brand_slug, model: vehicle.model, generation: vehicle.chassis, year: vehicle.year });
-      onSelection?.({ ...vehicle, year: vehicle.year ? Number(vehicle.year) : null }, data.status);
+      onSelection?.(selection, data.status);
     } catch (error) {
+      if (version !== selectionVersion.current) return;
       setResult({ status: 'unknown', reason: 'La vérification est indisponible. Contactez-nous avant de commander.' });
     } finally {
       setChecking(false);
@@ -132,6 +149,20 @@ function CompatibilityChecker({ product, onSelection }) {
           {chassis.map((value) => <option key={value} value={value}>{value}</option>)}
         </select>
         <input aria-label="Année du véhicule" type="number" min="1980" max="2035" placeholder="Année" value={vehicle.year} onChange={(event) => update('year', event.target.value)} className="h-11 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white" />
+        {bodyTypes.length > 0 && <select aria-label="Carrosserie du véhicule" value={vehicle.body_type} onChange={event => update('body_type', event.target.value)} className="h-11 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white">
+          <option value="">Carrosserie à préciser</option>
+          {bodyTypes.map(value => <option key={value} value={value}>{value}</option>)}
+          <option value="other">Autre carrosserie</option>
+        </select>}
+        {needsTrim && <input aria-label="Finition du véhicule" placeholder="Finition exacte (ex. M Sport)" value={vehicle.trim} onChange={event => update('trim', event.target.value)} className="h-11 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white" />}
+        {needsPhase && <select aria-label="Phase du véhicule" value={vehicle.facelift} onChange={event => update('facelift', event.target.value)} className="h-11 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white">
+          <option value="">Phase à préciser</option><option value="pre-lci">Avant restylage</option><option value="lci">Après restylage</option>
+        </select>}
+        {['has_camera', 'has_parking_sensors'].map((key, index) => selectedRules.some(item => item[index === 0 ? 'camera_compatible' : 'parking_sensor_compatible'] != null) && (
+          <select key={key} aria-label={index === 0 ? 'Caméra du véhicule' : 'Capteurs de stationnement'} value={vehicle[key]} onChange={event => update(key, event.target.value)} className="h-11 rounded-lg border border-[#232B3A] bg-[#0F1115] px-3 text-sm text-white">
+            <option value="">{index === 0 ? 'Caméra avant : à préciser' : 'Capteurs : à préciser'}</option><option value="yes">Présents</option><option value="no">Absents</option>
+          </select>
+        ))}
       </div>
       <button type="button" onClick={check} disabled={!vehicle.brand_slug || checking} className="mt-3 ty-btn-line h-10 w-full text-xs uppercase tracking-[0.16em] disabled:opacity-40">
         {checking ? 'Vérification…' : 'Vérifier la compatibilité'}
@@ -328,11 +359,12 @@ export default function ProductDetail() {
             {product.test_purchase && <p role="note" className="mt-4 text-sm text-[#F2C94C]">Essai uniquement : aucun débit réel ni expédition. Le stock et la compatibilité restent à valider avant la vente.</p>}
 
             <div className="mt-6 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-ty-textLow font-mono uppercase tracking-[0.18em]">{t('product.compatible_with')}:</span>
+              <span className="text-xs text-ty-textLow font-mono uppercase tracking-[0.18em]">Marques concernées :</span>
               {product.compatible_brands?.map((b) => (
                 <Link key={b} to={`/brands/${b}`} className="ty-chip">{b}</Link>
               ))}
             </div>
+            <p className="mt-2 text-xs text-ty-textLow">Ces marques ne constituent pas une compatibilité avec tous leurs modèles.</p>
 
             {isPreview ? (
               <div className="mt-6 rounded-xl border border-[#F2C94C]/30 bg-[#F2C94C]/5 p-4 text-sm text-[#F2C94C]">
