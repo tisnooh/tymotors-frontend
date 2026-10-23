@@ -7,13 +7,14 @@ import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
 import catalogueAudit from '@/lib/__fixtures__/productGalleryAudit.json';
 import { productGallery } from '@/lib/productGallery';
 import { productPhoto } from '@/lib/productPhoto';
+import { readVehicleSelection, saveVehicleSelection } from '@/lib/vehicleSelection';
 jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn(), checkCompatibility: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'fixture' }), useNavigate: () => jest.fn(), Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
 jest.mock('@/contexts/AppContext', () => ({ useApp: () => ({ addToCart: jest.fn(), toggleWishlist: jest.fn(), isInWishlist: () => false }) }));
 jest.mock('@/components/shared/ProductCard', () => ({ ProductCard: () => null }));
 let root, host;
-beforeEach(() => { global.IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement('div'); root = createRoot(host); jest.clearAllMocks(); });
+beforeEach(() => { global.IS_REACT_ACT_ENVIRONMENT = true; localStorage.clear(); host = document.createElement('div'); root = createRoot(host); jest.clearAllMocks(); });
 afterEach(() => { act(() => root.unmount()); });
 
 test('seller photo 2 changes without replacing the first product photo', async () => {
@@ -85,17 +86,19 @@ const setField = (label, value) => act(() => {
   if (element.tagName === 'INPUT') element.dispatchEvent(new Event('input', { bubbles: true }));
 });
 
-async function renderFitmentFixture() {
+async function renderFitmentFixture(resetFields = true, ruleOverrides = {}) {
   Products.get.mockResolvedValue({ id: 'fixture', slug: 'fixture', name: 'Pièce test', description: 'Montage à confirmer', status: 'draft', test_purchase: true, max_order_quantity: 20, stock: 0, price: 99, images: [], currency: 'EUR', compatible_brands: ['bmw'], compatibilities: [{
     brand_slug: 'bmw', model: 'Série 3', chassis: 'F30', year_from: 2013, year_to: 2019,
     body_types: ['Berline'], required_trim: ['M Sport'], excluded_trims: [],
-    facelift: 'lci', camera_compatible: false, parking_sensor_compatible: true, is_verified: false,
+    facelift: 'lci', camera_compatible: false, parking_sensor_compatible: true, is_verified: false, ...ruleOverrides,
   }] });
   Products.list.mockResolvedValue({ items: [] });
   await act(async () => root.render(<ProductDetail/>));
-  setField('Marque du véhicule', 'bmw');
-  setField('Modèle du véhicule', 'Série 3');
-  setField('Châssis du véhicule', 'F30');
+  if (resetFields) {
+    setField('Marque du véhicule', 'bmw');
+    setField('Modèle du véhicule', 'Série 3');
+    setField('Châssis du véhicule', 'F30');
+  }
 }
 
 test('collects constrained vehicle details without claiming brand-wide fitment', async () => {
@@ -114,6 +117,57 @@ test('collects constrained vehicle details without claiming brand-wide fitment',
     year: 2016, chassis: 'F30', body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: true,
   }));
   expect(host.textContent).toContain('Compatibilité à confirmer');
+  expect(readVehicleSelection()).toEqual({ brand: 'bmw', model: 'Série 3', chassis: 'F30', generation: 'F30', year: '2016',
+    body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: true });
+});
+
+test('restores the complete saved vehicle on a matching product and saves false equipment after checking', async () => {
+  const saved = { brand: 'bmw', model: 'Série 3', generation: 'F30', year: '2016', body_type: 'Berline',
+    trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: false };
+  saveVehicleSelection(saved);
+  await renderFitmentFixture(false);
+  expect(host.querySelector('[aria-label="Carrosserie du véhicule"]').value).toBe('Berline');
+  expect(host.querySelector('[aria-label="Finition du véhicule"]').value).toBe('M Sport');
+  expect(host.querySelector('[aria-label="Phase du véhicule"]').value).toBe('lci');
+  expect(host.querySelector('[aria-label="Caméra du véhicule"]').value).toBe('no');
+  expect(host.querySelector('[aria-label="Capteurs de stationnement"]').value).toBe('no');
+  Products.checkCompatibility.mockResolvedValue({ status: 'confirm' });
+  await act(async () => [...host.querySelectorAll('button')].find(button => button.textContent.includes('Vérifier la compatibilité')).click());
+  expect(Products.checkCompatibility).toHaveBeenCalledWith('fixture', expect.objectContaining({ generation: 'F30', facelift: 'lci', has_camera: false, has_parking_sensors: false }));
+  expect(readVehicleSelection()).toEqual({ ...saved, chassis: 'F30' });
+  setField('Caméra du véhicule', '');
+  expect(readVehicleSelection()).toMatchObject({ facelift: 'lci', body_type: 'Berline', trim: 'M Sport', has_camera: null, has_parking_sensors: false });
+  setField('Châssis du véhicule', '');
+  expect(readVehicleSelection()).toMatchObject({ generation: '', body_type: '', trim: '', facelift: '', has_camera: null, has_parking_sensors: null });
+});
+
+test('saved details of a different chassis are not applied to the product', async () => {
+  saveVehicleSelection({ brand: 'bmw', model: 'Série 3', generation: 'G20', year: '2020', body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: true });
+  await renderFitmentFixture(false);
+  expect(host.querySelector('[aria-label="Châssis du véhicule"]').value).toBe('');
+  expect(host.querySelector('[aria-label="Année du véhicule"]').value).toBe('');
+  expect(host.querySelector('[aria-label="Carrosserie du véhicule"]')).toBeNull();
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
+});
+
+test('a distinct generation label does not replace the saved chassis on the product', async () => {
+  const saved = { brand: 'bmw', model: 'Série 3', generation: 'F30 phase 2', chassis: 'F30', year: '2016',
+    body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: false };
+  saveVehicleSelection(saved);
+  await renderFitmentFixture(false, { generation: 'F30 phase 2' });
+  expect(host.querySelector('[aria-label="Châssis du véhicule"]').value).toBe('F30');
+  Products.checkCompatibility.mockResolvedValue({ status: 'confirm' });
+  await act(async () => [...host.querySelectorAll('button')].find(button => button.textContent.includes('Vérifier la compatibilité')).click());
+  expect(Products.checkCompatibility).toHaveBeenCalledWith('fixture', expect.objectContaining({ chassis: 'F30', generation: 'F30 phase 2', facelift: 'lci', has_camera: false }));
+  expect(readVehicleSelection()).toEqual(saved);
+});
+
+test.each(['G20', ''])('an explicit conflicting or unknown chassis %j is not replaced using the generation label', async chassis => {
+  saveVehicleSelection({ brand: 'bmw', model: 'Série 3', generation: 'F30', chassis, year: '2016', facelift: 'lci', has_camera: true });
+  await renderFitmentFixture(false);
+  expect(host.querySelector('[aria-label="Châssis du véhicule"]').value).toBe('');
+  expect(host.querySelector('[aria-label="Année du véhicule"]').value).toBe('');
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
 });
 
 test('does not apply a late compatible response after the vehicle selection changes', async () => {

@@ -69,25 +69,26 @@ export function useVehicleSelection() {
   const [brand, setBrandState] = useState(initial.brand);
   const [model, setModelState] = useState(initial.model);
   const [generation, setGenerationState] = useState(initial.generation);
-  const [details, setDetails] = useState({ year: initial.year, body_type: initial.body_type, trim: initial.trim || '', has_camera: initial.has_camera ?? null, has_parking_sensors: initial.has_parking_sensors ?? null });
+  const [details, setDetails] = useState({ year: initial.year, body_type: initial.body_type, trim: initial.trim || '', facelift: initial.facelift, has_camera: initial.has_camera ?? null, has_parking_sensors: initial.has_parking_sensors ?? null,
+    ...(Object.prototype.hasOwnProperty.call(initial, 'chassis') ? { chassis: initial.chassis } : {}) });
   const models = useCompatibility(brand);
 
   const setBrand = (value) => {
     setBrandState(value);
     setModelState('');
     setGenerationState('');
-    setDetails({ year: '', body_type: '', trim: '', has_camera: null, has_parking_sensors: null });
+    setDetails({ year: '', body_type: '', trim: '', facelift: '', has_camera: null, has_parking_sensors: null });
   };
 
   const setModel = (value) => {
     setModelState(value);
     setGenerationState('');
-    setDetails({ year: '', body_type: '', trim: '', has_camera: null, has_parking_sensors: null });
+    setDetails({ year: '', body_type: '', trim: '', facelift: '', has_camera: null, has_parking_sensors: null });
   };
 
   const setGeneration = (value) => {
     setGenerationState(value);
-    setDetails({ year: '', body_type: '', trim: '', has_camera: null, has_parking_sensors: null });
+    setDetails({ year: '', body_type: '', trim: '', facelift: '', has_camera: null, has_parking_sensors: null });
   };
 
   useEffect(() => {

@@ -1,12 +1,16 @@
+import { normalizeVehicleSelection } from '@/lib/vehicleSelection';
+
 export function vehiclePayload(selection) {
-  const year = Number(selection.year);
+  const cleaned = normalizeVehicleSelection(selection);
   return {
-    brand_slug: selection.brand, model: selection.model, chassis: selection.generation,
-    generation: selection.generation,
-    year: selection.year && Number.isInteger(year) && year >= 1950 && year <= 2100 ? year : null,
-    body_type: selection.body_type || null, trim: selection.trim || null,
-    has_camera: selection.has_camera ?? null,
-    has_parking_sensors: selection.has_parking_sensors ?? null,
+    brand_slug: cleaned.brand, model: cleaned.model || null,
+    chassis: (Object.prototype.hasOwnProperty.call(cleaned, 'chassis') ? cleaned.chassis : cleaned.generation) || null,
+    generation: cleaned.generation || null,
+    year: cleaned.year ? Number(cleaned.year) : null,
+    body_type: cleaned.body_type || null, trim: cleaned.trim || null,
+    facelift: cleaned.facelift || null,
+    has_camera: cleaned.has_camera,
+    has_parking_sensors: cleaned.has_parking_sensors,
   };
 }
 
@@ -18,6 +22,7 @@ export function checkedFit(result, vehicle) {
   if (!vehicle.year || !vehicle.model || !vehicle.chassis ||
     (rule.body_types?.length && !vehicle.body_type) ||
     ((rule.required_trim?.length || rule.excluded_trims?.length) && !vehicle.trim) ||
+    (['pre-lci', 'lci'].includes(rule.facelift) && rule.facelift !== vehicle.facelift) ||
     (rule.camera_compatible === false && vehicle.has_camera == null) ||
     (rule.parking_sensor_compatible === false && vehicle.has_parking_sensors == null)) return 'confirm';
   return 'compatible';

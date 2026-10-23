@@ -175,3 +175,13 @@ test('explicit unknown/false equipment values are not converted into positive op
   expect(Products.list.mock.calls.at(-1)[0]).not.toHaveProperty('has_camera');
   expect(Products.list.mock.calls.at(-1)[0]).not.toHaveProperty('trim');
 });
+
+test('phase and false equipment survive catalogue filtering, verification and the cart call', async () => {
+  const saved = { ...selection, chassis: 'W177', generation: 'W177 phase 1', facelift: 'pre-lci', has_camera: false, has_parking_sensors: false };
+  await render(saved);
+  expect(Products.list.mock.calls.at(-1)[0]).toMatchObject({ chassis: 'W177', facelift: 'pre-lci', has_camera: false, has_parking_sensors: false });
+  await choose();
+  expect(Products.checkCompatibility).toHaveBeenCalledWith(part.slug, vehiclePayload(saved));
+  await act(async () => cartButton().click());
+  expect(addToCart).toHaveBeenCalledWith(part.id, 1, expect.objectContaining({ chassis: 'W177', generation: 'W177 phase 1', facelift: 'pre-lci', has_camera: false, has_parking_sensors: false }));
+});

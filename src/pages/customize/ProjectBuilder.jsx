@@ -55,10 +55,11 @@ export function ProjectBuilder({ selection, brandName, activeCategory, onCategor
   useEffect(() => {
     let cancelled = false;
     setCatalogue({ loading: true, error: false, products: [], total: 0 });
-    const args = { brand: selection.brand, model: selection.model, chassis: selection.generation, strict_vehicle: true, limit: PAGE_SIZE, page };
+    const args = { brand: selection.brand, model: selection.model, chassis: vehicle.chassis, strict_vehicle: true, limit: PAGE_SIZE, page };
     if (vehicle.year) args.year = vehicle.year;
     if (vehicle.body_type) args.body_type = vehicle.body_type;
     if (vehicle.trim) args.trim = vehicle.trim;
+    if (vehicle.facelift) args.facelift = vehicle.facelift;
     if (vehicle.has_camera != null) args.has_camera = vehicle.has_camera;
     if (vehicle.has_parking_sensors != null) args.has_parking_sensors = vehicle.has_parking_sensors;
     if (category !== 'all') args.category = category;
@@ -70,7 +71,7 @@ export function ProjectBuilder({ selection, brandName, activeCategory, onCategor
       setCatalogue({ loading: false, error: false, products: data.items, total: Number.isInteger(data.total) && data.total >= data.items.length ? data.total : data.items.length });
     }).catch(() => { if (!cancelled) setCatalogue({ loading: false, error: true, products: [], total: 0 }); });
     return () => { cancelled = true; };
-  }, [category, page, retry, selection.brand, selection.model, selection.generation, vehicle.year, vehicle.body_type, vehicle.trim, vehicle.has_camera, vehicle.has_parking_sensors]);
+  }, [category, page, retry, selection.brand, selection.model, selection.generation, vehicle.chassis, vehicle.year, vehicle.body_type, vehicle.trim, vehicle.facelift, vehicle.has_camera, vehicle.has_parking_sensors]);
 
   const remove = id => { if (!submitting.current) setItems(current => current.filter(item => item.product.id !== id)); };
   const select = async product => {

@@ -49,11 +49,26 @@ export const Compatibility = {
   list: (brand) => api.get('/compatibility', { params: brand ? { brand } : {} }).then((r) => r.data),
 };
 
+// A hydrated cart vehicle may contain display-only compatibility labels.
+// Send only facts accepted by VehicleSelection; the server recomputes fitment.
+const cartVehicleFacts = (vehicle) => vehicle == null ? null : Object.fromEntries(
+  ['brand_slug', 'model', 'chassis', 'generation', 'year', 'body_type', 'facelift', 'trim', 'has_camera', 'has_parking_sensors']
+    .filter(field => Object.prototype.hasOwnProperty.call(vehicle, field))
+    .map(field => [field, vehicle[field]])
+);
+
 export const Cart = {
   get: () => api.get('/cart').then((r) => r.data),
-  add: (product_id, quantity = 1, selected_vehicle = null) => api.post('/cart', { product_id, quantity, selected_vehicle }).then((r) => r.data),
-  update: (product_id, quantity) => api.put('/cart', { product_id, quantity }).then((r) => r.data),
-  remove: (product_id) => api.delete(`/cart/${product_id}`).then((r) => r.data),
+  add: (product_id, quantity = 1, selected_vehicle = null, variant_id) => api.post('/cart', {
+    product_id, quantity, selected_vehicle: cartVehicleFacts(selected_vehicle),
+    ...(variant_id != null ? { variant_id } : {}),
+  }).then((r) => r.data),
+  update: (product_id, quantity, cart_item_id) => api.put('/cart', {
+    product_id, quantity, ...(cart_item_id != null ? { cart_item_id } : {}),
+  }).then((r) => r.data),
+  remove: (product_id, cart_item_id) => (cart_item_id != null
+    ? api.delete(`/cart/${product_id}`, { params: { cart_item_id } })
+    : api.delete(`/cart/${product_id}`)).then((r) => r.data),
   clear: () => api.delete('/cart').then((r) => r.data),
   claim: () => api.post('/cart/claim').then((r) => r.data),
 };

@@ -55,20 +55,20 @@ export function AppProvider({ children }) {
     refreshWishlist();
   }, [user, authLoading, refreshCart, refreshWishlist]);
 
-  const addToCart = useCallback(async (productId, quantity = 1, selectedVehicle = null) => {
-    const data = await Cart.add(productId, quantity, selectedVehicle);
+  const addToCart = useCallback(async (productId, quantity = 1, selectedVehicle = null, variantId) => {
+    const data = await (variantId != null ? Cart.add(productId, quantity, selectedVehicle, variantId) : Cart.add(productId, quantity, selectedVehicle));
     setCart(data);
     return data;
   }, []);
 
-  const updateCart = useCallback(async (productId, quantity) => {
-    const data = await Cart.update(productId, quantity);
+  const updateCart = useCallback(async (productId, quantity, cartItemId) => {
+    const data = await (cartItemId != null ? Cart.update(productId, quantity, cartItemId) : Cart.update(productId, quantity));
     setCart(data);
     return data;
   }, []);
 
-  const removeFromCart = useCallback(async (productId) => {
-    const data = await Cart.remove(productId);
+  const removeFromCart = useCallback(async (productId, cartItemId) => {
+    const data = await (cartItemId != null ? Cart.remove(productId, cartItemId) : Cart.remove(productId));
     setCart(data);
     return data;
   }, []);

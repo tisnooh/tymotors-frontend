@@ -16,11 +16,17 @@ export default function Cart() {
 
   const currency = cart.currency || 'EUR';
   const subtotal = cart.subtotal ?? 0;
-  const shipping = cart.shipping ?? 0;
-  const shippingFree = shipping === 0;
-  const total = cart.total ?? (subtotal + shipping);
+  const shippingPending = cart.shipping_status === 'requires_quote' ||
+    (cart.shipping !== undefined && (typeof cart.shipping !== 'number' || !Number.isFinite(cart.shipping)));
+  const shipping = shippingPending ? null : cart.shipping ?? 0;
+  const shippingFree = !shippingPending && shipping === 0;
+  const totalPending = shippingPending ||
+    (cart.total !== undefined && (typeof cart.total !== 'number' || !Number.isFinite(cart.total)));
+  const total = totalPending ? null : cart.total ?? (subtotal + shipping);
+  const checkoutBlocked = cart.checkout_available === false || shippingPending || totalPending;
 
   const startCheckout = async () => {
+    if (checkoutBlocked || checkingOut) return;
     try {
       setCheckingOut(true);
       const data = await Checkout.create();
@@ -53,7 +59,7 @@ export default function Cart() {
                   const compatibilityStatus = it.compatibility_result?.status || it.selected_vehicle?.compatibility_status;
                   const lineTotal = it.line_total ?? ((it.price || 0) * it.quantity);
                   return (
-                  <li key={it.product_id} data-testid="cart-item" className="py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                  <li key={it.cart_item_id || it.product_id} data-testid="cart-item" className="py-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                     <Link to={`/product/${it.slug}`} className="h-24 w-24 rounded-xl overflow-hidden bg-[#0F1115] border border-[#151A23] shrink-0">
                       <CartImage key={it.images?.[0] || it.image || it.product_id} item={it} />
                     </Link>
@@ -70,12 +76,12 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
-                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
+                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1, it.cart_item_id)} className="h-10 w-10 text-white">{'\u2212'}</button>
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
-                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
+                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateCart(it.product_id, it.quantity + 1, it.cart_item_id)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
                       <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(lineTotal, currency, i18n.language)}</p>
-                      <button onClick={() => removeFromCart(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
+                      <button onClick={() => removeFromCart(it.product_id, it.cart_item_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -90,19 +96,19 @@ export default function Cart() {
                 <h3 className="font-mono text-[10px] tracking-[0.32em] uppercase text-[#F2C94C]/80 mb-5">Récapitulatif</h3>
                 <dl className="space-y-3 text-sm">
                   <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.subtotal')}</dt><dd data-testid="cart-subtotal" className="text-white font-mono">{formatPrice(subtotal, currency, i18n.language)}</dd></div>
-                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.shipping')}</dt><dd data-testid="cart-shipping" className="text-white font-mono">{shippingFree ? <span className="text-[#F2C94C]">{t('cart.shipping_free')}</span> : formatPrice(shipping, currency, i18n.language)}</dd></div>
+                  <div className="flex justify-between"><dt className="text-ty-textMid">{t('cart.shipping')}</dt><dd data-testid="cart-shipping" className="text-white font-mono">{shippingPending ? 'À calculer' : shippingFree ? <span className="text-[#F2C94C]">{t('cart.shipping_free')}</span> : formatPrice(shipping, currency, i18n.language)}</dd></div>
                 </dl>
                 <div className="my-4 h-px bg-[#151A23]" />
                 <div className="flex justify-between items-baseline">
                   <span className="text-ty-textMid">{t('cart.total')}</span>
-                  <span data-testid="cart-total" className="text-white font-mono text-2xl">{formatPrice(total, currency, i18n.language)}</span>
+                  <span data-testid="cart-total" className="text-white font-mono text-2xl">{totalPending ? 'À confirmer' : formatPrice(total, currency, i18n.language)}</span>
                 </div>
                 <button
                   type="button"
                   data-testid="cart-checkout-button"
                   className="mt-6 w-full ty-btn-primary h-12 text-xs uppercase tracking-[0.18em]"
                   onClick={startCheckout}
-                  disabled={checkingOut}
+                  disabled={checkingOut || checkoutBlocked}
                 >
                   {checkingOut ? 'Redirection sécurisée…' : t('cart.checkout')} <ArrowRight className="h-4 w-4" />
                 </button>

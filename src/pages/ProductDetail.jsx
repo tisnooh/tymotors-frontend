@@ -61,9 +61,18 @@ function CompatibilityChecker({ product, onSelection }) {
     const saved = readVehicleSelection();
     const brand_slug = brands.includes(saved.brand) ? saved.brand : '';
     const model = detailed.some((item) => item.brand_slug === brand_slug && item.model === saved.model) ? saved.model : '';
-    const chassis = detailed.some((item) => item.brand_slug === brand_slug && item.model === model
-      && [item.chassis, item.generation].includes(saved.generation)) ? saved.generation : '';
-    return { brand_slug, model, chassis, year: chassis ? saved.year : '', body_type: '', trim: '', facelift: '', has_camera: '', has_parking_sensors: '' };
+    const hasSavedChassis = Object.prototype.hasOwnProperty.call(saved, 'chassis');
+    const savedRule = detailed.find((item) => item.brand_slug === brand_slug && item.model === model
+      && (hasSavedChassis ? Boolean(saved.chassis) && item.chassis === saved.chassis
+        : [item.chassis, item.generation].includes(saved.generation)));
+    const chassis = savedRule?.chassis || '';
+    return {
+      brand_slug, model, chassis, generation: chassis ? saved.generation : '', year: chassis ? saved.year : '',
+      body_type: chassis ? saved.body_type : '', trim: chassis ? saved.trim : '',
+      facelift: chassis ? saved.facelift : '',
+      has_camera: chassis && saved.has_camera != null ? (saved.has_camera ? 'yes' : 'no') : '',
+      has_parking_sensors: chassis && saved.has_parking_sensors != null ? (saved.has_parking_sensors ? 'yes' : 'no') : '',
+    };
   });
   const [result, setResult] = useState(null);
   const [checking, setChecking] = useState(false);
@@ -82,11 +91,16 @@ function CompatibilityChecker({ product, onSelection }) {
       const next = {
       ...current,
       [key]: value,
-      ...(key === 'brand_slug' ? { model: '', chassis: '', year: '' } : {}),
-      ...(key === 'model' ? { chassis: '', year: '' } : {}),
+      ...(key === 'brand_slug' ? { model: '', chassis: '', generation: '', year: '' } : {}),
+      ...(key === 'model' ? { chassis: '', generation: '', year: '' } : {}),
+      ...(key === 'chassis' ? { generation: detailed.find(item => item.brand_slug === current.brand_slug && item.model === current.model && item.chassis === value)?.generation || value } : {}),
       ...(['brand_slug', 'model', 'chassis'].includes(key) ? { body_type: '', trim: '', facelift: '', has_camera: '', has_parking_sensors: '' } : {}),
       };
-      saveVehicleSelection({ brand: next.brand_slug, model: next.model, generation: next.chassis, year: next.year });
+      saveVehicleSelection({
+        ...next, brand: next.brand_slug,
+        has_camera: next.has_camera === '' ? null : next.has_camera === 'yes',
+        has_parking_sensors: next.has_parking_sensors === '' ? null : next.has_parking_sensors === 'yes',
+      });
       return next;
     });
   };
@@ -96,6 +110,7 @@ function CompatibilityChecker({ product, onSelection }) {
     const version = selectionVersion.current;
     const selection = {
       ...vehicle,
+      generation: vehicle.generation || null,
       year: vehicle.year ? Number(vehicle.year) : null,
       body_type: vehicle.body_type || null,
       trim: vehicle.trim || null,
@@ -108,7 +123,7 @@ function CompatibilityChecker({ product, onSelection }) {
       const data = await Products.checkCompatibility(product.slug, selection);
       if (version !== selectionVersion.current) return;
       setResult(data);
-      saveVehicleSelection({ brand: vehicle.brand_slug, model: vehicle.model, generation: vehicle.chassis, year: vehicle.year });
+      saveVehicleSelection({ ...selection, brand: selection.brand_slug });
       onSelection?.(selection, data.status);
     } catch (error) {
       if (version !== selectionVersion.current) return;
