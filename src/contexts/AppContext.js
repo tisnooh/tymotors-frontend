@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Cart, Products, Wishlist } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
+import { assertVariantSaved, selectCartVariant } from '@/lib/cartVariant';
 
 const AppContext = createContext(null);
 
@@ -9,7 +10,12 @@ const DEFAULT_WISHLIST = { items: [] };
 
 export function AppProvider({ children }) {
   const { user, loading: authLoading } = useAuth();
-  const [cart, setCart] = useState(DEFAULT_CART);
+  const [cart, setCartState] = useState(DEFAULT_CART);
+  const cartRef = useRef(DEFAULT_CART);
+  const setCart = useCallback(data => {
+    cartRef.current = data;
+    setCartState(data);
+  }, []);
   const [wishlist, setWishlist] = useState(DEFAULT_WISHLIST);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -25,7 +31,7 @@ export function AppProvider({ children }) {
       // eslint-disable-next-line no-console
       console.warn('[TYMotors] refreshCart failed:', e?.message || e);
     }
-  }, []);
+  }, [setCart]);
 
   const refreshWishlist = useCallback(async () => {
     try {
@@ -53,31 +59,35 @@ export function AppProvider({ children }) {
     if (user) Cart.claim().then(setCart).catch(() => refreshCart());
     else refreshCart();
     refreshWishlist();
-  }, [user, authLoading, refreshCart, refreshWishlist]);
+  }, [user, authLoading, refreshCart, refreshWishlist, setCart]);
 
   const addToCart = useCallback(async (productId, quantity = 1, selectedVehicle = null, variantId) => {
-    const data = await (variantId != null ? Cart.add(productId, quantity, selectedVehicle, variantId) : Cart.add(productId, quantity, selectedVehicle));
+    const variants = await Products.variants(productId);
+    const exactVariantId = selectCartVariant(productId, variants, variantId);
+    const previousCart = cartRef.current;
+    const data = await Cart.add(productId, quantity, selectedVehicle, exactVariantId);
+    assertVariantSaved(productId, exactVariantId, data, quantity, selectedVehicle, previousCart);
     setCart(data);
     return data;
-  }, []);
+  }, [setCart]);
 
   const updateCart = useCallback(async (productId, quantity, cartItemId) => {
     const data = await (cartItemId != null ? Cart.update(productId, quantity, cartItemId) : Cart.update(productId, quantity));
     setCart(data);
     return data;
-  }, []);
+  }, [setCart]);
 
   const removeFromCart = useCallback(async (productId, cartItemId) => {
     const data = await (cartItemId != null ? Cart.remove(productId, cartItemId) : Cart.remove(productId));
     setCart(data);
     return data;
-  }, []);
+  }, [setCart]);
 
   const clearCart = useCallback(async () => {
     const data = await Cart.clear();
     setCart(data);
     return data;
-  }, []);
+  }, [setCart]);
 
   const toggleWishlist = useCallback(
     async (productId) => {

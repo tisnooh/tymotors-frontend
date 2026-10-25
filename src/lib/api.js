@@ -42,6 +42,7 @@ export const Categories = {
 export const Products = {
   list: (params = {}) => api.get('/products', { params: { preview: true, ...params } }).then((r) => r.data),
   get: (slug) => api.get(`/products/${slug}`, { params: { preview: true } }).then((r) => r.data),
+  variants: (productId) => api.get(`/products/${encodeURIComponent(productId)}/variants`).then((r) => r.data),
   checkCompatibility: (slug, vehicle) => api.post(`/products/${slug}/compatibility`, vehicle).then((r) => r.data),
 };
 
@@ -59,6 +60,7 @@ const cartVehicleFacts = (vehicle) => vehicle == null ? null : Object.fromEntrie
 
 export const Cart = {
   get: () => api.get('/cart').then((r) => r.data),
+  quote: (payload) => api.post('/cart/quote', payload).then((r) => r.data),
   add: (product_id, quantity = 1, selected_vehicle = null, variant_id) => api.post('/cart', {
     product_id, quantity, selected_vehicle: cartVehicleFacts(selected_vehicle),
     ...(variant_id != null ? { variant_id } : {}),
@@ -97,6 +99,11 @@ export const Contact = {
 };
 
 export const Checkout = {
+  // The server bounds provider creation at 50 s. Leave a bounded transport
+  // margin without retrying an operation whose payment outcome may be unknown.
+  createQuoted: (quoteId, requestKey) => api.post(`/cart/quote/${encodeURIComponent(quoteId)}/checkout`, {
+    request_key: requestKey,
+  }, { timeout: 65000 }).then((r) => r.data),
   create: () => {
     const promotion = new URLSearchParams(window.location.search).get('promo');
     return api.post('/create-checkout-session', null, { params: promotion ? { promotion_code: promotion } : {} }).then((r) => r.data);
