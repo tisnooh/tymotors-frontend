@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/AppContext';
@@ -8,27 +8,47 @@ import { Trash2, ArrowRight, Truck, ShieldCheck, BadgeCheck } from 'lucide-react
 import { Reveal } from '@/components/shared/Reveal';
 import { Checkout } from '@/lib/api';
 import { toast } from 'sonner';
+import DeliveryForm from '@/components/cart/DeliveryForm';
+import useCartQuote from '@/hooks/useCartQuote';
+import { quoteRequired } from '@/lib/cartQuote';
 
 export default function Cart() {
   const { t, i18n } = useTranslation();
   const { cart, updateCart, removeFromCart } = useApp();
   const [checkingOut, setCheckingOut] = useState(false);
+  const checkoutLock = useRef(false);
+  const delivery = useCartQuote(cart);
+  const requiresQuote = quoteRequired(cart);
+  const verifiedQuote = requiresQuote ? delivery.quote : null;
 
-  const currency = cart.currency || 'EUR';
-  const subtotal = cart.subtotal ?? 0;
-  const shippingPending = cart.shipping_status === 'requires_quote' ||
+  const currency = verifiedQuote?.currency || cart.currency || 'EUR';
+  const subtotal = verifiedQuote ? verifiedQuote.subtotal_cents / 100 : cart.subtotal ?? 0;
+  const shippingPending = verifiedQuote ? false : requiresQuote || cart.shipping_status === 'requires_quote' ||
     (cart.shipping !== undefined && (typeof cart.shipping !== 'number' || !Number.isFinite(cart.shipping)));
-  const shipping = shippingPending ? null : cart.shipping ?? 0;
+  const shipping = verifiedQuote ? verifiedQuote.shipping_cents / 100 : shippingPending ? null : cart.shipping ?? 0;
   const shippingFree = !shippingPending && shipping === 0;
-  const totalPending = shippingPending ||
+  const totalPending = verifiedQuote ? false : shippingPending ||
     (cart.total !== undefined && (typeof cart.total !== 'number' || !Number.isFinite(cart.total)));
-  const total = totalPending ? null : cart.total ?? (subtotal + shipping);
-  const checkoutBlocked = cart.checkout_available === false || shippingPending || totalPending;
+  const total = verifiedQuote ? verifiedQuote.total_cents / 100 : totalPending ? null : cart.total ?? (subtotal + shipping);
+  const checkoutBlocked = requiresQuote ? !delivery.ready : cart.checkout_available === false || shippingPending || totalPending;
+
+  const mutateCart = async action => {
+    delivery.invalidate();
+    try { await action(); }
+    catch { toast.error('Impossible de modifier le panier. Vérifiez son contenu avant de poursuivre.'); }
+  };
 
   const startCheckout = async () => {
-    if (checkoutBlocked || checkingOut) return;
+    if (checkoutBlocked || checkingOut || checkoutLock.current) return;
+    checkoutLock.current = true;
     try {
       setCheckingOut(true);
+      if (requiresQuote) {
+        const url = await delivery.checkout();
+        if (url) window.location.assign(url);
+        setCheckingOut(false);
+        return;
+      }
       const data = await Checkout.create();
       if (!data.url) throw new Error('missing_checkout_url');
       window.location.assign(data.url);
@@ -36,6 +56,10 @@ export default function Cart() {
       const message = error?.response?.data?.detail;
       toast.error(message || (i18n.language?.startsWith('fr') ? 'Le paiement est momentanément indisponible.' : 'Checkout is temporarily unavailable.'));
       setCheckingOut(false);
+    } finally {
+      // Quoted payment failures remain locked inside useCartQuote until review.
+      // The legacy test path retains its existing retry behaviour.
+      checkoutLock.current = false;
     }
   };
 
@@ -76,12 +100,12 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
-                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1, it.cart_item_id)} className="h-10 w-10 text-white">{'\u2212'}</button>
+                        <button type="button" aria-label="Diminuer la quantité" onClick={() => mutateCart(() => updateCart(it.product_id, it.quantity - 1, it.cart_item_id))} className="h-10 w-10 text-white">{'\u2212'}</button>
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
-                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateCart(it.product_id, it.quantity + 1, it.cart_item_id)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
+                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => mutateCart(() => updateCart(it.product_id, it.quantity + 1, it.cart_item_id))} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
                       <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(lineTotal, currency, i18n.language)}</p>
-                      <button onClick={() => removeFromCart(it.product_id, it.cart_item_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
+                      <button onClick={() => mutateCart(() => removeFromCart(it.product_id, it.cart_item_id))} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -89,6 +113,7 @@ export default function Cart() {
                   );
                 })}
               </ul>
+              {requiresQuote && <DeliveryForm delivery={delivery} language={i18n.language} />}
             </div>
 
             <div className="lg:col-span-4">

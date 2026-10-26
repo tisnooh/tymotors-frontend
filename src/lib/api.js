@@ -60,6 +60,7 @@ const cartVehicleFacts = (vehicle) => vehicle == null ? null : Object.fromEntrie
 
 export const Cart = {
   get: () => api.get('/cart').then((r) => r.data),
+  deliveryOptions: (destination) => api.post('/cart/delivery-options', { destination }).then((r) => r.data),
   quote: (payload) => api.post('/cart/quote', payload).then((r) => r.data),
   add: (product_id, quantity = 1, selected_vehicle = null, variant_id) => api.post('/cart', {
     product_id, quantity, selected_vehicle: cartVehicleFacts(selected_vehicle),

@@ -5,7 +5,9 @@ import { useApp } from '@/contexts/AppContext';
 import edits from '@/data/productPhotoEdits.json';
 import { Checkout } from '@/lib/api';
 jest.mock('@/contexts/AppContext', () => ({ useApp: jest.fn() }));
-jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn() } }));
+jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn(), createQuoted: jest.fn() },
+  Cart: { deliveryOptions: jest.fn(), quote: jest.fn() }, getSessionId: () => 'guest-test-session-12345' }));
+jest.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ user: null, loading: false }) }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children, ...props }) => <div {...props}>{children}</div> }));

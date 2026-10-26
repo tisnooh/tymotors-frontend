@@ -15,6 +15,11 @@ test('quote forwards the destination and stable request identity to the authorit
   expect(await Cart.quote(payload)).toEqual({ id: 'response' });
   expect(api.post).toHaveBeenCalledWith('/cart/quote', payload);
 });
+test('delivery discovery sends only the submitted destination, never an inferred shipping mode or amount', async () => {
+  const destination = { name: 'Client Test', line1: '1 rue fictive', city: 'Paris', postal_code: '75001', country: 'FR' };
+  await Cart.deliveryOptions(destination);
+  expect(api.post).toHaveBeenCalledWith('/cart/delivery-options', { destination });
+});
 test('quoted checkout uses only the quote and request identities, not client prices or promotion URL', async () => {
   expect(await Checkout.createQuoted('quote/id', 'attempt-request')).toEqual({ id: 'response' });
   expect(api.post).toHaveBeenCalledWith('/cart/quote/quote%2Fid/checkout', { request_key: 'attempt-request' }, { timeout: 65000 });
