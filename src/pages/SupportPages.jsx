@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Package, RotateCcw, HelpCircle, Truck, Shield, FileText, Cookie } from 'lucide-react';
+import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Package, HelpCircle, Truck } from 'lucide-react';
 import { Contact, Tracking } from '@/lib/api';
+import usePublicSiteConfig from '@/hooks/usePublicSiteConfig';
 
-const CONTACT_DETAILS = [
-  { icon: Mail, label: 'Email', value: process.env.REACT_APP_SUPPORT_EMAIL },
-  { icon: Phone, label: 'Téléphone', value: process.env.REACT_APP_SUPPORT_PHONE },
-  { icon: MapPin, label: 'Adresse', value: process.env.REACT_APP_BUSINESS_ADDRESS },
-].filter((detail) => Boolean(detail.value));
+const contactDetails = legal => [
+  { icon: Mail, label: 'Email', value: legal.contact_email },
+  { icon: Phone, label: 'Téléphone', value: legal.contact_phone },
+  { icon: MapPin, label: 'Adresse', value: legal.address },
+].filter(detail => !!detail.value);
 
 // ─── SHARED LAYOUT ───────────────────────────────────────────────────────────
 
@@ -41,6 +42,8 @@ function Section({ title, children }) {
 
 export function ContactPage() {
   const location = useLocation();
+  const config = usePublicSiteConfig();
+  const CONTACT_DETAILS = contactDetails(config.legal);
   const [form, setForm] = useState(() => {
     const request = location.state?.customizeRequest;
     return { name: '', email: '', subject: typeof request?.subject === 'string' ? request.subject.slice(0, 160) : '', message: typeof request?.message === 'string' ? request.message.slice(0, 5000) : '', website: '' };
@@ -64,7 +67,7 @@ export function ContactPage() {
   }
 
   return (
-    <PageLayout eyebrow="SUPPORT" title="Contact" subtitle="Une question ? Envoyez-nous votre demande, notre équipe vous répondra dès que possible.">
+    <PageLayout eyebrow="SUPPORT" title="Contact" subtitle="Une question ? Envoyez-nous votre demande.">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
           <div className="space-y-6">
@@ -79,7 +82,7 @@ export function ContactPage() {
                 </div>
               </div>
             ))}
-            {CONTACT_DETAILS.length === 0 && <div className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]"><Mail className="h-6 w-6 text-[#E10600]" /><p className="text-white mt-3">Formulaire de contact sécurisé</p><p className="text-ty-textMid text-sm mt-1">Votre demande sera enregistrée dans l’espace de support.</p></div>}
+            {CONTACT_DETAILS.length === 0 && <div className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]"><Mail className="h-6 w-6 text-[#E10600]" /><p className="text-white mt-3">Formulaire de contact sécurisé</p><p className="text-ty-textMid text-sm mt-1">Les coordonnées de contact seront publiées avant l’ouverture de la boutique. Vous pouvez utiliser ce formulaire pour enregistrer votre demande.</p></div>}
           </div>
         </div>
 
@@ -89,7 +92,7 @@ export function ContactPage() {
               <div className="h-12 w-12 rounded-full bg-green-900/30 flex items-center justify-center mx-auto mb-4">
                 <Mail className="h-6 w-6 text-green-400" />
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">Message envoyé !</h3>
+              <h3 className="text-white font-bold text-lg mb-2">Demande enregistrée</h3>
               <p className="text-ty-textMid text-sm">Votre demande est enregistrée. Nous vous répondrons dès que possible.</p>
             </div>
           ) : (
@@ -139,15 +142,15 @@ export function ContactPage() {
 
 export function ShippingPage() {
   return (
-    <PageLayout eyebrow="SUPPORT" title="Livraison" subtitle="Livraison rapide et sécurisée dans toute l'Europe.">
+    <PageLayout eyebrow="SUPPORT" title="Livraison" subtitle="Consultez les conditions vérifiées pour votre panier et votre destination avant tout achat.">
       <Section title="Zones de livraison">
-        <p>La livraison est actuellement disponible en France, Belgique, Allemagne, Espagne, Italie, Luxembourg, Pays-Bas et Portugal.</p>
+        <p>Le lancement est préparé pour la France. Les destinations proposées, les frais et le délai applicables sont précisés avant le paiement.</p>
       </Section>
       <Section title="Délais">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {[
-            { zone: 'Livraison UE suivie', délai: 'Délai propre à chaque produit', prix: '15 €' },
-            { zone: 'Commande dès 350 €', délai: 'Même niveau de suivi', prix: 'Livraison offerte' },
+            { zone: 'Livraison à vérifier', délai: 'Date ou délai confirmé avant achat', prix: 'Tarif du devis de livraison' },
+            { zone: 'Panier et destination', délai: 'Conditions propres à la commande', prix: 'Aucun seuil de gratuité garanti' },
           ].map(({ zone, délai, prix }) => (
             <div key={zone} className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
               <div className="flex items-center gap-2 mb-3">
@@ -161,13 +164,13 @@ export function ShippingPage() {
         </div>
       </Section>
       <Section title="Informations importantes">
-        <p>• La livraison gratuite est automatiquement appliquée pour toute commande supérieure à 350€.</p>
-        <p>• Un numéro de suivi vous sera envoyé par email dès l'expédition de votre colis.</p>
+        <p>• Les frais applicables à votre commande sont indiqués avant le paiement.</p>
+        <p>• Consultez la page de suivi de commande pour les informations d’expédition disponibles.</p>
         <p>• La disponibilité, le temps de préparation et le délai de livraison doivent être confirmés avant la commande.</p>
-        <p>• Les modalités douanières restent à confirmer avec le prestataire avant l'ouverture aux ventes.</p>
+        <p>• La provenance, le transport et les éventuels droits ou frais d’importation doivent être établis avant l’ouverture aux ventes et communiqués avant l’achat. Aucun supplément non accepté ne peut être ajouté après commande.</p>
       </Section>
       <Section title="Transporteurs">
-        <p>Le transporteur et le numéro de suivi sont communiqués lors de l’expédition de la commande.</p>
+        <p>Le transporteur, les éventuels colis séparés et les numéros de suivi sont indiqués lorsque leur attribution et leur prise en charge sont confirmées. TYMotors reste l’interlocuteur du client en cas de retard, perte ou non-conformité ; le client n’a pas à se substituer au vendeur pour gérer son fournisseur.</p>
       </Section>
     </PageLayout>
   );
@@ -180,13 +183,13 @@ export { WithdrawalPage as ReturnsPage } from './LegalPages';
 // ─── FAQ ─────────────────────────────────────────────────────────────────────
 
 const FAQ_ITEMS = [
-  { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Utilisez notre configurateur de compatibilité sur la page Personnaliser. Sélectionnez votre marque, modèle et génération pour voir tous les produits compatibles." },
+  { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Renseignez le véhicule dans Personnaliser, puis vérifiez la variante exacte et les restrictions de la fiche. Une compatibilité non confirmée ou une information manquante n’est pas une autorisation de montage. Demandez une vérification au support avant d’acheter si un doute subsiste." },
   { q: "Quels sont les délais de livraison ?", a: "Le délai dépend du produit, de sa disponibilité et de la destination. Il doit être confirmé avant la commande. Nous n'annonçons pas de livraison express ni d'expédition le jour même sans confirmation du prestataire." },
-  { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
+  { q: "La livraison est-elle gratuite ?", a: "Les frais de livraison dépendent du panier, de l’adresse et du mode de transport proposé. Leur montant est indiqué avant le paiement." },
   { q: "Puis-je retourner un article ?", a: "Pour les biens éligibles, vous disposez d’un droit de rétractation de 14 jours après réception. Consultez la page Retours et son formulaire ; les garanties légales restent applicables." },
-  { q: "Les produits sont-ils garantis ?", a: "Les garanties légales restent applicables. Pour un bien neuf, la conformité s'exerce pendant deux ans à compter de sa délivrance ; une éventuelle garantie commerciale est précisée sur la fiche. Consultez nos conditions de vente." },
-  { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
-  { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
+  { q: "Les produits sont-ils garantis ?", a: "Les garanties légales de conformité et des vices cachés s’exercent auprès du vendeur, indépendamment d’une garantie fournisseur. Pour un bien neuf, les défauts de conformité apparaissant dans les deux ans de la délivrance relèvent des règles légales ; réparation ou remplacement sans frais doivent intervenir dans les conditions prévues par la loi. Une garantie commerciale supplémentaire n’existe que si ses conditions sont confirmées." },
+  { q: "Comment suivre ma commande ?", a: "La page Suivi de commande affiche les dernières informations enregistrées avec le numéro de commande et l’email d’achat. Un numéro ou un lien transporteur n’apparaît qu’une fois confirmé. Une commande ou une expédition de test ne constitue pas un colis réellement envoyé." },
+  { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Les fixations, modifications et conditions de montage doivent être confirmées pour la référence et le véhicule exacts. En l’absence d’instructions vérifiées, aucune facilité de pose ni homologation routière n’est présumée. Le recours à un professionnel ne dispense pas de respecter les garanties légales." },
   { q: "Acceptez-vous les paiements en plusieurs fois ?", a: "Les moyens de paiement disponibles sont affichés par Stripe au moment du règlement. Un paiement fractionné n'est disponible que s'il est proposé pour votre achat, selon les conditions et frais indiqués sur cette page." },
 ];
 
@@ -215,7 +218,7 @@ export function FAQPage() {
       </div>
       <div className="mt-12 p-6 rounded-2xl border border-[#232B3A] bg-[#0A0B0E] text-center">
         <HelpCircle className="h-8 w-8 text-[#F2C94C] mx-auto mb-3" />
-        <p className="text-white font-bold mb-2">Vous n'avez pas trouvé votre réponse ?</p>
+        <p className="text-white font-bold mb-2">Vous n’avez pas trouvé votre réponse ?</p>
         <p className="text-ty-textMid text-sm mb-4">Envoyez votre demande depuis notre formulaire de contact.</p>
         <Link to="/support/contact" className="ty-btn-primary text-xs uppercase tracking-[0.18em] px-6 h-10 inline-flex items-center">
           Contacter le support
@@ -256,7 +259,7 @@ export function TrackPage() {
   }
 
   return (
-    <PageLayout eyebrow="SUPPORT" title="Suivi de commande" subtitle="Retrouvez l'état de votre commande en temps réel.">
+    <PageLayout eyebrow="SUPPORT" title="Suivi de commande" subtitle="Consultez les dernières informations enregistrées pour votre commande.">
       <div className="max-w-lg mx-auto">
         <form onSubmit={handleSearch} className="space-y-4">
           <div>
@@ -296,7 +299,7 @@ export function TrackPage() {
 
         <div className="mt-10 p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
           <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#F2C94C] mb-3">Vous avez reçu un email de suivi ?</p>
-          <p className="text-ty-textMid text-sm">Le lien du transporteur vous est envoyé par e-mail lors de l’expédition. Vérifiez également vos spams.</p>
+          <p className="text-ty-textMid text-sm">Si un lien transporteur vous a été adressé, consultez-le et vérifiez vos spams. En l’absence d’information confirmée, contactez TYMotors ; aucun envoi d’email ni suivi en temps réel n’est présumé.</p>
         </div>
       </div>
     </PageLayout>
