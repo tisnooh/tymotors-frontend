@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Cart, Checkout, getSessionId } from '@/lib/api';
 import { acceptedQuote, cartQuoteFingerprint, deliveryOptions, destinationInput, EMPTY_DESTINATION,
-  futureExpiry, secureRequestKey, testCheckoutUrl } from '@/lib/cartQuote';
+  futureExpiry, secureRequestKey, checkoutUrl } from '@/lib/cartQuote';
 
 export default function useCartQuote(cart) {
   const { user, loading: authLoading } = useAuth();
@@ -92,12 +92,12 @@ export default function useCartQuote(cart) {
       const result = await Checkout.createQuoted(quote.quote_id, view.paymentKey);
       if (!isCurrent(token)) return null;
       futureExpiry(quote.expires_at);
-      if (result?.is_test === true && result.quote_id === quote.quote_id
+      if (typeof result?.is_test === 'boolean' && result.quote_id === quote.quote_id
           && ['paid', 'awaiting_webhook'].includes(result.status)) {
         finish(token, { ...view, error: 'Ce paiement nécessite une vérification de son statut avant toute nouvelle tentative.' });
         return null;
       }
-      const url = testCheckoutUrl(result, quote.quote_id);
+      const url = checkoutUrl(result, quote.quote_id);
       finish(token, { ...view });
       return url;
     } catch {
@@ -117,6 +117,6 @@ export default function useCartQuote(cart) {
   invalidate: () => { operation.current = null; current.current = ''; setState(null); setRevision(value => value + 1); },
   error: view?.error || (holding ? 'Vérifiez la commande en cours avant tout nouveau paiement.'
     : expired ? 'Le devis ou le tarif de livraison a expiré. Recalculez la livraison.'
-      : quote && !quote.checkout_available ? 'Le paiement de test n’est pas disponible pour ce devis.' : ''), holding,
+      : quote && !quote.checkout_available ? 'Le paiement n’est pas disponible pour ce devis.' : ''), holding,
   authLoading, ready: !!quote?.checkout_available && !view?.busy && !holding && !authLoading };
 }

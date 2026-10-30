@@ -63,6 +63,10 @@ function OrderContent({ order: o, reload }) {
   const [confirmRefresh, setConfirmRefresh] = useState(false);
   async function save(e) {
     e.preventDefault();
+    if (o.stripe_profile_ref || o.commerce_quote_id) {
+      toast.error('Cette commande nécessite un traitement par dossier fournisseur avec sa preuve et sa version. Les étapes globales historiques ne peuvent pas être utilisées.');
+      return;
+    }
     if (status === 'cancelled' && !window.confirm('Annuler cette commande ? Un paiement reçu doit être remboursé séparément dans Stripe. Le stock ne sera pas remis automatiquement.')) return;
     setBusy(true);
     try { await adminApi.put(`orders/${o.id}`, { fulfillment_status: status, tracking_number: tracking, carrier: carrier || null, tracking_url: trackingUrl || null, expected_updated_at: o.updated_at }); toast.success('Commande mise à jour'); reload(); }
@@ -74,7 +78,12 @@ function OrderContent({ order: o, reload }) {
     catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); }
   }
   async function saveSupplier(e) {
-    e.preventDefault(); setBusy(true);
+    e.preventDefault();
+    if (o.stripe_profile_ref || o.commerce_quote_id) {
+      toast.error('Cette commande utilise des dossiers fournisseurs distincts. La confirmation doit conserver la référence exacte et une preuve par dossier.');
+      return;
+    }
+    setBusy(true);
     try {
       await adminApi.put(`orders/${o.id}/supplier`, {
         status: supplierStatus, alibaba_order_id: alibabaOrderId || null, agent_order_id: agentOrderId || null,

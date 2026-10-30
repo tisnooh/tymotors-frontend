@@ -1,4 +1,4 @@
-import { acceptedQuote, deliveryOptions, destinationInput, futureExpiry, quoteRequired, testCheckoutUrl } from './cartQuote';
+import { acceptedQuote, checkoutUrl, deliveryOptions, destinationInput, futureExpiry, quoteRequired, testCheckoutUrl } from './cartQuote';
 import { cartFixture, checkoutFixture, destination, optionFixture, optionsFixture, quoteFixture, quoteId } from './__fixtures__/cartQuote';
 
 test('only submitted allowlisted destination facts survive normalization', () => {
@@ -52,6 +52,19 @@ test('a different cart currency cannot be silently converted by an EUR quote', (
 test('only a linked Stripe test session URL is accepted', () => {
   expect(checkoutFixture().session_id).toContain('customer_fixture_');
   expect(testCheckoutUrl(checkoutFixture(), quoteId)).toBe(checkoutFixture().url);
+});
+
+test('server-approved production sessions use their exact live identity without changing sandbox restriction', () => {
+  const live = checkoutFixture({ is_test: false, session_id: 'cs_live_fixture_123',
+    url: 'https://checkout.stripe.com/c/pay/cs_live_fixture_123#opaque' });
+  expect(checkoutUrl(live, quoteId)).toBe(live.url);
+  expect(() => testCheckoutUrl(live, quoteId)).toThrow();
+  expect(() => checkoutUrl({ ...live, is_test: true }, quoteId)).toThrow();
+  expect(() => checkoutUrl({ ...checkoutFixture(), is_test: false }, quoteId)).toThrow();
+});
+
+test.each([undefined, null, 0, 'false'])('non-boolean mode cannot authorize a checkout (%j)', is_test => {
+  expect(() => checkoutUrl(checkoutFixture({ is_test }), quoteId)).toThrow();
 });
 test.each([{ is_test: false }, { quote_id: 'other' }, { session_id: 'cs_live_123' },
   { url: 'https://checkout.stripe.com.evil.example/c/pay/cs_test_customer_fixture_123' },

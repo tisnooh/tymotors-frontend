@@ -76,13 +76,19 @@ export function acceptedQuote(quote, cart, option, now = Date.now()) {
   if (expected.size || !Number.isSafeInteger(subtotal) || subtotal !== quote.subtotal_cents) return invalid();
   return quote;
 }
-export function testCheckoutUrl(response, quoteId) {
-  if (response?.is_test !== true || response.quote_id !== quoteId || response.status !== 'open'
+export function checkoutUrl(response, quoteId) {
+  if (typeof response?.is_test !== 'boolean' || response.quote_id !== quoteId || response.status !== 'open'
       || !uuid.test(response.order_id) || typeof response.session_id !== 'string'
-      || !/^cs_test_[A-Za-z0-9_]{1,240}$/.test(response.session_id) || typeof response.url !== 'string') return invalid();
+      || !(response.is_test ? /^cs_test_[A-Za-z0-9_]{1,240}$/ : /^cs_live_[A-Za-z0-9_]{1,240}$/).test(response.session_id)
+      || typeof response.url !== 'string' || /[\s\\\u0000-\u001f\u007f]/.test(response.url)) return invalid();
   let url;
   try { url = new URL(response.url); } catch { return invalid(); }
   if (url.protocol !== 'https:' || url.hostname !== 'checkout.stripe.com' || url.port
       || url.username || url.password || url.pathname !== `/c/pay/${response.session_id}` || url.search) return invalid();
   return url.href;
+}
+// Existing sandbox-only callers retain their explicit restriction.
+export function testCheckoutUrl(response, quoteId) {
+  if (response?.is_test !== true) return invalid();
+  return checkoutUrl(response, quoteId);
 }

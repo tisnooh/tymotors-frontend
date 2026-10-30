@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { Account as AccountApi } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatPrice } from '@/lib/format';
 
 const ORDER_LABELS = { unpaid: 'Paiement en attente', paid: 'Payée', refunded: 'Remboursée', unfulfilled: 'À préparer', processing: 'En préparation', shipped: 'Expédiée', delivered: 'Livrée', cancelled: 'Annulée', requires_review: 'Vérification nécessaire' };
+
+function useOwnedValue(owner, fallback) {
+  const [state, setState] = useState(null);
+  const update = useCallback(value => setState({ owner, value }), [owner]);
+  return [state && state.owner === owner ? state.value : fallback, update];
+}
 
 function TrackingTimeline({ order }) {
   const events = order.tracking_events || [];
@@ -15,20 +21,30 @@ function TrackingTimeline({ order }) {
 export default function Account() {
   const { orderId } = useParams();
   const { user, loading, signOut, updateEmail } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const [orders, setOrders] = useState([]);
+  const [profile, setProfile] = useOwnedValue(user?.id, null);
+  const [orders, setOrders] = useOwnedValue(user?.id, []);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
-  const [emailPrefs, setEmailPrefs] = useState(null);
+  const [emailPrefs, setEmailPrefs] = useOwnedValue(user?.id, null);
   const [newEmail, setNewEmail] = useState('');
   const [notice, setNotice] = useState('');
   const [savingEmail, setSavingEmail] = useState(false);
   useEffect(() => {
     if (!user) return;
-    Promise.all([AccountApi.get(), AccountApi.orders(), AccountApi.emailPreferences()])
-      .then(([nextProfile, nextOrders, nextPrefs]) => { setProfile(nextProfile); setOrders(nextOrders.items || []); setEmailPrefs(nextPrefs); })
-      .catch(() => setError('Impossible de charger le compte pour le moment.'));
-  }, [user]);
+    let active = true;
+    setError(''); setNotice('');
+    Promise.allSettled([AccountApi.get(), AccountApi.orders(), AccountApi.emailPreferences()])
+      .then(([nextProfile, nextOrders, nextPrefs]) => {
+        if (!active) return;
+        if (nextProfile.status === 'fulfilled') setProfile(nextProfile.value);
+        if (nextOrders.status === 'fulfilled') setOrders(nextOrders.value.items || []);
+        if (nextPrefs.status === 'fulfilled') setEmailPrefs(nextPrefs.value);
+        if ([nextProfile, nextOrders, nextPrefs].some(result => result.status === 'rejected')) {
+          setError('Certaines informations du compte sont momentanément indisponibles.');
+        }
+      });
+    return () => { active = false; };
+  }, [user, setProfile, setOrders, setEmailPrefs]);
   useEffect(() => {
     if (orderId && orders.length) document.getElementById(`order-${orderId}`)?.scrollIntoView({ block: 'center' });
   }, [orderId, orders]);

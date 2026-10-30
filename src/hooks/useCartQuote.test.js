@@ -41,6 +41,17 @@ test('valid options and quote enable only exact linked test checkout', async () 
   expect(url).toBe(checkoutFixture().url); expect(Checkout.createQuoted).toHaveBeenCalledTimes(1);
   expect(delivery.ready).toBe(false); expect(delivery.holding).toBe(true);
 });
+
+test('an exact live session approved by the backend can redirect, while mismatched identities stay locked', async () => {
+  const live = checkoutFixture({ is_test: false, session_id: 'cs_live_hook_fixture',
+    url: 'https://checkout.stripe.com/c/pay/cs_live_hook_fixture#opaque' });
+  Checkout.createQuoted.mockResolvedValue(live);
+  await ready();
+  let url; await act(async () => { url = await delivery.checkout(); });
+  expect(url).toBe(live.url);
+  expect(Checkout.createQuoted).toHaveBeenCalledTimes(1);
+  expect(delivery.holding).toBe(true);
+});
 test('invalid address never reaches the server', async () => {
   await act(async () => delivery.calculate());
   expect(Cart.deliveryOptions).not.toHaveBeenCalled(); expect(delivery.error).toBeTruthy();
