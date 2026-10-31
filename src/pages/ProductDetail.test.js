@@ -122,6 +122,7 @@ test('collects constrained vehicle details without claiming brand-wide fitment',
     year: 2016, chassis: 'F30', body_type: 'Berline', trim: 'M Sport', facelift: 'lci', has_camera: false, has_parking_sensors: true,
   }));
   expect(host.textContent).toContain('Compatibilité à confirmer');
+  expect(host.querySelector('[data-testid="product-add-to-cart-button"]').disabled).toBe(true);
 });
 
 test('does not apply a late compatible response after the vehicle selection changes', async () => {

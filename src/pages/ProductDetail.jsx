@@ -322,7 +322,7 @@ export default function ProductDetail() {
   const isPreview = product.status !== 'active' && !product.test_purchase;
   const maxOrderQuantity = product.max_order_quantity ?? Math.min(product.stock, 20);
   const requiresVehicleCheck = Boolean(product.compatibilities?.length);
-  const canOrder = !isPreview && product.purchase_available !== false && maxOrderQuantity > 0 && (!requiresVehicleCheck || ['compatible', 'confirm'].includes(compatibilityStatus));
+  const canOrder = !isPreview && product.purchase_available !== false && maxOrderQuantity > 0 && (!requiresVehicleCheck || compatibilityStatus === 'compatible');
 
   return (
     <main data-testid="page-product" className="pt-28 pb-24">
