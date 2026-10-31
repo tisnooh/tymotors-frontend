@@ -28,6 +28,12 @@ test('read-only draft keeps quick add disabled', () => {
   expect(host.textContent).toContain('Bientôt disponible');
   expect(mockAdd).not.toHaveBeenCalled();
 });
+test('active item stays non-purchasable when the server has closed checkout', () => {
+  act(() => root.render(<ProductCard product={{ ...draft, status: 'active', stock: 3, purchase_available: false }}/>));
+  expect(host.querySelector('[data-testid="product-card-add-to-cart-button"]').disabled).toBe(true);
+  expect(host.textContent).toContain('Indisponible');
+  expect(mockAdd).not.toHaveBeenCalled();
+});
 
 test.each(Object.entries(secondPhotos))('%s uses the approved second photo in the presentation card too', (slug, photo) => {
   const images = ['/unchanged-main.jpg', photo.previousImage];

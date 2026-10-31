@@ -282,7 +282,7 @@ export default function ProductDetail() {
 
   const onAdd = useCallback(async () => {
     if (!product) return;
-    if (product.status !== 'active' && !product.test_purchase) {
+    if ((product.status !== 'active' && !product.test_purchase) || product.purchase_available === false) {
       toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
       return;
     }
@@ -299,7 +299,7 @@ export default function ProductDetail() {
 
   const onBuyNow = useCallback(async () => {
     if (!product) return;
-    if (product.status !== 'active' && !product.test_purchase) {
+    if ((product.status !== 'active' && !product.test_purchase) || product.purchase_available === false) {
       toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
       return;
     }
@@ -322,7 +322,7 @@ export default function ProductDetail() {
   const isPreview = product.status !== 'active' && !product.test_purchase;
   const maxOrderQuantity = product.max_order_quantity ?? Math.min(product.stock, 20);
   const requiresVehicleCheck = Boolean(product.compatibilities?.length);
-  const canOrder = !isPreview && maxOrderQuantity > 0 && (!requiresVehicleCheck || ['compatible', 'confirm'].includes(compatibilityStatus));
+  const canOrder = !isPreview && product.purchase_available !== false && maxOrderQuantity > 0 && (!requiresVehicleCheck || ['compatible', 'confirm'].includes(compatibilityStatus));
 
   return (
     <main data-testid="page-product" className="pt-28 pb-24">
@@ -388,7 +388,7 @@ export default function ProductDetail() {
               </button>
             </div>
             <button type="button" onClick={onBuyNow} disabled={busy || !canOrder} className="mt-3 ty-btn-line h-11 w-full text-xs uppercase tracking-[0.18em] disabled:opacity-50">
-              {isPreview ? 'Bientôt disponible' : 'Acheter maintenant'}
+              {isPreview ? 'Bientôt disponible' : product.purchase_available === false ? 'Indisponible' : 'Acheter maintenant'}
             </button>
 
             <div className="mt-8 grid grid-cols-3 gap-3">

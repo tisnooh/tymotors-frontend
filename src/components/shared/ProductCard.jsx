@@ -97,6 +97,7 @@ export function ProductCard({ product, index = 0 }) {
   const { addToCart, toggleWishlist, isInWishlist } = useApp();
   const inWishlist = isInWishlist(product.id);
   const isPreview = product.status !== 'active' && !product.test_purchase;
+  const purchaseDisabled = isPreview || product.purchase_available === false;
 
   // Use reviewed seller photos, retaining the main presentation when the legacy
   // hover photo is still unreviewed. Catalogue edits continue to take priority.
@@ -108,8 +109,8 @@ export function ProductCard({ product, index = 0 }) {
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (isPreview) {
-        toast.info(i18n.language?.startsWith('fr') ? 'Ce produit sera bientôt disponible.' : 'This product is coming soon.');
+      if (purchaseDisabled) {
+        toast.info(i18n.language?.startsWith('fr') ? 'Ce produit est indisponible.' : 'This product is unavailable.');
         return;
       }
       if (product.compatibilities?.length) {
@@ -125,7 +126,7 @@ export function ProductCard({ product, index = 0 }) {
         toast.error(i18n.language?.startsWith('fr') ? 'Erreur lors de l\u2019ajout' : 'Could not add to cart');
       }
     },
-    [addToCart, isPreview, product.compatibilities?.length, product.id, i18n.language]
+    [addToCart, purchaseDisabled, product.compatibilities?.length, product.id, i18n.language]
   );
 
   const onWish = useCallback(
@@ -156,7 +157,7 @@ export function ProductCard({ product, index = 0 }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-80 pointer-events-none" />
         <ProductBadges badges={product.badges} />
         <WishlistButton active={inWishlist} onClick={onWish} label={t('product.wishlist')} disabled={isPreview} />
-        <QuickAddButton onClick={onAdd} label={isPreview ? (i18n.language?.startsWith('fr') ? 'Bientôt' : 'Coming soon') : t('product.add_to_cart')} disabled={isPreview} />
+        <QuickAddButton onClick={onAdd} label={purchaseDisabled ? (isPreview ? (i18n.language?.startsWith('fr') ? 'Bientôt' : 'Coming soon') : (i18n.language?.startsWith('fr') ? 'Indisponible' : 'Unavailable')) : t('product.add_to_cart')} disabled={purchaseDisabled} />
         <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F2C94C]/40 to-transparent" />
       </div>
 
@@ -198,7 +199,7 @@ export function ProductCard({ product, index = 0 }) {
             )}
           </div>
           <span className={`font-mono text-[10px] uppercase ${!isPreview && product.stock > 0 ? 'text-emerald-300' : 'text-[#F2C94C]'}`}>
-            {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
+            {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : purchaseDisabled ? 'Indisponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
           </span>
         </div>
       </div>
