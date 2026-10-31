@@ -57,7 +57,7 @@ function OrderContent({ order: o, reload }) {
   const [supplierStatus, setSupplierStatus] = useState(supplier?.status || 'pending_validation');
   const [alibabaOrderId, setAlibabaOrderId] = useState(supplier?.alibaba_order_id || '');
   const [agentOrderId, setAgentOrderId] = useState(supplier?.agent_order_id || '');
-  const [agentProvider, setAgentProvider] = useState(supplier?.agent_provider || 'HyperSKU');
+  const [agentProvider, setAgentProvider] = useState(supplier?.agent_provider || 'CJdropshipping');
   const [agentConnection, setAgentConnection] = useState(supplier?.agent_connection_status || 'not_connected');
   const [supplierNotes, setSupplierNotes] = useState(supplier?.notes || '');
   const [confirmRefresh, setConfirmRefresh] = useState(false);
@@ -93,7 +93,7 @@ function OrderContent({ order: o, reload }) {
     } catch (error) { toast.error(errorMessage(error)); } finally { setBusy(false); setConfirmRefresh(false); }
   }
   const agentDashboard = agentProvider.trim().toLowerCase() === 'hypersku' ? 'https://app.hypersku.com/dashboard'
-    : agentProvider.trim().toLowerCase() === 'cjdropshipping' ? 'https://cjdropship.com/fulfillment-service/' : null;
+    : agentProvider.trim().toLowerCase() === 'cjdropshipping' ? 'https://www.cjdropshipping.com/mine/shipment' : null;
   const canRefreshLinks = supplier && ['pending_validation', 'requires_attention'].includes(supplier.status)
     && !supplier.approved_at && !supplier.ordered_at && !supplier.alibaba_order_id && !supplier.agent_order_id
     && o.payment_status === 'paid' && !['cancelled', 'refunded'].includes(o.status)
