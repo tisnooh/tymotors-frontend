@@ -21,10 +21,10 @@ test('withdrawal requires an explicit decision before submission', async () => {
 
 test('payment mode wording follows server configuration without changing the code', async () => {
   await act(async () => root.render(<TermsPage/>));
-  expect(host.textContent).toContain('Actuellement Stripe fonctionne en test.');
+  expect(host.textContent).toContain('Le paiement réel n’est pas encore ouvert.');
   await act(async () => root.unmount()); root=createRoot(host);
   SiteConfig.get.mockResolvedValue({ legal:{},legal_ready:true,stripe_mode:'live' });
   await act(async () => root.render(<TermsPage/>));
-  expect(host.textContent).not.toContain('Actuellement Stripe fonctionne en test.');
+  expect(host.textContent).not.toContain('Le paiement réel n’est pas encore ouvert.');
   expect(host.textContent).toContain('Les achats fournisseurs restent soumis à une validation humaine.');
 });

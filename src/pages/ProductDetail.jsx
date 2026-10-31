@@ -393,7 +393,7 @@ export default function ProductDetail() {
 
             <div className="mt-8 grid grid-cols-3 gap-3">
               <Trust icon={<Truck className="h-4 w-4" />} title="Expédition" sub="Suivi inclus" />
-              <Trust icon={<ShieldCheck className="h-4 w-4" />} title="Paiement sécurisé" sub="Stripe en mode test" />
+              <Trust icon={<ShieldCheck className="h-4 w-4" />} title={isPreview ? 'Commande à venir' : 'Paiement sécurisé'} sub={isPreview ? 'Après validation du produit' : product.test_purchase ? 'Paiement de démonstration' : 'Paiement par Stripe'} />
               <Trust icon={<BadgeCheck className="h-4 w-4" />} title="Compatibilité" sub="Vérification avant achat" />
             </div>
 
