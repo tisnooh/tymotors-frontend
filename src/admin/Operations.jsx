@@ -71,7 +71,18 @@ function ChannelForm({product,channel,done,close}){
 
 export function SettingsPage(){
   const state=useData('settings'),[page,setPage]=useState(1),audit=useData('audit',{page,limit:25});
-  return <><PageTitle title="Paramètres" description="Réglages opérationnels et journal d’actions."/><LoadState state={state}>{d=><SettingsForm key={d.updated_at} initial={d} reload={()=>{state.reload();audit.reload();}}/>}</LoadState><Panel title="Journal d’actions"><LoadState state={audit}>{d=><><Table items={d.items} columns={[{label:'Date',render:r=>date(r.created_at)},{label:'Action',render:r=>r.action},{label:'Objet',render:r=>r.resource},{label:'Administrateur',render:r=>r.admin_user_id||'Système'},{label:'Modification',render:r=><details><summary>Voir les valeurs</summary><pre className="ad-json">{JSON.stringify(r.metadata,null,2)}</pre></details>}]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel></>;
+  return <><PageTitle title="Paramètres" description="Réglages opérationnels et journal d’actions."/><LoadState state={state}>{d=><SettingsForm key={d.updated_at} initial={d} reload={()=>{state.reload();audit.reload();}}/>}</LoadState><CjStatusPanel/><Panel title="Journal d’actions"><LoadState state={audit}>{d=><><Table items={d.items} columns={[{label:'Date',render:r=>date(r.created_at)},{label:'Action',render:r=>r.action},{label:'Objet',render:r=>r.resource},{label:'Administrateur',render:r=>r.admin_user_id||'Système'},{label:'Modification',render:r=><details><summary>Voir les valeurs</summary><pre className="ad-json">{JSON.stringify(r.metadata,null,2)}</pre></details>}]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel></>;
+}
+function CjStatusPanel(){
+  const [status,setStatus]=useState(null),[busy,setBusy]=useState(false);
+  async function check(){
+    setBusy(true);
+    try { const result=await adminApi.get('integrations/cj/status'); setStatus(result.status); }
+    catch(error) { setStatus(null); toast.error(errorMessage(error)); }
+    finally { setBusy(false); }
+  }
+  const labels={api_authenticated:'Clé CJ authentifiée. Produits et expédition à relier.',not_configured:'Clé CJ absente du serveur.',rejected:'Clé CJ refusée par CJ.',unavailable:'Service CJ temporairement indisponible.',invalid_response:'Réponse CJ non reconnue.'};
+  return <Panel title="Connexion CJdropshipping"><p className="ad-note">Ce contrôle vérifie seulement l’authentification API. Il ne crée aucune commande et ne valide aucune référence produit.</p><button type="button" className="ad-btn" disabled={busy} onClick={check}>{busy?'Vérification…':'Tester la connexion CJ'}</button>{status&&<p role="status" className="ad-note">{labels[status]||'État CJ inconnu.'}</p>}</Panel>;
 }
 function SettingsForm({initial,reload}){
   const [form,setForm]=useState(initial),[busy,setBusy]=useState(false);
