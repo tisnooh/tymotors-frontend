@@ -33,7 +33,10 @@ export default function AuthPage() {
         navigate('/account');
       }
     } catch (authError) {
-      setError(authError?.message || 'Connexion impossible. Réessaie dans un instant.');
+      const detail = authError?.response?.data?.detail;
+      setError(typeof detail === 'string' ? detail : mode === 'forgot'
+        ? 'Service momentanément indisponible. Réessaie dans quelques minutes.'
+        : authError?.message || 'Connexion impossible. Réessaie dans un instant.');
     } finally { setBusy(false); }
   }
 

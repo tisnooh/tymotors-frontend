@@ -41,6 +41,6 @@ export default function AuthConfirm() {
     <h1 className="ty-display text-white text-4xl mt-3">{state.status === 'success' ? 'Confirmation réussie' : state.status === 'error' ? 'Lien non valide' : 'Confirmation en cours'}</h1>
     <p className={`${state.status === 'error' ? 'text-red-200' : 'text-ty-textMid'} mt-5`}>{state.message}</p>
     {state.status === 'success' && <Link to="/account" className="ty-btn-primary w-full mt-7">ACCÉDER À MON COMPTE</Link>}
-    {state.status === 'error' && <Link to="/auth?mode=login" className="ty-btn-secondary w-full mt-7">RETOUR À LA CONNEXION</Link>}
+    {state.status === 'error' && <Link to="/auth?mode=forgot" className="ty-btn-secondary w-full mt-7">DEMANDER UN NOUVEAU LIEN</Link>}
   </div></main>;
 }
