@@ -139,14 +139,14 @@ export function ContactPage() {
 
 export function ShippingPage() {
   return (
-    <PageLayout eyebrow="SUPPORT" title="Livraison" subtitle="Livraison rapide et sécurisée dans toute l'Europe.">
+    <PageLayout eyebrow="SUPPORT" title="Livraison" subtitle="Les conditions de livraison sont confirmées avant le paiement.">
       <Section title="Zones de livraison">
-        <p>La livraison est actuellement disponible en France, Belgique, Allemagne, Espagne, Italie, Luxembourg, Pays-Bas et Portugal.</p>
+        <p>La zone actuellement configurée pour le paiement est la France. Les autres destinations seront proposées après validation de leurs frais et délais.</p>
       </Section>
       <Section title="Délais">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {[
-            { zone: 'Livraison UE suivie', délai: 'Délai propre à chaque produit', prix: '15 €' },
+            { zone: 'Livraison en France', délai: 'Délai propre à chaque produit', prix: '15 €' },
             { zone: 'Commande dès 350 €', délai: 'Même niveau de suivi', prix: 'Livraison offerte' },
           ].map(({ zone, délai, prix }) => (
             <div key={zone} className="p-5 rounded-xl border border-[#151A23] bg-[#0A0B0E]">
@@ -162,7 +162,7 @@ export function ShippingPage() {
       </Section>
       <Section title="Informations importantes">
         <p>• La livraison gratuite est automatiquement appliquée pour toute commande supérieure à 350€.</p>
-        <p>• Un numéro de suivi vous sera envoyé par email dès l'expédition de votre colis.</p>
+        <p>• Le suivi sera communiqué lorsqu'un transporteur et un numéro de colis auront été confirmés.</p>
         <p>• La disponibilité, le temps de préparation et le délai de livraison doivent être confirmés avant la commande.</p>
         <p>• Les modalités douanières restent à confirmer avec le prestataire avant l'ouverture aux ventes.</p>
       </Section>
@@ -182,10 +182,10 @@ export { WithdrawalPage as ReturnsPage } from './LegalPages';
 const FAQ_ITEMS = [
   { q: "Comment savoir si un produit est compatible avec mon véhicule ?", a: "Utilisez notre configurateur de compatibilité sur la page Personnaliser. Sélectionnez votre marque, modèle et génération pour voir tous les produits compatibles." },
   { q: "Quels sont les délais de livraison ?", a: "Le délai dépend du produit, de sa disponibilité et de la destination. Il doit être confirmé avant la commande. Nous n'annonçons pas de livraison express ni d'expédition le jour même sans confirmation du prestataire." },
-  { q: "La livraison est-elle gratuite ?", a: "Oui, la livraison est gratuite pour toute commande supérieure à 350€ en France et dans l'Union Européenne." },
+  { q: "La livraison est-elle gratuite ?", a: "La livraison est offerte dès 350 € pour les commandes vers la France, lorsque le produit est disponible à la vente. Les frais exacts sont affichés avant paiement." },
   { q: "Puis-je retourner un article ?", a: "Pour les biens éligibles, vous disposez d’un droit de rétractation de 14 jours après réception. Consultez la page Retours et son formulaire ; les garanties légales restent applicables." },
   { q: "Les produits sont-ils garantis ?", a: "Les garanties légales restent applicables. Pour un bien neuf, la conformité s'exerce pendant deux ans à compter de sa délivrance ; une éventuelle garantie commerciale est précisée sur la fiche. Consultez nos conditions de vente." },
-  { q: "Comment suivre ma commande ?", a: "Un email avec votre numéro de suivi vous sera envoyé dès l'expédition. Vous pouvez également suivre votre commande depuis la page Suivi de commande." },
+  { q: "Comment suivre ma commande ?", a: "Vous pouvez consulter la page Suivi de commande. Le transporteur et le numéro de colis y seront indiqués lorsqu'ils auront été confirmés." },
   { q: "Les produits nécessitent-ils une installation professionnelle ?", a: "Certains produits peuvent être installés en DIY, d'autres nécessitent un professionnel. Chaque fiche produit indique le niveau d'installation requis." },
   { q: "Acceptez-vous les paiements en plusieurs fois ?", a: "Les moyens de paiement disponibles sont affichés par Stripe au moment du règlement. Un paiement fractionné n'est disponible que s'il est proposé pour votre achat, selon les conditions et frais indiqués sur cette page." },
 ];

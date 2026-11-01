@@ -57,6 +57,20 @@ async function openMenu() {
   await click(trigger);
   return query('mobile-menu-sheet');
 }
+
+test('narrow desktop windows use the mobile navigation without overlapping desktop links', async () => {
+  const previousWidth = window.innerWidth;
+  try {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    await act(async () => window.dispatchEvent(new Event('resize')));
+    expect(query('navbar-main-nav').className).toContain('hidden');
+    expect(query('navbar-mobile-menu-button').className).toContain('inline-flex');
+    expect(query('navbar-shop-now-button').className).toContain('hidden');
+  } finally {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: previousWidth });
+    await act(async () => window.dispatchEvent(new Event('resize')));
+  }
+});
 beforeEach(async () => {
   mockLanguage = 'fr'; mockPathname = '/'; jest.clearAllMocks();
   host = document.createElement('div'); document.body.appendChild(host); root = createRoot(host);

@@ -8,6 +8,7 @@ import { useApp } from '@/contexts/AppContext';
 
 function isDesktopNavigationDevice() {
   if (typeof window === 'undefined' || typeof navigator === 'undefined') return true;
+  if (window.innerWidth < 1024) return false;
   const userAgent = navigator.userAgent || '';
   const mobileOrTablet = /Android|iPad|iPhone|iPod|Tablet|Mobile/i.test(userAgent);
   const ipadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;

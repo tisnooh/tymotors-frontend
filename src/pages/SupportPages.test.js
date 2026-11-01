@@ -87,6 +87,8 @@ test('tracking displays the carrier and tracking number even without a URL', asy
 test('shipping copy does not promise unconfirmed same-day dispatch', async () => {
   await act(async () => root.render(<ShippingPage />));
   expect(container.textContent).toContain('confirmés avant la commande');
+  expect(container.textContent).toContain('France');
+  expect(container.textContent).not.toContain('dans toute l’Europe');
   expect(container.textContent).not.toContain('avant 14h');
   expect(container.textContent).not.toContain('après expédition');
 });
