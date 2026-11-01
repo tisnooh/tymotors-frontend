@@ -237,7 +237,8 @@ const FULFILLMENT_LABELS = {
 };
 
 export function TrackPage() {
-  const [orderNum, setOrderNum] = useState('');
+  const location = useLocation();
+  const [orderNum, setOrderNum] = useState(() => new URLSearchParams(location.search || '').get('order') || '');
   const [email, setEmail] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');

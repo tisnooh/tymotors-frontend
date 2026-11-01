@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client';
 import Cart from './Cart';
 import { useApp } from '@/contexts/AppContext';
 import edits from '@/data/productPhotoEdits.json';
+import { Checkout, SiteConfig } from '@/lib/api';
 jest.mock('@/contexts/AppContext', () => ({ useApp: jest.fn() }));
-jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn() } }));
+jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn() }, SiteConfig: { get: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children, ...props }) => <div {...props}>{children}</div> }));
@@ -13,6 +14,7 @@ beforeEach(() => {
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   host = document.createElement('div'); root = createRoot(host);
   cart = { items: [{ product_id: 'fixture', slug: 'spoiler', name: 'Spoiler', price: 139, quantity: 2, max_order_quantity: 20 }], subtotal: 278, shipping: 15, total: 293, currency: 'EUR' };
+  SiteConfig.get.mockReturnValue(new Promise(() => {}));
   useApp.mockImplementation(() => ({ cart, updateCart: jest.fn(), removeFromCart: jest.fn() }));
 });
 afterEach(() => { act(() => root.unmount()); jest.clearAllMocks(); });
@@ -47,4 +49,24 @@ test('missing or broken image uses a readable fallback, not a different product'
   act(() => host.querySelector('img').dispatchEvent(new Event('error')));
   expect(host.querySelector('img')).toBeNull();
   expect(host.querySelector('[role="img"]').getAttribute('aria-label')).toBe('Spoiler');
+});
+
+test('test mode does not offer checkout or claim a live payment', async () => {
+  SiteConfig.get.mockResolvedValue({ stripe_mode: 'test', legal_ready: false });
+  await act(async () => root.render(<Cart />));
+  const button = host.querySelector('[data-testid="cart-checkout-button"]');
+  expect(button.disabled).toBe(true);
+  expect(host.textContent).not.toContain('STRIPE TEST');
+  button.click();
+  expect(Checkout.create).not.toHaveBeenCalled();
+});
+
+test('live checkout opens only for an available compatible item', async () => {
+  SiteConfig.get.mockResolvedValue({ stripe_mode: 'live', legal_ready: true });
+  cart.items[0].purchase_available = true;
+  cart.items[0].compatibility_result = { status: 'compatible' };
+  await act(async () => root.render(<Cart />));
+  expect(host.querySelector('[data-testid="cart-checkout-button"]').disabled).toBe(false);
+  expect(host.textContent).toContain('Paiement sécurisé par Stripe');
+  expect(host.textContent).not.toContain('environnement de test');
 });

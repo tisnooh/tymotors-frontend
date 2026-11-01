@@ -67,6 +67,13 @@ test('an unmatched order keeps a generic lookup error', async () => {
   expect(container.textContent).toContain('Commande introuvable');
 });
 
+test('tracking link from a guest email pre-fills the order reference', async () => {
+  useLocation.mockReturnValue({ state: null, search: '?order=TY-20261101-ABC12345' });
+  await act(async () => root.render(<TrackPage />));
+  expect(container.querySelector('input[type="text"]').value).toBe('TY-20261101-ABC12345');
+  expect(Tracking.lookup).not.toHaveBeenCalled();
+});
+
 test('tracking displays the carrier and tracking number even without a URL', async () => {
   Tracking.lookup.mockResolvedValue({ order_number: 'TY-TEST', fulfillment_status: 'shipped',
     carrier: 'Transporteur test', tracking_number: 'TRACK-123',

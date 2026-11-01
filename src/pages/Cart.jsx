@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/AppContext';
@@ -6,21 +6,35 @@ import { formatPrice } from '@/lib/format';
 import { productPhoto } from '@/lib/productPhoto';
 import { Trash2, ArrowRight, Truck, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { Reveal } from '@/components/shared/Reveal';
-import { Checkout } from '@/lib/api';
+import { Checkout, SiteConfig } from '@/lib/api';
 import { toast } from 'sonner';
 
 export default function Cart() {
   const { t, i18n } = useTranslation();
   const { cart, updateCart, removeFromCart } = useApp();
   const [checkingOut, setCheckingOut] = useState(false);
+  const [siteConfig, setSiteConfig] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    SiteConfig.get().then((config) => { if (mounted) setSiteConfig(config); })
+      .catch(() => { if (mounted) setSiteConfig(null); });
+    return () => { mounted = false; };
+  }, []);
 
   const currency = cart.currency || 'EUR';
   const subtotal = cart.subtotal ?? 0;
   const shipping = cart.shipping ?? 0;
   const shippingFree = shipping === 0;
   const total = cart.total ?? (subtotal + shipping);
+  const liveCheckout = siteConfig?.stripe_mode === 'live' && siteConfig.legal_ready === true;
+  const itemsReady = cart.items.every((item) => item.purchase_available === true
+    && item.quantity <= item.max_order_quantity
+    && item.compatibility_result?.status === 'compatible');
+  const canCheckout = liveCheckout && itemsReady;
 
   const startCheckout = async () => {
+    if (!canCheckout || checkingOut) return;
     try {
       setCheckingOut(true);
       const data = await Checkout.create();
@@ -102,14 +116,14 @@ export default function Cart() {
                   data-testid="cart-checkout-button"
                   className="mt-6 w-full ty-btn-primary h-12 text-xs uppercase tracking-[0.18em]"
                   onClick={startCheckout}
-                  disabled={checkingOut}
+                  disabled={checkingOut || !canCheckout}
                 >
                   {checkingOut ? 'Redirection sécurisée…' : t('cart.checkout')} <ArrowRight className="h-4 w-4" />
                 </button>
-                <p className="mt-3 text-[11px] leading-relaxed text-ty-textLow text-center">Paiement Stripe en environnement de test : aucune carte réelle ne doit être utilisée. En continuant, vous acceptez nos <Link to="/legal/terms" className="underline hover:text-white">conditions de vente</Link>.</p>
+                <p className="mt-3 text-[11px] leading-relaxed text-ty-textLow text-center">{canCheckout ? 'Paiement sécurisé par Stripe. En continuant, vous acceptez nos ' : 'Le paiement sera disponible après validation du véhicule, du produit et de la boutique. Consultez nos '}<Link to="/legal/terms" className="underline hover:text-white">conditions de vente</Link>.</p>
                 <div className="mt-5 grid grid-cols-3 gap-2">
                   <Trust icon={<Truck className="h-4 w-4" />} label="SUIVI" />
-                  <Trust icon={<ShieldCheck className="h-4 w-4" />} label="STRIPE TEST" />
+                  <Trust icon={<ShieldCheck className="h-4 w-4" />} label={canCheckout ? 'STRIPE' : 'PAIEMENT'} />
                   <Trust icon={<BadgeCheck className="h-4 w-4" />} label="VÉRIFIER" />
                 </div>
               </div>
