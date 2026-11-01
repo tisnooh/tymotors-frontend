@@ -24,7 +24,7 @@ function assertNoInjection(serialize, value) {
 for (const consumer of ['terser-webpack-plugin', 'css-minimizer-webpack-plugin', 'workbox-build']) {
   test(`${consumer}: patched serializer and RegExp/Date injection rejected`, () => {
     const load = consumerRequire(consumer);
-    assert.equal(load('serialize-javascript/package.json').version, '7.1.2');
+    assert.equal(load('serialize-javascript/package.json').version, '7.1.3');
     const serialize = load('serialize-javascript');
     const forgedRegex = Object.create(RegExp.prototype);
     Object.defineProperty(forgedRegex, 'source', { get: () => 'x' });

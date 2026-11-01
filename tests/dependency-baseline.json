@@ -1,10 +1,20 @@
 {
-  "exceptions": [{
-    "id": "GHSA-vfj7-8cjw-p6xm",
-    "package": "braces",
-    "versions": ["3.0.3"],
-    "severity": "high",
-    "expires": "2026-11-13T00:00:00Z",
-    "reason": "No fixed upstream release; build/watch/test glob input is repository-controlled. Never run untrusted pull requests with credentials. Re-review within 30 days; see backend/docs/SECURITY_REVIEW.md."
-  }]
+  "exceptions": [
+    {
+      "id": "GHSA-g3hv-75wg-m249",
+      "package": "minimatch",
+      "versions": ["3.1.5", "5.1.9"],
+      "severity": "moderate",
+      "expires": "2026-11-13T00:00:00Z",
+      "reason": "Transitive ESLint, CRA build/test and filelist glob handling; inputs are repository-controlled. The advisory fixes only minimatch 11, incompatible with these dependency majors. Review upstream upgrades before expiry."
+    },
+    {
+      "id": "GHSA-gcqx-w48m-w2h4",
+      "package": "deepmerge",
+      "versions": ["4.3.1"],
+      "severity": "low",
+      "expires": "2026-11-13T00:00:00Z",
+      "reason": "Transitive CRA build/test dependency through fork-ts-checker, SVGR, Rollup and Jest; no patched version is published. Inputs are repository-controlled. Review upstream before expiry."
+    }
+  ]
 }
