@@ -7,6 +7,7 @@ import legacyPhotos from '@/data/productLegacyFramedPhotos.json';
 import catalogueAudit from '@/lib/__fixtures__/productGalleryAudit.json';
 import { productGallery } from '@/lib/productGallery';
 import { productPhoto } from '@/lib/productPhoto';
+import { optimizedImageUrl } from '@/lib/image';
 jest.mock('@/lib/api', () => ({ Products: { get: jest.fn(), list: jest.fn(), checkCompatibility: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ useParams: () => ({ slug: 'fixture' }), useNavigate: () => jest.fn(), Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
@@ -141,7 +142,7 @@ test.each(catalogueAudit.map(product => [product.slug, product]))('%s renders on
   Products.list.mockResolvedValue({ items: [] });
   await act(async () => root.render(<ProductDetail/>));
   const gallery = productGallery(product);
-  expect(host.querySelector('img').getAttribute('src')).toBe(productPhoto(product.images[0]));
+  expect(host.querySelector('img').getAttribute('src')).toBe(optimizedImageUrl(productPhoto(product.images[0])));
   expect(document.head.querySelector('meta[property="og:image"]').getAttribute('content'))
     .toBe(new URL(gallery[0], window.location.origin).href);
   const schema = JSON.parse(document.head.querySelector('script[data-tymotors-product="true"]').textContent);
@@ -149,9 +150,9 @@ test.each(catalogueAudit.map(product => [product.slug, product]))('%s renders on
   const thumbs = [...host.querySelectorAll('[data-testid="product-image-thumb"]')];
   expect(thumbs).toHaveLength(gallery.length > 1 ? gallery.length : 0);
   for (const [index, thumb] of thumbs.entries()) {
-    expect(thumb.querySelector('img').getAttribute('src')).toBe(gallery[index]);
+    expect(thumb.querySelector('img').getAttribute('src')).toBe(optimizedImageUrl(gallery[index]));
     act(() => thumb.click());
-    expect(host.querySelector('img').getAttribute('src')).toBe(gallery[index]);
+    expect(host.querySelector('img').getAttribute('src')).toBe(optimizedImageUrl(gallery[index]));
   }
   const legacy = legacyPhotos[slug]?.previousImage;
   expect([...host.querySelectorAll('img')].some(image => image.getAttribute('src') === legacy)).toBe(false);
