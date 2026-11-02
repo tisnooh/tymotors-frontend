@@ -1,7 +1,7 @@
 /* global global */
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Returns } from './Operations';
+import { Returns, CjStatusPanel } from './Operations';
 import { adminApi } from './api';
 import { toast } from 'sonner';
 
@@ -40,4 +40,13 @@ test('a concurrent withdrawal update shows an error without claiming a refund', 
   expect(toast.error).toHaveBeenCalledWith('Request changed. Reload.');
   expect(toast.success).not.toHaveBeenCalled();
   expect(host.textContent).toContain('Elle ne rembourse pas le paiement');
+});
+
+test('CJ status distinguishes authentication from missing product connections', async () => {
+  adminApi.get.mockResolvedValue({ status: 'api_authenticated', mapping_status: 'no_products', connected_variants: 0, authorized_shops: 1 });
+  await act(async () => root.render(<CjStatusPanel/>));
+  await act(async () => host.querySelector('button').click());
+  expect(adminApi.get).toHaveBeenCalledWith('integrations/cj/status');
+  expect(host.querySelector('[role="status"]').textContent).toContain('Aucune variante liée à CJ');
+  expect(host.textContent).not.toContain('expédition validée');
 });
