@@ -71,7 +71,7 @@ function ChannelForm({product,channel,done,close}){
 
 export function SettingsPage(){
   const state=useData('settings'),[page,setPage]=useState(1),audit=useData('audit',{page,limit:25});
-  return <><PageTitle title="Paramètres" description="Réglages opérationnels et journal d’actions."/><LoadState state={state}>{d=><SettingsForm key={d.updated_at} initial={d} reload={()=>{state.reload();audit.reload();}}/>}</LoadState><CjStatusPanel/><StripeStatusPanel/><Panel title="Journal d’actions"><LoadState state={audit}>{d=><><Table items={d.items} columns={[{label:'Date',render:r=>date(r.created_at)},{label:'Action',render:r=>r.action},{label:'Objet',render:r=>r.resource},{label:'Administrateur',render:r=>r.admin_user_id||'Système'},{label:'Modification',render:r=><details><summary>Voir les valeurs</summary><pre className="ad-json">{JSON.stringify(r.metadata,null,2)}</pre></details>}]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel></>;
+  return <><PageTitle title="Paramètres" description="Réglages opérationnels et journal d’actions."/><LoadState state={state}>{d=><SettingsForm key={d.updated_at} initial={d} reload={()=>{state.reload();audit.reload();}}/>}</LoadState><CjStatusPanel/><StripeStatusPanel/><ZeroCheckoutDiagnosticPanel/><Panel title="Journal d’actions"><LoadState state={audit}>{d=><><Table items={d.items} columns={[{label:'Date',render:r=>date(r.created_at)},{label:'Action',render:r=>r.action},{label:'Objet',render:r=>r.resource},{label:'Administrateur',render:r=>r.admin_user_id||'Système'},{label:'Modification',render:r=><details><summary>Voir les valeurs</summary><pre className="ad-json">{JSON.stringify(r.metadata,null,2)}</pre></details>}]}/><Pager data={d} page={page} setPage={setPage}/></>}</LoadState></Panel></>;
 }
 export function CjStatusPanel(){
   const [result,setResult]=useState(null),[busy,setBusy]=useState(false);
@@ -95,6 +95,24 @@ function StripeStatusPanel(){
   }
   const labels={api_authenticated:'Clé Stripe authentifiée sur le compte attendu.',wrong_account:'La clé Stripe pointe vers un autre compte.',not_configured:'Clé Stripe absente du serveur.',unavailable:'Stripe ne confirme pas la clé pour le moment.'};
   return <Panel title="Connexion Stripe"><p className="ad-note">Vérifie la clé du serveur et le compte Stripe, sans créer de paiement. La vente exige aussi un produit, une livraison et les informations vendeur validés.</p><button type="button" className="ad-btn" disabled={busy} onClick={check}>{busy?'Vérification…':'Tester la connexion Stripe'}</button>{result&&<p role="status" className="ad-note">{labels[result.status]||'État Stripe inconnu.'}{result.account_id?` Compte : ${result.account_id}.`:''}{result.status==='api_authenticated'&&!result.charges_enabled?' Paiements non activés sur ce compte.':''}</p>}</Panel>;
+}
+function safeStripeCheckoutUrl(value){
+  try { const url=new URL(value); return url.protocol==='https:' && url.hostname==='checkout.stripe.com'; }
+  catch { return false; }
+}
+export function ZeroCheckoutDiagnosticPanel(){
+  const [result,setResult]=useState(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
+  async function create(){
+    setBusy(true);setResult(null);setError('');
+    try {
+      const data=await adminApi.post('diagnostics/zero-checkout',{});
+      if(!data || data.is_test!==true || data.scope!=='stripe_order_only' || !data.order_id || !data.order_reference || !safeStripeCheckoutUrl(data.url))
+        throw new Error('Le diagnostic reçu est incomplet. Aucun lien de paiement ne sera ouvert.');
+      setResult(data);
+    } catch(requestError) { setError(errorMessage(requestError)); }
+    finally { setBusy(false); }
+  }
+  return <Panel title="Diagnostic de commande à 0 €"><p className="ad-note">Article interne archivé, réservé à l’administration. Cet essai vérifie Stripe puis la création de commande uniquement : aucun panier public, colis, achat fournisseur ni lien CJ.</p><button type="button" className="ad-btn" disabled={busy||!!result} onClick={create}>{busy?'Préparation…':result?'Essai préparé':'Créer l’essai gratuit'}</button>{error&&<p role="alert" className="ad-note">{error}</p>}{result&&<div role="status" className="ad-note"><p>Diagnostic 0 € préparé · référence {result.order_reference}. Aucune expédition.</p><div className="ad-actions"><a className="ad-btn" href={result.url}>Ouvrir Stripe à 0 €</a><Link className="ad-btn" to={`/admin/orders/${result.order_id}`}>Voir le dossier de commande</Link></div></div>}</Panel>;
 }
 function SettingsForm({initial,reload}){
   const [form,setForm]=useState(initial),[busy,setBusy]=useState(false);

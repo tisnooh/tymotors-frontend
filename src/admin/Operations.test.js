@@ -1,12 +1,12 @@
 /* global global */
 import React, { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Returns, CjStatusPanel } from './Operations';
+import { Returns, CjStatusPanel, ZeroCheckoutDiagnosticPanel } from './Operations';
 import { adminApi } from './api';
 import { toast } from 'sonner';
 
 jest.mock('@/lib/api', () => ({ api: {} }));
-jest.mock('./api', () => ({ ...jest.requireActual('./api'), adminApi: { get: jest.fn(), patch: jest.fn() } }));
+jest.mock('./api', () => ({ ...jest.requireActual('./api'), adminApi: { get: jest.fn(), patch: jest.fn(), post: jest.fn() } }));
 jest.mock('sonner', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => require('react').createElement('a', { href: to, ...props }) }), { virtual: true });
 
@@ -49,4 +49,32 @@ test('CJ status distinguishes authentication from missing product connections', 
   expect(adminApi.get).toHaveBeenCalledWith('integrations/cj/status');
   expect(host.querySelector('[role="status"]').textContent).toContain('Aucune variante liée à CJ');
   expect(host.textContent).not.toContain('expédition validée');
+});
+
+test('admin-only zero-euro diagnostic exposes the Stripe link and private order after creation', async () => {
+  adminApi.post.mockResolvedValue({ url:'https://checkout.stripe.com/c/pay/cs_fixture', order_reference:'TY-DIAG-1', order_id:'order-fixture', is_test:true, scope:'stripe_order_only' });
+  await act(async () => root.render(<ZeroCheckoutDiagnosticPanel/>));
+  expect(host.textContent).toContain('aucun panier public, colis, achat fournisseur ni lien CJ');
+  await act(async () => host.querySelector('button').click());
+  expect(adminApi.post).toHaveBeenCalledWith('diagnostics/zero-checkout', {});
+  expect(host.querySelector('a[href="https://checkout.stripe.com/c/pay/cs_fixture"]')).not.toBeNull();
+  expect(host.querySelector('a[href="/admin/orders/order-fixture"]')).not.toBeNull();
+  expect(host.textContent).toContain('Diagnostic 0 € préparé');
+  expect(host.querySelector('button').disabled).toBe(true);
+});
+
+test('unauthorized diagnostic cannot expose a checkout link', async () => {
+  adminApi.post.mockRejectedValue({ response:{status:403} });
+  await act(async () => root.render(<ZeroCheckoutDiagnosticPanel/>));
+  await act(async () => host.querySelector('button').click());
+  expect(host.querySelector('[role="alert"]').textContent).toContain('Accès réservé aux administrateurs');
+  expect(host.querySelector('a[href^="https://checkout.stripe.com/"]')).toBeNull();
+});
+
+test('diagnostic rejects an untrusted checkout URL', async () => {
+  adminApi.post.mockResolvedValue({ url:'https://example.invalid/pay', order_reference:'TY-DIAG-1', order_id:'order-fixture', is_test:true, scope:'stripe_order_only' });
+  await act(async () => root.render(<ZeroCheckoutDiagnosticPanel/>));
+  await act(async () => host.querySelector('button').click());
+  expect(host.querySelector('[role="alert"]').textContent).toContain('diagnostic reçu est incomplet');
+  expect(host.querySelector('a[href^="https://example.invalid/"]')).toBeNull();
 });
