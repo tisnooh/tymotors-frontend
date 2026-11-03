@@ -48,12 +48,19 @@ export default function OrderSuccess() {
     return <main className="pt-32 pb-24 ty-container text-center min-h-[70vh]"><LoaderCircle className="h-10 w-10 text-[#E10600] animate-spin mx-auto" /><p className="text-ty-textMid mt-4">Vérification sécurisée du paiement…</p></main>;
   }
 
+  const paymentFailed = order.payment_status === 'failed';
+  const paymentRefunded = order.payment_status === 'refunded';
+  const paymentPending = !order.paid && !paymentFailed && !paymentRefunded;
+  const heading = order.paid ? 'Paiement confirmé' : paymentFailed ? 'Paiement non abouti' : paymentRefunded ? 'Commande remboursée' : 'Paiement en cours';
+
   return (
     <main className="pt-32 pb-24 ty-container min-h-[70vh]">
       <div className="max-w-2xl mx-auto rounded-2xl border border-[#232B3A] bg-[#0A0B0E] p-6 md:p-10">
-        <CheckCircle2 className={`h-12 w-12 ${order.paid ? 'text-emerald-400' : 'text-[#F2C94C]'}`} />
-        <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[#F2C94C] mt-6">Commande vérifiée</p>
-        <h1 className="ty-display text-white text-4xl mt-2">{order.paid ? 'Paiement confirmé' : 'Paiement en cours'}</h1>
+        {paymentFailed || paymentRefunded
+          ? <AlertTriangle className="h-12 w-12 text-[#F2C94C]" />
+          : <CheckCircle2 className={`h-12 w-12 ${order.paid ? 'text-emerald-400' : 'text-[#F2C94C]'}`} />}
+        <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[#F2C94C] mt-6">{paymentFailed || paymentRefunded ? 'État de la commande' : 'Commande vérifiée'}</p>
+        <h1 className="ty-display text-white text-4xl mt-2">{heading}</h1>
         {order.is_test && <p role="note" className="mt-3 text-sm text-[#F2C94C]">Commande de test : aucun débit réel ni expédition.</p>}
         <p className="text-ty-textMid mt-3">{order.customer_email ? `Email de commande : ${order.customer_email}.` : 'Retrouvez votre commande dans le suivi ci-dessous.'}</p>
         <dl className="mt-8 divide-y divide-[#151A23] border-y border-[#151A23] text-sm">
@@ -62,7 +69,9 @@ export default function OrderSuccess() {
           <div className="flex justify-between py-3 text-base"><dt className="text-white">Total</dt><dd className="text-white font-mono">{formatPrice(order.total, order.currency, 'fr')}</dd></div>
         </dl>
         <p className="text-ty-textLow text-xs mt-5 break-all">Référence : {order.order_reference}</p>
-        {!order.paid && <p className="text-ty-textMid text-sm mt-3">La validation attend la notification sécurisée de Stripe. Ne payez pas une seconde fois. Retrouvez ensuite votre commande dans le suivi.</p>}
+        {paymentPending && <p className="text-ty-textMid text-sm mt-3">La validation attend la notification sécurisée de Stripe. Ne payez pas une seconde fois. Retrouvez ensuite votre commande dans le suivi.</p>}
+        {paymentFailed && <p className="text-ty-textMid text-sm mt-3">Ce paiement n’a pas été confirmé. Aucun nouveau paiement n’a été déclenché depuis cette page.</p>}
+        {paymentRefunded && <p className="text-ty-textMid text-sm mt-3">Le paiement de cette commande a été remboursé. Retrouvez son état dans le suivi.</p>}
         <Link to="/support/track" className="text-white underline inline-block mt-4">Suivre ma commande</Link>
         <div className="mt-8 flex flex-wrap gap-3"><Link to="/shop" className="ty-btn-primary">Continuer mes achats</Link><Link to="/support/contact" className="ty-btn-secondary">Besoin d’aide ?</Link></div>
       </div>

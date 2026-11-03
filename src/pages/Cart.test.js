@@ -4,8 +4,10 @@ import Cart from './Cart';
 import { useApp } from '@/contexts/AppContext';
 import edits from '@/data/productPhotoEdits.json';
 import { Checkout, SiteConfig } from '@/lib/api';
+import { toast } from 'sonner';
 jest.mock('@/contexts/AppContext', () => ({ useApp: jest.fn() }));
 jest.mock('@/lib/api', () => ({ Checkout: { create: jest.fn() }, SiteConfig: { get: jest.fn() } }));
+jest.mock('sonner', () => ({ toast: { error: jest.fn() } }));
 jest.mock('react-router-dom', () => ({ Link: ({ to, ...props }) => <a href={to} {...props} /> }), { virtual: true });
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: key => key, i18n: { language: 'fr' } }) }));
 jest.mock('@/components/shared/Reveal', () => ({ Reveal: ({ children, ...props }) => <div {...props}>{children}</div> }));
@@ -15,7 +17,7 @@ beforeEach(() => {
   host = document.createElement('div'); root = createRoot(host);
   cart = { items: [{ product_id: 'fixture', slug: 'spoiler', name: 'Spoiler', price: 139, quantity: 2, max_order_quantity: 20 }], subtotal: 278, shipping: 15, total: 293, currency: 'EUR' };
   SiteConfig.get.mockReturnValue(new Promise(() => {}));
-  useApp.mockImplementation(() => ({ cart, updateCart: jest.fn(), removeFromCart: jest.fn() }));
+  useApp.mockImplementation(() => ({ cart, updateCart: jest.fn(), removeFromCart: jest.fn(), refreshCart: jest.fn() }));
 });
 afterEach(() => { act(() => root.unmount()); jest.clearAllMocks(); });
 test('cart uses the API images array and leaves prices and the product destination intact', () => {
@@ -69,4 +71,15 @@ test('live checkout opens only for an available compatible item', async () => {
   expect(host.querySelector('[data-testid="cart-checkout-button"]').disabled).toBe(false);
   expect(host.textContent).toContain('Paiement sécurisé par Stripe');
   expect(host.textContent).not.toContain('environnement de test');
+});
+
+test('a rejected cart quantity change reports the error and refreshes the cart', async () => {
+  const updateCart = jest.fn().mockRejectedValue(new Error('stock changed'));
+  const refreshCart = jest.fn().mockResolvedValue(undefined);
+  useApp.mockImplementation(() => ({ cart, updateCart, removeFromCart: jest.fn(), refreshCart }));
+  await act(async () => root.render(<Cart />));
+  await act(async () => host.querySelector('button[aria-label="Augmenter la quantité"]').click());
+  expect(updateCart).toHaveBeenCalledWith('fixture', 3);
+  expect(refreshCart).toHaveBeenCalledTimes(1);
+  expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Impossible de modifier'));
 });
