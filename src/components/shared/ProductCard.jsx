@@ -157,7 +157,7 @@ export function ProductCard({ product, index = 0 }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-80 pointer-events-none" />
         <ProductBadges badges={product.badges} />
         <WishlistButton active={inWishlist} onClick={onWish} label={t('product.wishlist')} disabled={isPreview} />
-        <QuickAddButton onClick={onAdd} label={purchaseDisabled ? (isPreview ? (i18n.language?.startsWith('fr') ? 'Bientôt' : 'Coming soon') : (i18n.language?.startsWith('fr') ? 'Indisponible' : 'Unavailable')) : t('product.add_to_cart')} disabled={purchaseDisabled} />
+        <QuickAddButton onClick={onAdd} label={purchaseDisabled ? (i18n.language?.startsWith('fr') ? 'Indisponible' : 'Unavailable') : t('product.add_to_cart')} disabled={purchaseDisabled} />
         <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F2C94C]/40 to-transparent" />
       </div>
 
@@ -199,7 +199,7 @@ export function ProductCard({ product, index = 0 }) {
             )}
           </div>
           <span className={`font-mono text-[10px] uppercase ${!isPreview && product.stock > 0 ? 'text-emerald-300' : 'text-[#F2C94C]'}`}>
-            {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : purchaseDisabled ? 'Indisponible' : product.stock > 0 ? 'Disponible' : 'Indisponible'}
+            {product.test_purchase ? (i18n.language?.startsWith('fr') ? 'Simulation de commande' : 'Demo checkout only') : isPreview ? (i18n.language?.startsWith('fr') ? 'En cours de vérification' : 'Pending verification') : purchaseDisabled ? (i18n.language?.startsWith('fr') ? 'Indisponible' : 'Unavailable') : product.stock > 0 ? (i18n.language?.startsWith('fr') ? 'Disponible' : 'Available') : (i18n.language?.startsWith('fr') ? 'Indisponible' : 'Unavailable')}
           </span>
         </div>
       </div>

@@ -50,7 +50,7 @@
     "catalogue_error": "Le catalogue est momentanément indisponible.",
     "retry": "Réessayer",
     "photo_unavailable": "Photo indisponible",
-    "test_product": "Disponible pour les tests",
+    "test_product": "Simulation de commande",
     "compatibility": "Vérifiez toujours la compatibilité avec votre véhicule avant de commander.",
     "query_label": "Recherche : « {{query}} »",
     "pagination": "Pages du catalogue",

@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 export default function Cart() {
   const { t, i18n } = useTranslation();
-  const { cart, updateCart, removeFromCart } = useApp();
+  const { cart, updateCart, removeFromCart, refreshCart } = useApp();
   const [checkingOut, setCheckingOut] = useState(false);
   const [siteConfig, setSiteConfig] = useState(null);
 
@@ -32,6 +32,32 @@ export default function Cart() {
     && item.quantity <= item.max_order_quantity
     && item.compatibility_result?.status === 'compatible');
   const canCheckout = liveCheckout && itemsReady;
+
+  const refreshAfterMutationFailure = async () => {
+    try {
+      if (refreshCart) await refreshCart();
+    } catch {
+      // The original cart operation still needs a visible error when refresh is offline.
+    }
+  };
+
+  const updateQuantity = async (productId, quantity) => {
+    try {
+      await updateCart(productId, quantity);
+    } catch {
+      await refreshAfterMutationFailure();
+      toast.error(i18n.language?.startsWith('fr') ? 'Impossible de modifier la quantité. Vérifiez le panier et réessayez.' : 'Could not update quantity. Check your cart and try again.');
+    }
+  };
+
+  const removeItem = async (productId) => {
+    try {
+      await removeFromCart(productId);
+    } catch {
+      await refreshAfterMutationFailure();
+      toast.error(i18n.language?.startsWith('fr') ? 'Impossible de retirer cet article. Réessayez.' : 'Could not remove this item. Try again.');
+    }
+  };
 
   const startCheckout = async () => {
     if (!canCheckout || checkingOut) return;
@@ -84,12 +110,12 @@ export default function Cart() {
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                       <div className="flex items-center h-10 rounded-xl border border-[#232B3A] bg-[#0F1115]">
-                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateCart(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
+                        <button type="button" aria-label="Diminuer la quantité" onClick={() => updateQuantity(it.product_id, it.quantity - 1)} className="h-10 w-10 text-white">{'\u2212'}</button>
                         <span data-testid="cart-item-qty" className="w-8 text-center text-white font-mono">{it.quantity}</span>
-                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateCart(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
+                        <button type="button" aria-label="Augmenter la quantité" disabled={it.quantity >= (it.max_order_quantity ?? Math.min(it.stock, 20))} onClick={() => updateQuantity(it.product_id, it.quantity + 1)} className="h-10 w-10 text-white disabled:opacity-30">+</button>
                       </div>
                       <p data-testid="cart-item-line-total" className="text-white font-mono w-24 text-right">{formatPrice(lineTotal, currency, i18n.language)}</p>
-                      <button onClick={() => removeFromCart(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
+                      <button onClick={() => removeItem(it.product_id)} data-testid="cart-item-remove-button" aria-label={t('cart.remove')} className="h-10 w-10 rounded-full border border-[#232B3A] text-ty-textMid hover:text-[#E10600] hover:border-[#E10600] flex items-center justify-center">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
