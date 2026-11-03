@@ -33,11 +33,19 @@ export default function Cart() {
     && item.compatibility_result?.status === 'compatible');
   const canCheckout = liveCheckout && itemsReady;
 
+  const refreshAfterMutationFailure = async () => {
+    try {
+      if (refreshCart) await refreshCart();
+    } catch {
+      // The original cart operation still needs a visible error when refresh is offline.
+    }
+  };
+
   const updateQuantity = async (productId, quantity) => {
     try {
       await updateCart(productId, quantity);
     } catch {
-      if (refreshCart) await refreshCart();
+      await refreshAfterMutationFailure();
       toast.error(i18n.language?.startsWith('fr') ? 'Impossible de modifier la quantité. Vérifiez le panier et réessayez.' : 'Could not update quantity. Check your cart and try again.');
     }
   };
@@ -46,7 +54,7 @@ export default function Cart() {
     try {
       await removeFromCart(productId);
     } catch {
-      if (refreshCart) await refreshCart();
+      await refreshAfterMutationFailure();
       toast.error(i18n.language?.startsWith('fr') ? 'Impossible de retirer cet article. Réessayez.' : 'Could not remove this item. Try again.');
     }
   };

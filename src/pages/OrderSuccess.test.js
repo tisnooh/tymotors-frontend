@@ -44,6 +44,16 @@ test.each([
   expect(host.textContent).not.toContain('La validation attend');
 });
 
+test.each([
+  ['failed', 'Paiement non abouti'],
+  ['refunded', 'Commande remboursée'],
+])('the %s status takes precedence over an inconsistent paid flag', async (status, title) => {
+  Checkout.get.mockResolvedValue(order(status, true));
+  await act(async () => root.render(<OrderSuccess />));
+  expect(host.querySelector('h1').textContent).toBe(title);
+  expect(useApp().refreshCart).not.toHaveBeenCalled();
+});
+
 test('a paid order keeps its confirmation and refreshes the cart', async () => {
   Checkout.get.mockResolvedValue(order('paid', true));
   await act(async () => root.render(<OrderSuccess />));

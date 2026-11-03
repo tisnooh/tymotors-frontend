@@ -73,9 +73,9 @@ test('live checkout opens only for an available compatible item', async () => {
   expect(host.textContent).not.toContain('environnement de test');
 });
 
-test('a rejected cart quantity change reports the error and refreshes the cart', async () => {
+test.each([false, true])('a rejected cart quantity change reports the error even if refresh fails (%s)', async (refreshFails) => {
   const updateCart = jest.fn().mockRejectedValue(new Error('stock changed'));
-  const refreshCart = jest.fn().mockResolvedValue(undefined);
+  const refreshCart = jest.fn()[refreshFails ? 'mockRejectedValue' : 'mockResolvedValue'](refreshFails ? new Error('offline') : undefined);
   useApp.mockImplementation(() => ({ cart, updateCart, removeFromCart: jest.fn(), refreshCart }));
   await act(async () => root.render(<Cart />));
   await act(async () => host.querySelector('button[aria-label="Augmenter la quantité"]').click());

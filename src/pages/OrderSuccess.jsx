@@ -25,7 +25,7 @@ export default function OrderSuccess() {
         const data = await Checkout.get(sessionId);
         if (stopped) return;
         setOrder(data);
-        if (data.paid) refreshCart();
+        if (data.payment_status === 'paid') refreshCart();
         else if (++attempts < 15 && !['failed', 'refunded'].includes(data.payment_status)) timer = setTimeout(check, 2000);
       } catch { if (!stopped) setError(true); }
     };
@@ -51,7 +51,7 @@ export default function OrderSuccess() {
   const paymentFailed = order.payment_status === 'failed';
   const paymentRefunded = order.payment_status === 'refunded';
   const paymentPending = !order.paid && !paymentFailed && !paymentRefunded;
-  const heading = order.paid ? 'Paiement confirmé' : paymentFailed ? 'Paiement non abouti' : paymentRefunded ? 'Commande remboursée' : 'Paiement en cours';
+  const heading = paymentFailed ? 'Paiement non abouti' : paymentRefunded ? 'Commande remboursée' : order.paid ? 'Paiement confirmé' : 'Paiement en cours';
 
   return (
     <main className="pt-32 pb-24 ty-container min-h-[70vh]">
