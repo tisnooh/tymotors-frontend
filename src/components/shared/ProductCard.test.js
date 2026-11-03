@@ -16,16 +16,17 @@ afterEach(() => act(() => root.unmount()));
 const draft = { id: 'fixture', slug: 'fixture', name: 'Pièce test', price: 19.99, currency: 'EUR', stock: 0, status: 'draft', images: [] };
 test('sandbox card enables quick add and labels test availability', async () => {
   act(() => root.render(<ProductCard product={{ ...draft, test_purchase: true }}/>));
-  expect(host.textContent).toContain('Disponible pour les tests');
+  expect(host.textContent).toContain('Simulation de commande');
   const button = host.querySelector('[data-testid="product-card-add-to-cart-button"]');
   expect(button.disabled).toBe(false);
   await act(async () => button.click());
   expect(mockAdd).toHaveBeenCalledWith('fixture', 1);
 });
-test('read-only draft keeps quick add disabled', () => {
-  act(() => root.render(<ProductCard product={draft}/>));
+test('live draft is labeled as unverified and cannot be purchased', () => {
+  act(() => root.render(<ProductCard product={{ ...draft, test_purchase: false, purchase_available: false, max_order_quantity: 0 }}/>));
   expect(host.querySelector('[data-testid="product-card-add-to-cart-button"]').disabled).toBe(true);
-  expect(host.textContent).toContain('Bientôt disponible');
+  expect(host.textContent).toContain('En cours de vérification');
+  expect(host.textContent).not.toContain('Simulation de commande');
   expect(mockAdd).not.toHaveBeenCalled();
 });
 test('active item stays non-purchasable when the server has closed checkout', () => {

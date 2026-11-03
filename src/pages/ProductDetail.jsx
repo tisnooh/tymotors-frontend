@@ -351,7 +351,7 @@ export default function ProductDetail() {
             <div className="mt-3 flex items-center gap-2 text-xs" role="status">
               <span className={`h-2 w-2 rounded-full ${isPreview || product.test_purchase ? 'bg-[#F2C94C]' : product.stock > 0 ? 'bg-emerald-400' : 'bg-[#E10600]'}`} />
               <span className={isPreview || product.test_purchase ? 'text-[#F2C94C]' : product.stock > 0 ? 'text-emerald-300' : 'text-red-300'}>
-                {product.test_purchase ? 'Disponible pour les tests' : isPreview ? 'Bientôt disponible' : product.stock > 0 ? `${product.stock} article${product.stock > 1 ? 's' : ''} disponible${product.stock > 1 ? 's' : ''}` : 'Rupture de stock'}
+                {product.test_purchase ? (i18n.language?.startsWith('fr') ? 'Simulation de commande' : 'Demo checkout only') : isPreview ? (i18n.language?.startsWith('fr') ? 'En cours de vérification' : 'Pending verification') : product.stock > 0 ? `${product.stock} article${product.stock > 1 ? 's' : ''} disponible${product.stock > 1 ? 's' : ''}` : 'Rupture de stock'}
               </span>
             </div>
 
@@ -381,14 +381,14 @@ export default function ProductDetail() {
                 <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Augmenter la quantité' : 'Increase quantity'} disabled={qty >= maxOrderQuantity} onClick={() => setQty((q) => Math.min(q + 1, maxOrderQuantity))} className="h-12 w-12 text-white text-lg disabled:opacity-30">+</button>
               </div>
               <button type="button" onClick={onAdd} disabled={busy || !canOrder} data-testid="product-add-to-cart-button" className="flex-1 ty-btn-primary h-12 text-xs uppercase tracking-[0.18em] disabled:opacity-50">
-                <ShoppingBag className="h-4 w-4" /> {isPreview ? 'Bientôt disponible' : maxOrderQuantity < 1 ? 'Indisponible' : requiresVehicleCheck && !compatibilityStatus ? 'Vérifiez votre véhicule' : t('product.add_to_cart')}
+                <ShoppingBag className="h-4 w-4" /> {isPreview ? 'Indisponible' : maxOrderQuantity < 1 ? 'Indisponible' : requiresVehicleCheck && !compatibilityStatus ? 'Vérifiez votre véhicule' : t('product.add_to_cart')}
               </button>
               <button type="button" aria-label={i18n.language?.startsWith('fr') ? 'Ajouter aux favoris' : 'Add to wishlist'} aria-pressed={inWishlist} onClick={() => toggleWishlist(product.id)} disabled={isPreview} data-testid="product-wishlist-button" className={`h-12 w-12 rounded-xl border flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${inWishlist ? 'bg-[#E10600] border-[#E10600] text-white' : 'border-[#232B3A] text-ty-textMid hover:text-white hover:border-[#2E394D]'}`}>
                 <Heart className={`h-5 w-5 ${inWishlist ? 'fill-white' : ''}`} />
               </button>
             </div>
             <button type="button" onClick={onBuyNow} disabled={busy || !canOrder} className="mt-3 ty-btn-line h-11 w-full text-xs uppercase tracking-[0.18em] disabled:opacity-50">
-              {isPreview ? 'Bientôt disponible' : product.purchase_available === false ? 'Indisponible' : 'Acheter maintenant'}
+              {isPreview ? 'Indisponible' : product.purchase_available === false ? 'Indisponible' : 'Acheter maintenant'}
             </button>
 
             <div className="mt-8 grid grid-cols-3 gap-3">

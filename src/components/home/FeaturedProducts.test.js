@@ -53,7 +53,7 @@ test('keeps editorial selection first, with real card images, prices and product
   expect(rail.querySelector('[data-testid="product-card"]').getAttribute('href')).toBe('/product/part-0');
   expect(rail.querySelector('[data-testid="product-card-price"]').textContent).toContain('139');
   expect(host.textContent).toContain(fr.featured.sub);
-  expect(host.textContent).toContain('Disponible pour les tests');
+  expect(host.textContent).toContain('Simulation de commande');
   expect(host.querySelector('[data-testid="featured-view-all-button"]').getAttribute('href')).toBe('/shop');
 });
 

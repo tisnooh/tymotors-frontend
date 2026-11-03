@@ -50,7 +50,7 @@
     "catalogue_error": "The catalogue is temporarily unavailable.",
     "retry": "Try again",
     "photo_unavailable": "Photo unavailable",
-    "test_product": "Available for testing",
+    "test_product": "Demo checkout only",
     "compatibility": "Always check compatibility with your vehicle before ordering.",
     "query_label": "Search: “{{query}}”",
     "pagination": "Catalogue pages",
