@@ -51,6 +51,54 @@ test('CJ status distinguishes authentication from missing product connections', 
   expect(host.textContent).not.toContain('expédition validée');
 });
 
+test('CJ diagnosis names missing shop configuration and lists only authorized shop identifiers', async () => {
+  adminApi.get.mockResolvedValue({ status: 'api_authenticated', mapping_status: 'shop_not_configured',
+    shops: [{ id: 'shop-1', name: 'TYMotors' }, { id: 'bad/id', name: 'Autre' }] });
+  await act(async () => root.render(<CjStatusPanel/>));
+  await act(async () => host.querySelector('button').click());
+  const status = host.querySelector('[role="status"]').textContent;
+  expect(status).toContain('Aucun identifiant de boutique CJ');
+  expect(status).toContain('TYMotors · identifiant shop-1');
+  expect(status).toContain('aucune sélection automatique');
+  expect(status).not.toContain('bad/id');
+});
+
+test('CJ shop authorization failure shows bounded provider diagnostics for support', async () => {
+  adminApi.get.mockResolvedValue({ status: 'api_authenticated', mapping_status: 'shop_not_authorized',
+    shops: [{ id: 'shop-1', name: 'TYMotors' }],
+    diagnostics: { stage: 'shops', http_status: 403, code: 1601012, request_id: 'req_abc-123' } });
+  await act(async () => root.render(<CjStatusPanel/>));
+  await act(async () => host.querySelector('button').click());
+  const status = host.querySelector('[role="status"]').textContent;
+  expect(status).toContain('n’est pas autorisée');
+  expect(status).toContain('lecture des boutiques · HTTP 403 · code CJ 1601012 · requête req_abc-123');
+});
+
+test('CJ getShops failure reports the observed unavailable stage without inferring a shop', async () => {
+  adminApi.get.mockResolvedValue({ status: 'api_authenticated', mapping_status: 'unavailable',
+    diagnostics: { stage: 'shops', http_status: 403, code: 2147483647, request_id: 'req.abc:123' } });
+  await act(async () => root.render(<CjStatusPanel/>));
+  await act(async () => host.querySelector('button').click());
+  const status = host.querySelector('[role="status"]').textContent;
+  expect(status).toContain('Liaison des produits CJ impossible à vérifier');
+  expect(status).toContain('lecture des boutiques · HTTP 403 · code CJ 2147483647 · requête req.abc:123');
+  expect(status).not.toContain('Boutiques autorisées renvoyées');
+});
+
+test('CJ status never renders malformed shop names or untrusted diagnostic fields', async () => {
+  adminApi.get.mockResolvedValue({ status: 'rejected', mapping_status: 'shop_not_configured',
+    shops: [{ id: 'shop-1', name: 'TYMotors' }, { id: 'shop-2', name: '<script>secret</script>' }],
+    diagnostics: { stage: '<img>', http_status: '403', code: { secret: true }, request_id: 'key=secret<script>' } });
+  await act(async () => root.render(<CjStatusPanel/>));
+  await act(async () => host.querySelector('button').click());
+  const status = host.querySelector('[role="status"]').textContent;
+  expect(status).toContain('Clé CJ refusée');
+  expect(status).not.toContain('TYMotors · identifiant');
+  expect(status).not.toContain('secret');
+  expect(status).not.toContain('Diagnostic CJ');
+  expect(host.querySelector('script')).toBeNull();
+});
+
 test('admin-only zero-euro diagnostic exposes the Stripe link and private order after creation', async () => {
   adminApi.post.mockResolvedValue({ url:'https://checkout.stripe.com/c/pay/cs_fixture', order_reference:'TY-DIAG-1', order_id:'order-fixture', is_test:true, scope:'stripe_order_only' });
   await act(async () => root.render(<ZeroCheckoutDiagnosticPanel/>));
