@@ -112,11 +112,131 @@ function OrderContent({ order: o, reload }) {
       {canRefreshLinks && <div>{confirmRefresh ? <div role="group" aria-label="Confirmation de récupération des liens"><p className="ad-note">Seuls les liens exacts manquants seront récupérés. Les liens et coûts existants restent inchangés. Les modifications non enregistrées de cette page seront perdues. Aucun achat ni validation ne sera déclenché.</p><button className="ad-btn" disabled={busy} onClick={refreshSupplierLinks}>Confirmer la récupération des liens</button> <button className="ad-btn" disabled={busy} onClick={() => setConfirmRefresh(false)}>Annuler la récupération</button></div> : <p><button className="ad-btn" disabled={busy} onClick={() => setConfirmRefresh(true)}>Récupérer les liens manquants des fiches produits</button></p>}</div>}
       <form className="ad-form-grid" onSubmit={saveSupplier}><StatusSelect label="Étape fournisseur" value={supplierStatus} onChange={e => setSupplierStatus(e.target.value)} values={['pending_validation','approved','ordered','received_by_agent','quality_control','ready_to_ship','requires_attention','cancelled']}/><Field label="Prestataire logistique" value={agentProvider} onChange={e => setAgentProvider(e.target.value)} minLength={2} maxLength={100} required placeholder="HyperSKU, CJdropshipping…"/><StatusSelect label="Connexion agent" value={agentConnection} onChange={e => setAgentConnection(e.target.value)} values={['not_connected','onboarding','connected']}/><Field label="Numéro de commande Alibaba" value={alibabaOrderId} onChange={e => setAlibabaOrderId(e.target.value)} maxLength={200}/><Field label="Référence agent / entrepôt" value={agentOrderId} onChange={e => setAgentOrderId(e.target.value)} maxLength={200}/><Field label="Notes internes"><textarea value={supplierNotes} onChange={e => setSupplierNotes(e.target.value)} maxLength={2000}/></Field><div className="ad-actions"><button className="ad-btn ad-primary" disabled={busy}>Enregistrer l’étape</button>{agentDashboard && <a className="ad-btn" href={agentDashboard} target="_blank" rel="noreferrer">Ouvrir {agentProvider.trim()} <ArrowUpRight size={14}/></a>}</div></form>
       <p className="ad-note">Le prestataire et l’état de connexion sont renseignés manuellement : ouvrir son espace ne connecte pas automatiquement TYMotors à son API.</p>
+      <CjDraftPanel key={o.id} orderId={o.id}/>
     </Panel> : o.is_test ? <Panel title="Commande de test"><p className="ad-note">Paiement sandbox uniquement. Aucun stock réel consommé, aucun dossier fournisseur ni expédition déclenchés.</p></Panel> : o.payment_status === 'paid' ? <Panel title="Commande fournisseur"><p className="ad-alert">Le dossier fournisseur n’a pas encore été créé. Rechargez après la migration Supabase.</p></Panel> : null}
     <Panel title="Suivi visible par le client"><Table items={o.tracking_events || []} columns={[{ label: 'Date', render: r => date(r.occurred_at) }, { label: 'Étape', render: r => r.title }, { label: 'Description', render: r => r.description || '—' }, { label: 'Visible', render: r => r.is_customer_visible ? 'Oui' : 'Interne' }]}/></Panel>
     <Panel title="Emails de la commande"><Table items={o.emails || []} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Type', render: r => r.email_type }, { label: 'Destinataire', render: r => r.recipient }, { label: 'Statut', render: r => <Badge value={r.status}/> }, { label: 'Erreur', render: r => r.error_message || '—' }]}/></Panel>
     <Panel title="Historique"><Table items={o.history} columns={[{ label: 'Date', render: r => date(r.created_at) }, { label: 'Action', render: r => r.action }, { label: 'Auteur', render: r => r.admin_user_id || 'Stripe / système' }, { label: 'Détails', render: r => <pre className="ad-json">{JSON.stringify(r.metadata, null, 2)}</pre> }]}/></Panel>
   </>;
+}
+
+const cjBlockerLabels = {
+  payment_not_confirmed: 'Le paiement client n’est pas confirmé.',
+  paid_order_stock_not_secured: 'Le paiement ou le stock de cette commande n’est pas sécurisé.',
+  supplier_dossier_missing: 'Le dossier fournisseur manque.',
+  supplier_approval_required: 'Le dossier fournisseur doit être approuvé.',
+  supplier_approval_evidence_required: 'Une approbation fournisseur datée et CJdropshipping sont requis.',
+  supplier_line_not_verified: 'Une référence fournisseur reste à vérifier.',
+  compatibility_review_required: 'La compatibilité doit être vérifiée.',
+  fitment_not_confirmed: 'La compatibilité du véhicule n’est pas confirmée.',
+  shipping_address_incomplete: 'L’adresse de livraison est incomplète.',
+  destination_not_verified: 'La destination de livraison n’est pas vérifiée.',
+  cj_shipping_province_required: 'La région de livraison manque.',
+  cj_route_not_verified: 'La route logistique CJ n’est pas vérifiée.',
+  mixed_or_missing_cj_routes: 'Les articles n’utilisent pas une route CJ unique et vérifiée.',
+  cj_store_name_not_verified: 'Le nom de la boutique CJ n’est pas vérifié.',
+  cj_store_mismatch: 'Une variante est associée à une autre boutique CJ.',
+  cj_payload_not_supported: 'Les données de commande ne respectent pas le format CJ.',
+  cj_field_length_or_type_invalid: 'Un champ de commande est incomplet ou trop long pour CJ.',
+  unit_shipping_quote_required: 'Le tarif de livraison fournisseur reste à confirmer avant achat.',
+  purchase_currency_and_complete_cost_required: 'Le coût complet et la devise restent à confirmer avant achat.',
+  financial_approval_snapshot_required: 'Une validation financière reste nécessaire avant achat.',
+  cj_paid_fulfillment_not_enabled: 'Le paiement fournisseur CJ n’est pas activé.',
+};
+
+const cjStateLabels = {
+  reserved: 'Réservé : résultat de l’envoi inconnu. Rapprochement manuel requis.',
+  uncertain: 'Envoi incertain : vérifiez CJ manuellement. Aucun renvoi automatique.',
+  submitted: 'Brouillon transmis à CJ, sans paiement fournisseur.',
+};
+
+function validCjPreview(result) {
+  if (result?.scope !== 'unpaid_cj_draft' || !Array.isArray(result.blockers) ||
+      !Array.isArray(result.warnings) || typeof result.can_submit_draft !== 'boolean') return false;
+  if (![...result.blockers, ...result.warnings].every(issue => issue && typeof issue.code === 'string' &&
+      (issue.order_item_id == null || typeof issue.order_item_id === 'string'))) return false;
+  if (result.submission) return typeof result.submission.state === 'string' && !result.can_submit_draft;
+  if (!result.can_submit_draft) return true;
+  const payload = result.payload;
+  return /^[a-f0-9]{64}$/.test(result.fingerprint || '') &&
+    typeof result.expected_updated_at === 'string' &&
+    /(?:Z|[+-]\d{2}:\d{2})$/.test(result.expected_updated_at) &&
+    !Number.isNaN(Date.parse(result.expected_updated_at)) &&
+    payload && Array.isArray(payload.products) && payload.products.length > 0 &&
+    ['orderNumber', 'storeName', 'fromCountryCode', 'logisticName']
+      .every(field => typeof payload[field] === 'string' && payload[field].trim());
+}
+
+export function CjDraftPanel({ orderId }) {
+  const [view, setView] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
+  const [reused, setReused] = useState(false);
+  const path = `orders/${orderId}/cj-draft`;
+  async function check() {
+    setBusy(true); setError(''); setConfirmed(false);
+    try {
+      const result = await adminApi.get(path);
+      if (!validCjPreview(result)) {
+        throw new Error('Réponse CJ incomplète. Aucun brouillon envoyé.');
+      }
+      setView(result); setReused(false);
+    } catch (e) { setView(null); setError(errorMessage(e)); }
+    finally { setBusy(false); }
+  }
+  async function create() {
+    if (!confirmed || busy || !validCjPreview(view) || !view.can_submit_draft || view.submission) return;
+    setBusy(true); setError('');
+    try {
+      const result = await adminApi.post(path, {
+        expected_updated_at: view.expected_updated_at,
+        fingerprint: view.fingerprint,
+        confirm_create_unpaid_draft: true,
+      });
+      if (!result?.submission?.state || !['reserved', 'uncertain', 'submitted'].includes(result.submission.state)) {
+        throw new Error('Réponse CJ incomplète. Vérifiez la commande avant toute autre action.');
+      }
+      setView({ scope: 'unpaid_cj_draft', can_submit_draft: false, submission: result.submission });
+      setReused(result.reused === true); setConfirmed(false);
+    } catch (e) {
+      // The POST may have reached the server. Never offer another submission from a stale preview.
+      setView(null); setConfirmed(false);
+      setError(`${errorMessage(e)} Vérifiez le statut du dossier ; ne renvoyez pas le brouillon sans rapprochement.`);
+    } finally { setBusy(false); }
+  }
+  async function sync() {
+    if (busy || view?.submission?.state !== 'submitted') return;
+    setBusy(true); setError('');
+    try {
+      const result = await adminApi.post(`orders/${orderId}/cj-sync`, {});
+      if (!result?.submission?.state) throw new Error('Réponse CJ incomplète.');
+      setView({ scope: 'unpaid_cj_draft', can_submit_draft: false, submission: result.submission });
+    } catch (e) { setError(errorMessage(e)); }
+    finally { setBusy(false); }
+  }
+  const submission = view?.submission;
+  const observation = submission?.observation;
+  return <div className="ad-stack"><h3>Brouillon CJ · sans paiement</h3>
+    <p className="ad-note">Vérifiez le dossier avant de créer un brouillon chez CJdropshipping. Cette action peut transmettre les données de livraison à CJ, mais ne déclenche aucun paiement ni expédition via TYMotors et ne marque pas la commande comme expédiée.</p>
+    <button type="button" className="ad-btn" disabled={busy} onClick={check}>{busy ? 'Vérification…' : 'Vérifier le brouillon CJ'}</button>
+    {error && <p className="ad-alert" role="alert">{error}</p>}
+    {view && <div role="status">
+      {submission ? <><p>{cjStateLabels[submission.state] || `État CJ à vérifier : ${submission.state}`}</p>
+        <p className="ad-note">Référence CJ : {submission.cj_order_id || 'non reçue'} · Boutique CJ : {submission.cj_shop_id || 'non renseignée'} · Identifiant de requête : {submission.request_id || 'non reçu'}.</p>
+        {reused && <p className="ad-note">Brouillon déjà enregistré ; aucune nouvelle demande n’a été créée.</p>}
+        {observation && <p className="ad-note">Dernière observation CJ : {observation.order_status || 'statut inconnu'} · commande {observation.order_number || observation.order_id || 'sans référence'} · suivi {observation.tracking_number || 'non fourni'}. Le suivi client n’est pas mis à jour automatiquement.</p>}
+        {submission.state === 'submitted' && submission.cj_order_id && <button type="button" className="ad-btn" disabled={busy} onClick={sync}>Actualiser le statut CJ</button>}
+      </> : <>
+        {(view.blockers || []).length > 0 && <div className="ad-alert"><strong>Création bloquée :</strong><ul>{view.blockers.map((b, i) => <li key={`${b.code}-${i}`}>{cjBlockerLabels[b.code] || `Vérification requise (${b.code})`}{b.order_item_id ? ` · ligne ${b.order_item_id}` : ''}</li>)}</ul></div>}
+        {(view.warnings || []).length > 0 && <div className="ad-note"><strong>Avant tout achat :</strong><ul>{view.warnings.map((w, i) => <li key={`${w.code}-${i}`}>{cjBlockerLabels[w.code] || `Vérification requise (${w.code})`}</li>)}</ul></div>}
+        {view.can_submit_draft && view.payload && <><p className="ad-note">Aperçu : commande {view.payload.orderNumber} · boutique {view.payload.storeName} · {view.payload.products?.length || 0} article(s) · route {view.payload.fromCountryCode} / {view.payload.logisticName}. Aucun paiement fournisseur.</p>
+          <label className="ad-check"><input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)}/>Je confirme la création d’un brouillon CJ sans paiement, après vérification des références et de la livraison.</label>
+          <button type="button" className="ad-btn" disabled={busy || !confirmed} onClick={create}>Créer le brouillon CJ sans paiement</button></>}
+        {view.can_submit_draft && !view.payload && <p className="ad-alert">Aperçu CJ incomplet : création indisponible.</p>}
+      </>}
+    </div>}
+  </div>;
 }
 
 export function Customers() {
